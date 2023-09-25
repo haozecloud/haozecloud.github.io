@@ -20,20 +20,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>我的第一篇博文 - 原点独白</title>
+  <title>Linux中/etc/issue、/etc/motd文件 - 原点独白</title>
 
   
-    <meta name="description" content="大家好">
+    <meta name="description" content="@TOC 前言在Linux操作系统中，&#x2F;etc&#x2F;issue和&#x2F;etc&#x2F;motd文件都是系统管理员可以使用来显示系统信息和欢迎信息的关键文件。这些文件通常位于&#x2F;etc目录中，是用户在登录时第一个看到的内容。&#x2F;etc&#x2F;issue文件提供了一些基本的系统信息，例如操作系统名称、版本号、内核版本等。而&#x2F;etc&#x2F;motd文件则通常包含了一些系统管理员可以添加">
 <meta property="og:type" content="article">
-<meta property="og:title" content="我的第一篇博文">
+<meta property="og:title" content="Linux中&#x2F;etc&#x2F;issue、&#x2F;etc&#x2F;motd文件">
 <meta property="og:url" content="https://haozecloud.github.io/2023/09/25/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E6%96%87/index.html">
 <meta property="og:site_name" content="原点独白">
-<meta property="og:description" content="大家好">
+<meta property="og:description" content="@TOC 前言在Linux操作系统中，&#x2F;etc&#x2F;issue和&#x2F;etc&#x2F;motd文件都是系统管理员可以使用来显示系统信息和欢迎信息的关键文件。这些文件通常位于&#x2F;etc目录中，是用户在登录时第一个看到的内容。&#x2F;etc&#x2F;issue文件提供了一些基本的系统信息，例如操作系统名称、版本号、内核版本等。而&#x2F;etc&#x2F;motd文件则通常包含了一些系统管理员可以添加">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/52559569f797eb15dbbb3b1f5bcf1bd9.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/45a87dcefbe4a8fdcb9588cd91f2c9d6.png">
 <meta property="article:published_time" content="2023-09-25T08:37:54.000Z">
-<meta property="article:modified_time" content="2023-09-25T08:39:05.113Z">
+<meta property="article:modified_time" content="2023-09-25T12:55:38.027Z">
 <meta property="article:author" content="Zhang Hao Ze">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/52559569f797eb15dbbb3b1f5bcf1bd9.png">
   
   
   
@@ -80,7 +83,7 @@
 <widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
 
 
-<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">我的第一篇博文</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%AE%B6%E5%A5%BD"><span class="toc-text">大家好</span></a></li></ol></div></div></widget>
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">Linux中/etc/issue、/etc/motd文件</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E5%89%8D%E6%AC%A2%E8%BF%8E%E8%AF%AD"><span class="toc-text">登录前欢迎语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E5%90%8E%E6%AC%A2%E8%BF%8E%E8%AF%AD"><span class="toc-text">登录后欢迎语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div></widget>
 
 
 
@@ -99,8 +102,36 @@
 <div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-25T08:37:54.000Z">2023-09-25</time></div></div>
 
 <article class='md-text content post'>
-<h1 class="article-title"><span>我的第一篇博文</span></h1>
-<h2 id="大家好"><a href="#大家好" class="headerlink" title="大家好"></a>大家好</h2>
+<h1 class="article-title"><span>Linux中/etc/issue、/etc/motd文件</span></h1>
+<p>@<a href="Linux%E4%B8%AD/etc/issue%E3%80%81/etc/motd%E6%96%87%E4%BB%B6">TOC</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Linux操作系统中，<code>/etc/issue</code>和<code>/etc/motd</code>文件都是系统管理员可以使用来显示系统信息和欢迎信息的关键文件。这些文件通常位于&#x2F;etc目录中，是用户在登录时第一个看到的内容。&#x2F;etc&#x2F;issue文件提供了一些基本的<code>系统信息</code>，例如操作<code>系统名称</code>、<code>版本号</code>、<code>内核版本</code>等。而&#x2F;etc&#x2F;motd文件则通常包含了一些系统管理员可以添加的欢迎信息、系统安全提示或者重要公告等。这些文件对于系统的安全性、稳定性和可用性都有很大的影响，因此系统管理员需要对它们进行适当的配置和维护。</p>
+<h2 id="登录前欢迎语"><a href="#登录前欢迎语" class="headerlink" title="登录前欢迎语"></a>登录前欢迎语</h2><p>&#x2F;etc&#x2F;issue文件用来显示Linux系统的基本信息，例如发行版本、内核版本、安装日期等。当用户登录到Linux系统时，该文件将被用来显示欢迎信息。</p>
+<p>实验</p>
+<pre><code>[root@mysql5_7 ~]# vim /etc/issue
+\S
+Kernel \r on an \m
+\d
+&lt;Welcome to Mysql.server&gt;
+:wq
+#保存退出
+</code></pre>
+<p>测试，这个需要系统登录看，用远程工具看不到</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img-blog.csdnimg.cn/img_convert/52559569f797eb15dbbb3b1f5bcf1bd9.png" alt="image"/></div><div class="image-meta"><span class="image-caption center">image</span></div></div>
+<p>以下是&#x2F;etc&#x2F;issue文件的一些常见选项说明：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">\n：换行符，用于在欢迎信息中添加新行。</span><br><span class="line"></span><br><span class="line">\l：显示本地终端设备名称。</span><br><span class="line"></span><br><span class="line">\m：显示计算机的硬件架构。</span><br><span class="line"></span><br><span class="line">\s：显示操作系统的名称。</span><br><span class="line"></span><br><span class="line">\r：显示内核的版本号。</span><br><span class="line"></span><br><span class="line">\t：显示当前时间。</span><br><span class="line"></span><br><span class="line">\u：显示当前用户名。</span><br><span class="line"></span><br><span class="line">\v：显示操作系统的发行版本号。</span><br><span class="line"></span><br><span class="line">\\：显示反斜杠字符。</span><br><span class="line"></span><br><span class="line">其他自定义文本：可以在文件中添加其他自定义文本或标记。</span><br></pre></td></tr></table></figure>
+<p>使用这些选项，你可以根据需要定制并个性化系统登录时的欢迎信息。例如，可以使用\s和\v选项来显示操作系统的名称和发行版本号，\l选项来显示本地终端设备名称，以及\t选项来显示当前时间等。</p>
+<h2 id="登录后欢迎语"><a href="#登录后欢迎语" class="headerlink" title="登录后欢迎语"></a>登录后欢迎语</h2><p>&#x2F;etc&#x2F;motd文件用来显示Linux系统的欢迎信息。当用户第一次登录到Linux系统时，该文件将被用来显示欢迎信息。</p>
+<p>实验</p>
+<pre><code>[root@mysql5_7 ~]# vim /etc/motd
+&quot;Welcome to MySql.server &quot;
+:wq
+#保存退出
+</code></pre>
+<p>测试，可以看到成功了</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img-blog.csdnimg.cn/img_convert/45a87dcefbe4a8fdcb9588cd91f2c9d6.png" alt="image"/></div><div class="image-meta"><span class="image-caption center">image</span></div></div>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章讨论了Linux系统中&#x2F;etc&#x2F;issue和&#x2F;etc&#x2F;motd文件的作用。&#x2F;etc&#x2F;issue文件用来显示Linux系统的基本信息，例如发行版本、内核版本和安装日期等，在用户登录前会显示欢迎信息。&#x2F;etc&#x2F;motd文件则用来显示Linux系统的欢迎信息，在用户第一次登录后会显示该文件中的内容。</p>
+
 
 
 <div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
