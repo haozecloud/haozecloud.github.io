@@ -20,18 +20,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>MySQL数据库备份mysqldump - 原点独白</title>
+  <title>MySQL数据库备份mysqldump - 原点独白-专注于技术研究、信息安全、服务器运维、云计算及各种主流前后端技术</title>
 
   
     <meta name="description" content="@TOC  前言MySQL是一个广泛使用的开源关系型数据库管理系统，可用于存储和管理数据。为了保护数据，我们需要定期备份数据库，以便在数据丢失或损坏时可以恢复数据。在本文中，我将介绍如何使用mysqldump命令来备份MySQL数据库。  一、关于备份热备份和冷备份热备份是指在MySQL服务器运行时进行备份，这种备份方式不会中断MySQL服务器的正常运行。备份过程中，MySQL服务器仍然可以读写数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL数据库备份mysqldump">
 <meta property="og:url" content="https://haozecloud.github.io/2023/09/25/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BDmysqldump/index.html">
-<meta property="og:site_name" content="原点独白">
+<meta property="og:site_name" content="原点独白-专注于技术研究、信息安全、服务器运维、云计算及各种主流前后端技术">
 <meta property="og:description" content="@TOC  前言MySQL是一个广泛使用的开源关系型数据库管理系统，可用于存储和管理数据。为了保护数据，我们需要定期备份数据库，以便在数据丢失或损坏时可以恢复数据。在本文中，我将介绍如何使用mysqldump命令来备份MySQL数据库。  一、关于备份热备份和冷备份热备份是指在MySQL服务器运行时进行备份，这种备份方式不会中断MySQL服务器的正常运行。备份过程中，MySQL服务器仍然可以读写数">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-09-25T08:37:54.000Z">
-<meta property="article:modified_time" content="2023-09-25T13:03:26.459Z">
+<meta property="article:published_time" content="2023-09-25T12:37:54.000Z">
+<meta property="article:modified_time" content="2023-09-26T00:59:19.036Z">
 <meta property="article:author" content="Zhang Hao Ze">
 <meta name="twitter:card" content="summary">
   
@@ -48,6 +48,8 @@
 
   
 
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
   
 
   
@@ -70,7 +72,7 @@
 
   
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白-专注于技术研究、信息安全、服务器运维、云计算及各种主流前后端技术</div><div class="sub cap">微信公众号</div></a></div>
 
 <nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
@@ -96,7 +98,7 @@
 
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-25T08:37:54.000Z">2023-09-25</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-25T12:37:54.000Z">2023-09-25</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>MySQL数据库备份mysqldump</span></h1>
@@ -169,7 +171,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/25/Linux%E4%B8%ADmotd%E6%96%87%E4%BB%B6/">Linux中/etc/issue、/etc/motd文件</a></div><div class="item" id="next"></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/26/%E4%BA%91%E8%AE%A1%E7%AE%97%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%93-%E6%89%80%E6%9C%89/">云计算笔试面试题库-所有</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/25/Linux%E4%B8%8B%E5%91%BD%E4%BB%A4find%E5%91%BD%E4%BB%A4%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE/">Linux下命令find命令文件查找</a></div></section></div>
 
 
 
