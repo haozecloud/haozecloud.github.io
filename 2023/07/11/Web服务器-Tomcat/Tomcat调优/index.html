@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="tomcat的优化可以提高网站的并发能力，体现个人的价值，tomcat在java项目中的使用率非常高，所以在生产环境对tomcat的优化也就变得非常必要了，一般情况下tomcat的优化主要从两个方面入手，一个是自身配置，另一个是tomcat所运行的jvm虚拟机的优化，优化的工作可以从安装完tomcat就开始着手 一、AJP优化在前面的课程中我们提到了一个叫AJP的协议，同时我们也知道了这个AJP的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E8%B0%83%E4%BC%98/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="tomcat的优化可以提高网站的并发能力，体现个人的价值，tomcat在java项目中的使用率非常高，所以在生产环境对tomcat的优化也就变得非常必要了，一般情况下tomcat的优化主要从两个方面入手，一个是自身配置，另一个是tomcat所运行的jvm虚拟机的优化，优化的工作可以从安装完tomcat就开始着手 一、AJP优化在前面的课程中我们提到了一个叫AJP的协议，同时我们也知道了这个AJP的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603162047961.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603162079362.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.703Z">
+<meta property="article:modified_time" content="2022-06-03T15:40:00.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603162047961.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81AJP%E4%BC%98%E5%8C%96"><span class="toc-text">一、AJP优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96"><span class="toc-text">二、运行模式优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#apr%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="toc-text">apr运行模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2apr%E7%8E%AF%E5%A2%83"><span class="toc-text">部署apr环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E4%BC%98%E5%8C%96%E5%8F%82%E6%95%B0"><span class="toc-text">其它优化参数</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.703Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>tomcat的优化可以提高网站的并发能力，体现个人的价值，tomcat在java项目中的使用率非常高，所以在生产环境对tomcat的优化也就变得非常必要了，一般情况下tomcat的优化主要从两个方面入手，一个是自身配置，另一个是tomcat所运行的jvm虚拟机的优化，优化的工作可以从安装完tomcat就开始着手</p>
+<h2 id="一、AJP优化"><a href="#一、AJP优化" class="headerlink" title="一、AJP优化"></a>一、AJP优化</h2><p>在前面的课程中我们提到了一个叫AJP的协议，同时我们也知道了这个AJP的作用，但是在生产环境中一般使用的是nginx+tomcat的架构，所以大多数时候用不到AJP协议，所以我们可以禁用它，而在我们的server.xml文件中这个AJP默认就是禁用的,如果是其它版本最好看一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue conf]# vim /opt/tomcat1/conf/server.xml </span><br><span class="line"></span><br><span class="line">&lt;!--</span><br><span class="line">   &lt;Connector protocol=&quot;AJP/1.3&quot;</span><br><span class="line">              address=&quot;::1&quot;</span><br><span class="line">              port=&quot;8009&quot;</span><br><span class="line">              redirectPort=&quot;8443&quot; /&gt;</span><br><span class="line">   --&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、运行模式优化"><a href="#二、运行模式优化" class="headerlink" title="二、运行模式优化"></a>二、运行模式优化</h2><p>tomcat的运行模式有3种：</p>
+<p><strong>bio</strong></p>
+<p>性能非常低下，没有经过任何优化处理和支持，适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4以前的唯一选择，但程序直观简单易理解。</p>
+<p><strong>nio</strong></p>
+<p>nio(new I&#x2F;O)，是Java SE 1.4及后续版本提供的一种新的I&#x2F;O操作方式它拥有比传统I&#x2F;O操作(bio)更好的并发运行性能。Tomcat9默认使用nio运行模式。适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程比较复杂。AIO(NIO2)使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，JDK7开始支持。</p>
+<p><strong>apr</strong></p>
+<p>安装起来最困难，但是从操作系统级别来解决异步的IO问题，大幅度的提高性能</p>
+<p>进入tomcat的服务器状态页面查看默认的模式</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603162047961.png" alt="image20200313202144717.png"/></div><div class="image-meta"><span class="image-caption center">image20200313202144717.png</span></div></div>
+
+<p>如果默认使用的是bio模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">设置使用nio模式</span><br><span class="line">[root@zutuanxue logs]# vim /opt/tomcat1/conf/server.xml</span><br><span class="line">&lt;Connector  port=&quot;8080&quot;protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot; connectionTimeout=&quot;20000&quot;</span><br><span class="line">               redirectPort=&quot;8443&quot; /&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="apr运行模式"><a href="#apr运行模式" class="headerlink" title="apr运行模式"></a>apr运行模式</h3><p>APR(Apache portable Run-time libraries，Apache可移植运行库)的目的如其名称一样，主要为上层的应用程序提供一个可以跨越多操作系统平台使用的底层支持接口库。可以大大地提高Tomcat对静态文件的处理性能。 也是在Tomcat上运行高并发应用的首选模式。</p>
+<p>系统自带的软件包不是最新的，且缺少相关软件包，所以我们选择源码包安装</p>
+<p>所需软件包</p>
+<p>apr-1.7.0.tar.gz 主程序包 包含了通用开发组件</p>
+<p>apr-iconv-1.2.2.tar.gz 用于实现iconv编码</p>
+<p>apr-util-1.6.1.tar.gz 额外的开发组件</p>
+<p>tomcat-native.tar.gz 关联tomcat和apr的组件</p>
+<p>arp相关软件包下载 <a target="_blank" rel="noopener" href="https://mirrors.cnnic.cn/apache/apr/">https://mirrors.cnnic.cn/apache/apr/</a></p>
+<p>tomcat-native在tomcat安装目录的bin下</p>
+<h3 id="部署apr环境"><a href="#部署apr环境" class="headerlink" title="部署apr环境"></a>部署apr环境</h3><p><strong>step 1</strong> 环境准备</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# dnf install -y apr-devel openssl-devel gcc make expat-devel libtool </span><br></pre></td></tr></table></figure>
+
+<p><strong>step 2</strong> 安装apr主程序包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# tar fx apr-1.7.0.tar.gz </span><br><span class="line">[root@zutuanxue ~]# cd apr-1.7.0/</span><br><span class="line">[root@zutuanxue ~]# ./configure --prefix=/usr/local/apr</span><br><span class="line">[root@zutuanxue apr-1.7.0]# make -j4 &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 3</strong> 安装apr-iconv</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# tar fx apr-iconv-1.2.2.tar.gz </span><br><span class="line">[root@zutuanxue ~]# cd apr-iconv-1.2.2/</span><br><span class="line">[root@zutuanxue ~]# ./configure   --with-apr=/usr/local/apr  --prefix=/usr/local/apr-iconv</span><br><span class="line">[root@zutuanxue apr-iconv-1.2.2]# make -j4 &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 4</strong> 安装apr-util</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# tar fx apr-util-1.6.1.tar.gz </span><br><span class="line">[root@zutuanxue ~]# cd apr-util-1.6.1/</span><br><span class="line">[root@zutuanxue ~]# ./configure --prefix=/usr/local/apr-util  --with-apr=/usr/local/apr   --with-apr-iconv=/usr/local/apr-iconv/bin/apriconv</span><br><span class="line">[root@zutuanxue apr-util-1.6.1]# make -j4 &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 5</strong> 安装tomcat-native</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cd /opt/tomcat1/bin/</span><br><span class="line">[root@zutuanxue bin]# tar fx tomcat-native.tar.gz </span><br><span class="line">[root@zutuanxue bin]# cd tomcat-native-1.2.23-src/native</span><br><span class="line">[root@zutuanxue tomcat-native-1.2.23-src]# ./configure --with-apr=/usr/local/apr  --with-java-home=/usr/java/jdk-13.0.2</span><br><span class="line">[root@zutuanxue tomcat-native-1.2.23-src]# make -j4 &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 6</strong> 修改并加载环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# echo &#x27;export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/apr/lib</span><br><span class="line">export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/apr/lib&#x27; &gt;&gt; /etc/profile</span><br><span class="line">[root@zutuanxue ~]# source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 7</strong> 修改tomcat配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# vim /opt/tomcat1/conf/server.xml </span><br><span class="line">   protocol=&quot;org.apache.coyote.http11.Http11AprProtocol&quot;</span><br><span class="line">               connectionTimeout=&quot;20000&quot;</span><br><span class="line">               redirectPort=&quot;8443&quot; /&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>step 8</strong> 测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#为了避免干扰先执行关闭</span><br><span class="line">[root@zutuanxue ~]# sh /opt/tomcat1/bin/shutdown.sh </span><br><span class="line">#测试</span><br><span class="line">[root@zutuanxue ~]# sh /opt/tomcat1/bin/catalina.sh run</span><br><span class="line">#如果没有问题可以看到</span><br><span class="line">14-Mar-2020 00:22:23.894 信息 [main] org.apache.coyote.AbstractProtocol.start 开始协议处理句柄[&quot;http-apr-8080&quot;]</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603162079362.png" alt="image20200314122328676.png"/></div><div class="image-meta"><span class="image-caption center">image20200314122328676.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意：如果非root用户启动失败，把apr环境变量在当前用户的.bash_profile中写一份</span><br><span class="line">[root@zutuanxue ~]# echo &#x27;export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/apr/lib</span><br><span class="line">export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/apr/lib&#x27; &gt;&gt; /root/.bash_profile</span><br><span class="line">[root@zutuanxue ~]# source /root/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="其它优化参数"><a href="#其它优化参数" class="headerlink" title="其它优化参数"></a>其它优化参数</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue logs]# vim /opt/tomcat1/conf/server.xml </span><br><span class="line"> &lt;Connector  port=&quot;8080&quot;            			protocol=&quot;HTTP/1.1              enableLookups=&quot;false&quot;                maxThreads=&quot;1000&quot;                minSpareThreads=&quot;100&quot;                acceptCount=&quot;900&quot;                disableUploadTimeout=&quot;true&quot;                connectionTimeout=&quot;20000&quot;                URIEncoding=&quot;UTF-8&quot;                redirectPort=&quot;8443&quot;</span><br><span class="line">compression=&quot;on&quot;                compressionMinSize=&quot;1024&quot;                useSendfile=&quot;false&quot;                noCompressionUserAgents=&quot;mozilla, traviata&quot;                compressibleMimeType=&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript &quot;  /&gt;</span><br><span class="line"></span><br><span class="line">maxThreads：最大线程数，默认150。增大值避免队列请求过多，导致响应缓慢。</span><br><span class="line">minSpareThreads：最小空闲线程数。</span><br><span class="line">acceptCount：当处理请求超过此值时，将后来请求放到队列中等待。</span><br><span class="line">disableUploadTimeout：禁用上传超时时间</span><br><span class="line">connectionTimeout：连接超时，单位毫秒，0代表不限制</span><br><span class="line">URIEncoding：URI地址编码使用UTF-8</span><br><span class="line">enableLookups：关闭dns解析，提高响应时间</span><br><span class="line">compression：启用压缩功能</span><br><span class="line">compressionMinSize：最小压缩大小，单位Byte</span><br><span class="line">compressibleMimeType ：压缩的文件类型</span><br><span class="line"></span><br><span class="line">官方参数文档：http://tomcat.apache.org/tomcat-9.0-doc/config/http.html</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E9%83%A8%E7%BD%B2%E5%9C%A8linux%E6%9C%8D%E5%8A%A1%E5%99%A8/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E5%A4%9A%E5%AE%9E%E4%BE%8B/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="一、批量部署概述什么是PXE预启动执行环境（PXE）是由Intel公司开发的最新技术，工作于Client&#x2F;Server的网络模式，支持工作站通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统，在启动过程中，终端要求服务器分配IP地址，再用TFTP（trivial file transfer protocol）或MTFTP(multicast trivial file trans">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/%E9%83%A8%E7%BD%B2linux%E7%BD%91%E7%BB%9C%E5%AE%89%E8%A3%85%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、批量部署概述什么是PXE预启动执行环境（PXE）是由Intel公司开发的最新技术，工作于Client&#x2F;Server的网络模式，支持工作站通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统，在启动过程中，终端要求服务器分配IP地址，再用TFTP（trivial file transfer protocol）或MTFTP(multicast trivial file trans">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526488594.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526515184.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526811897.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526828444.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526884300.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526915193.png">
+<meta property="article:published_time" content="2023-07-11T11:44:39.804Z">
+<meta property="article:modified_time" content="2022-06-03T14:35:08.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526488594.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2%E6%A6%82%E8%BF%B0"><span class="toc-text">一、批量部署概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2%E5%8E%9F%E7%90%86"><span class="toc-text">二、批量部署原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81kickstart%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98"><span class="toc-text">三、kickstart批量部署实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81kickstart-uefi%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2"><span class="toc-text">四、kickstart+uefi批量部署</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.804Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<h2 id="一、批量部署概述"><a href="#一、批量部署概述" class="headerlink" title="一、批量部署概述"></a>一、批量部署概述</h2><p><strong>什么是PXE</strong><br>预启动执行环境（PXE）是由Intel公司开发的最新技术，工作于Client&#x2F;Server的网络模式，支持工作站通过网络从远端服务器下载映像，并由此支持通过网络启动操作系统，在启动过程中，终端要求服务器分配IP地址，再用TFTP（trivial file transfer protocol）或MTFTP(multicast trivial file transfer protocol)协议下载一个启动软件包到本机内存中执行，由这个启动软件包完成终端（客户端）基本软件设置，从而引导预先安装在服务器中的终端操作系统。PXE可以引导多种操作系统，如：Windows95&#x2F;98&#x2F;2000&#x2F;windows2003&#x2F;windows2008&#x2F;winXP&#x2F;win7&#x2F;win8,linux系列系统等。</p>
+<p><strong>PXE原理</strong><br>PXE是在没有软驱、硬盘、CD-ROM的情况下引导计算机的一种方式，也就是BIOS将使用PXE协议从网络引导。整个安装的过程是这样的：</p>
+<p>PXE网卡启动 &#x3D;&gt; DHCP获得IP地址 &#x3D;&gt; 从TFTP上下载 pxelinux.0、vmlinuz、initr.img 等 &#x3D;&gt; 引导系统进入安装步骤 &#x3D;&gt; 通过PEX linux 下载ks.cfg文件并跟据ks.cfg自动化安装系统 &#x3D;&gt; 完成。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526488594.png" alt="image20200403143123698.png"/></div><div class="image-meta"><span class="image-caption center">image20200403143123698.png</span></div></div>
+
+<p><strong>TFTP服务</strong><br>TFTP是用来下载远程文件的最简单网络协议，它其于UDP协议而实现。</p>
+<p><strong>什么是kickstart</strong><br>KickStart是一种无人职守安装方式。KickStart的工作原理是通过记录典型的安装过程中所需人工干预填写的各种参数，并生成一个名为ks.cfg的文件；在其后的安装过程中（不只局限于生成KickStart安装文件的机器）当出现要求填写参数的情况时，安装程序会首先去查找KickStart生成的文件，当找到合适的参数时，就采用找到的参数，当没有找到合适的参数时，才需要安装者手工干预。这样，如果KickStart文件涵盖了安装过程中出现的所有需要填写的参数时，安装者完全可以只告诉安装程序从何处取ks.cfg文件，然后去忙自己的事情。等安装完毕，安装程序会根据ks.cfg中设置的重启选项来重启系统，并结束安装。</p>
+<h2 id="二、批量部署原理"><a href="#二、批量部署原理" class="headerlink" title="二、批量部署原理"></a>二、批量部署原理</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526515184.png" alt="image20200403144115628.png"/></div><div class="image-meta"><span class="image-caption center">image20200403144115628.png</span></div></div>
+
+<p><strong>1、PXE Client向DHCP发送请求：</strong><br>　　PXE Client从自己的PXE网卡启动，通过PXE BootROM(自启动芯片)会以UDP(简单用户数据报协议)发送一个广播请求，向本网络中的DHCP服务器索取IP。</p>
+<p><strong>2、DHCP服务器提供信息：</strong><br>　　DHCP服务器收到客户端的请求，验证是否来至合法的PXE Client的请求，验证通过它将给客户端一个“提供”响应，这个“提供”响应中包含了为客户端分配的IP地址、pxelinux启动程序(TFTP)位置，以及配置文件所在位置。</p>
+<p><strong>3、PXE客户端请求下载启动文件：</strong><br>　　客户端收到服务器的“回应”后，会回应一个帧，以请求传送启动所需文件。这些启动文件包括：pxelinux.0、pxelinux.cfg&#x2F;default、vmlinuz、initrd.img等文件。</p>
+<p><strong>4、Boot Server响应客户端请求并传送文件：</strong><br>　　当服务器收到客户端的请求后，他们之间之后将有更多的信息在客户端与服务器之间作应答, 用以决定启动参数。BootROM由TFTP通讯协议从Boot Server下载启动安装程序所必须的文件(pxelinux.0、pxelinux.cfg&#x2F;default)。default文件下载完成后，会根据该文件中定义的引导顺序，启动Linux安装程序的引导内核。</p>
+<p><strong>5、请求下载自动应答文件：</strong><br>　　客户端通过pxelinux.cfg&#x2F;default文件成功的引导Linux安装内核后，安装程序首先必须确定你通过什么安装介质来安装linux，如果是通过网络安装(NFS, FTP, HTTP)，则会在这个时候初始化网络，并定位安装源位置。接着会读取default文件中指定的自动应答文件ks.cfg所在位置，根据该位置请求下载该文件。<br>　　这里有个问题，在第2步和第5步初始化2次网络了，这是由于PXE获取的是安装用的内核以及安装程序等，而安装程序要获取的是安装系统所需的二进制包以及配置文件。因此PXE模块和安装程序是相对独立的，PXE的网络配置并不能传递给安装程序，从而进行两次获取IP地址过程，但IP地址在DHCP的租期内是一样的。</p>
+<p><strong>6、客户端安装操作系统：</strong><br>　　将ks.cfg文件下载回来后，通过该文件找到OS Server，并按照该文件的配置请求下载安装过程需要的软件包。<br>　　OS Server和客户端建立连接后，将开始传输软件包，客户端将开始安装操作系统。安装完成后，将提示重新引导计算机。</p>
+<h2 id="三、kickstart批量部署实战"><a href="#三、kickstart批量部署实战" class="headerlink" title="三、kickstart批量部署实战"></a>三、kickstart批量部署实战</h2><p>环境：</p>
+<ul>
+<li>selinux关闭，防火墙关闭</li>
+<li>Server：192.168.2.100</li>
+</ul>
+<p><strong>Step 1 配置dnf源</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cat server.repo </span><br><span class="line">[serverApp]</span><br><span class="line">name=app</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///mnt/AppStream</span><br><span class="line">[serverOS]</span><br><span class="line">name=os</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///mnt/BaseOS</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2 安装软件包</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# dnf install dhcp-server tftp-server httpd syslinux -y</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3 搭建并启动DHCP</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# vim /etc/dhcp/dhcpd.conf </span><br><span class="line">subnet 192.168.2.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        option routers          192.168.2.100;</span><br><span class="line">        range                   192.168.2.10    192.168.2.20;</span><br><span class="line">        next-server             192.168.2.100;</span><br><span class="line">        filename                &quot;pxelinux.0&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# systemctl start dhcpd</span><br><span class="line">[root@zutuanxue ~]# systemctl status dhcpd</span><br><span class="line">[root@zutuanxue ~]# netstat -antlup | grep :67</span><br><span class="line">udp        0      0 0.0.0.0:67              0.0.0.0:*                           31465/dhcpd         </span><br><span class="line">udp        0      0 0.0.0.0:67              0.0.0.0:*                           1345/dnsmasq        </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 4 生成需要的文件并启动tftp服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cp /usr/share/syslinux/pxelinux.0		/var/lib/tftpboot/</span><br><span class="line">[root@zutuanxue ~]# cp /mnt/isolinux/&#123;vmlinuz,ldlinux.c32,initrd.img&#125; 		/var/lib/tftpboot/</span><br><span class="line">[root@zutuanxue ~]# mkdir /var/lib/tftpboot/pxelinux.cfg</span><br><span class="line">[root@zutuanxue ~]# vim /var/lib/tftpboot/pxelinux.cfg/default			#生成default文件</span><br><span class="line">default linux</span><br><span class="line">timeout 3</span><br><span class="line">label linux</span><br><span class="line">  kernel vmlinuz</span><br><span class="line">  append initrd=initrd.img ip=dhcp method=http://192.168.2.100/RHEL ks=http://192.168.2.100/ks.cfg</span><br><span class="line">[root@zutuanxue mnt]# systemctl start tftp			#启动tftp服务</span><br><span class="line">[root@zutuanxue mnt]# systemctl status tftp</span><br><span class="line">[root@zutuanxue mnt]# netstat -antulp | grep :69</span><br><span class="line">udp6       0      0 :::69                   :::*                                1/systemd           </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 5 搭建并启动http服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# mkdir /var/www/html/RHEL		#建立软件包存放目录</span><br><span class="line">[root@zutuanxue ~]# mount /dev/cdrom /var/www/html/RHEL		#将光盘挂载到对应目录中</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 6 生成ks.cfg文件</strong></p>
+<p>由于CentOS8.0中没有system-config-kickstart包，所以无法通过工具生成ks文件，需要手动生成，例子中root用户和新建的hello用户的密码都为‘&#96;123qwe’</p>
+<p>如果需要自己额外指定密码，请使用其它工具进行转换，例如doveadm命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">cp /root/anaconda-ks.cfg /var/www/html/ks.cfg	#生成ks.cfg文件</span><br><span class="line">[root@zutuanxue ~]# vim /var/www/html/ks.cfg</span><br><span class="line">#version=RHEL8</span><br><span class="line">ignoredisk --only-use=sda</span><br><span class="line">autopart --type=lvm</span><br><span class="line"># Partition clearing information</span><br><span class="line">clearpart --all			#删除所有分区</span><br><span class="line"># Use graphical install</span><br><span class="line">graphical</span><br><span class="line">url  --url=&quot;http://192.168.2.100/RHEL/&quot;			#指定安装URL</span><br><span class="line"># Keyboard layouts</span><br><span class="line">keyboard --vckeymap=cn --xlayouts=&#x27;cn&#x27;</span><br><span class="line"># System language</span><br><span class="line">lang zh_CN.UTF-8</span><br><span class="line"># Network information</span><br><span class="line">network  --bootproto=dhcp --device=ens33 --ipv6=auto --activate</span><br><span class="line">network  --hostname=localhost.localdomain</span><br><span class="line">##root用户的密码&quot;111111&quot;</span><br><span class="line">rootpw --iscrypted $6$kdHt1qIdgNPlHUD1$zibMjh/AQGZQjIJe8Q4HYiin.IKaV7MHWciueiwbLD/03giuSqzU5ynSu/giDAjMLpJFj/CpNgT7TKSm5XyxV1</span><br><span class="line"># X Window System configuration information</span><br><span class="line">xconfig  --startxonboot</span><br><span class="line"># Run the Setup Agent on first boot</span><br><span class="line">#firstboot disable		#初次启动设置</span><br><span class="line">firstboot --disable</span><br><span class="line"># System services</span><br><span class="line">services --enabled=&quot;chronyd&quot;</span><br><span class="line"># System timezone</span><br><span class="line">timezone America/New_York --isUtc</span><br><span class="line">#Reboot after installation	#安装完成后自动重启</span><br><span class="line">reboot</span><br><span class="line"># License agreement		#同意授权协议</span><br><span class="line">eula --agreed</span><br><span class="line">#添加一个普通用户名字为zutuanxue密码&quot;111111&quot; 属组为 whell</span><br><span class="line">user --groups=wheel --name=zutuanxue --password=$6$kdHt1qIdgNPlHUD1$zibMjh/AQGZQjIJe8Q4HYiin.IKaV7MHWciueiwbLD/03giuSqzU5ynSu/giDAjMLpJFj/CpNgT7TKSm5XyxV1 --iscrypted --gecos=&quot;zutuanxue&quot;</span><br><span class="line">%packages</span><br><span class="line">@^graphical-server-environment</span><br><span class="line">%end</span><br><span class="line"></span><br><span class="line">%addon com_redhat_kdump --disable --reserve-mb=&#x27;auto&#x27;</span><br><span class="line"></span><br><span class="line">%end</span><br><span class="line"></span><br><span class="line">%anaconda</span><br><span class="line">pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty</span><br><span class="line">pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok</span><br><span class="line">pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty</span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 7 修改文件权限，启动http服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# chmod a+r /var/www/html/ks.cfg</span><br><span class="line">[root@zutuanxue ~]# systemctl start httpd</span><br><span class="line">[root@zutuanxue ~]# systemctl start httpd</span><br><span class="line">[root@zutuanxue ~]# systemctl status httpd</span><br><span class="line">[root@zutuanxue ~]# netstat -antlp | grep :80</span><br><span class="line">tcp6       0      0 :::80                   :::*                    LISTEN      33976/httpd         </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 8 测试</strong></p>
+<p>选择网络启动</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526811897.png" alt="image20191202110450898.png"/></div><div class="image-meta"><span class="image-caption center">image20191202110450898.png</span></div></div>
+
+<p>获取IP和相关文件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526828444.png" alt="image20191202110525859.png"/></div><div class="image-meta"><span class="image-caption center">image20191202110525859.png</span></div></div>
+
+<p>开启安装进程</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526884300.png" alt="install6.png"/></div><div class="image-meta"><span class="image-caption center">install6.png</span></div></div>
+
+<p>安装完成后自动重启</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603526915193.png" alt="install7.png"/></div><div class="image-meta"><span class="image-caption center">install7.png</span></div></div>
+
+<h2 id="四、kickstart-uefi批量部署"><a href="#四、kickstart-uefi批量部署" class="headerlink" title="四、kickstart+uefi批量部署"></a>四、kickstart+uefi批量部署</h2><p><strong>环境：</strong></p>
+<ul>
+<li>selinux关闭，防火墙关闭</li>
+<li>Server：192.168.2.100</li>
+</ul>
+<p><strong>Step 1 配置dnf源</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cat server.repo </span><br><span class="line">[serverApp]</span><br><span class="line">name=app</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///mnt/AppStream</span><br><span class="line">[serverOS]</span><br><span class="line">name=os</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///mnt/BaseOS</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 2 安装软件包</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# dnf install dhcp-server tftp-server httpd -y</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 3 搭建并启动DHCP</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# vim /etc/dhcp/dhcpd.conf </span><br><span class="line">subnet 192.168.2.0 netmask 255.255.255.0 &#123;</span><br><span class="line">        option routers          192.168.2.100;</span><br><span class="line">        range                   192.168.2.10    192.168.2.20;</span><br><span class="line">        next-server             192.168.2.100;</span><br><span class="line">        filename                &quot;BOOTX64.EFI&quot;;#注意差异，使用的不是pxelinux.0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# systemctl start dhcpd</span><br><span class="line">[root@zutuanxue ~]# systemctl status dhcpd</span><br><span class="line">[root@zutuanxue ~]# netstat -antlup | grep :67</span><br><span class="line">udp        0      0 0.0.0.0:67              0.0.0.0:*                           31465/dhcpd         </span><br><span class="line">udp        0      0 0.0.0.0:67              0.0.0.0:*                           1345/dnsmasq        </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 4 生成需要的文件并启动tftp服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cd /mnt/EFI/BOOT/</span><br><span class="line">[root@zutuanxue BOOT]# cp BOOTX64.EFI grub.cfg grubx64.efi /var/lib/tftpboot/</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# cp /mnt/isolinux/&#123;vmlinuz,initrd.img&#125; 		/var/lib/tftpboot/</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# vim /var/lib/tftpboot/grub.cfg</span><br><span class="line">set default=&quot;0&quot;</span><br><span class="line">set timeout=3</span><br><span class="line">menuentry &#x27;Install CentOS Linux 8.0.1905&#x27;  &#123;</span><br><span class="line">        linuxefi /vmlinuz ip=dhcp ks=http://192.168.2.100/ks.cfg</span><br><span class="line">        initrdefi /initrd.img</span><br><span class="line">&#125;</span><br><span class="line">[root@zutuanxue mnt]# systemctl start tftp			#启动tftp服务</span><br><span class="line">[root@zutuanxue mnt]# systemctl status tftp</span><br><span class="line">[root@zutuanxue mnt]# netstat -antulp | grep :69</span><br><span class="line">udp6       0      0 :::69                   :::*                                1/systemd           </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 5 搭建并启动http服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# mkdir /var/www/html/RHEL		#建立软件包存放目录</span><br><span class="line">[root@zutuanxue ~]# mount /dev/cdrom /var/www/html/RHEL		#将光盘挂载到对应目录中</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 6 生成ks.cfg文件</strong></p>
+<p>由于CentOS8.0中没有system-config-kickstart包，所以无法通过工具生成ks文件，需要手动生成，例子中root用户和新建的hello用户的密码都为‘&#96;123qwe’</p>
+<p><a target="_blank" rel="noopener" href="https://access.redhat.com/labs/kickstartconfig/">https://access.redhat.com/labs/kickstartconfig/</a></p>
+<p>如果需要自己额外指定密码，请使用其它工具进行转换，例如doveadm命令，但是系统没有这个工具，所以推荐使用python来实现</p>
+<p>注意：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# python3 -c &#x27;import crypt,getpass;pw=&quot;zutuanxue&quot;;print(crypt.crypt(pw))&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>生成ks.cfg文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">cp /root/anaconda-ks.cfg /var/www/html/ks.cfg	#生成ks.cfg文件</span><br><span class="line">[root@zutuanxue ~]# vim /var/www/html/ks.cfg</span><br><span class="line">#version=RHEL8</span><br><span class="line">ignoredisk --only-use=nvme0n1    ###注意这是与BIOS方式差异的位置，注意设备类型，可在BIOS中查看到</span><br><span class="line">autopart --type=lvm</span><br><span class="line"># Partition clearing information</span><br><span class="line">clearpart --all			#删除所有分区</span><br><span class="line"># Use graphical install</span><br><span class="line">graphical</span><br><span class="line">url     --url=&quot;http://192.168.2.100/RHEL/&quot;			#指定安装URL</span><br><span class="line"># Keyboard layouts</span><br><span class="line">keyboard --vckeymap=cn --xlayouts=&#x27;cn&#x27;</span><br><span class="line"># System language</span><br><span class="line">lang zh_CN.UTF-8</span><br><span class="line"># Network information</span><br><span class="line">network  --bootproto=dhcp --device=ens33 --ipv6=auto --activate</span><br><span class="line">network  --hostname=localhost.localdomain</span><br><span class="line"># Root password	“`123qwe”			##root用户的密码&quot;111111&quot;</span><br><span class="line">rootpw --iscrypted $6$kdHt1qIdgNPlHUD1$zibMjh/AQGZQjIJe8Q4HYiin.IKaV7MHWciueiwbLD/03giuSqzU5ynSu/giDAjMLpJFj/CpNgT7TKSm5XyxV1</span><br><span class="line"># X Window System configuration information</span><br><span class="line">xconfig  --startxonboot</span><br><span class="line"># Run the Setup Agent on first boot</span><br><span class="line">#firstboot disable		#初次启动设置</span><br><span class="line">firstboot --disable</span><br><span class="line"># System services</span><br><span class="line">services --enabled=&quot;chronyd&quot;</span><br><span class="line"># System timezone</span><br><span class="line">timezone America/New_York --isUtc</span><br><span class="line">#Reboot after installation	#安装完成后自动重启</span><br><span class="line">reboot</span><br><span class="line"># License agreement		#同意授权协议</span><br><span class="line">eula --agreed</span><br><span class="line">#添加一个普通用户名字为zutuanxue密码&quot;111111&quot; 属组为 whell</span><br><span class="line">user --groups=wheel --name=zutuanxue --password=$6$kdHt1qIdgNPlHUD1$zibMjh/AQGZQjIJe8Q4HYiin.IKaV7MHWciueiwbLD/03giuSqzU5ynSu/giDAjMLpJFj/CpNgT7TKSm5XyxV1 --iscrypted --gecos=&quot;zutuanxue&quot;</span><br><span class="line">%packages</span><br><span class="line">@^graphical-server-environment</span><br><span class="line">%end</span><br><span class="line"></span><br><span class="line">%addon com_redhat_kdump --disable --reserve-mb=&#x27;auto&#x27;</span><br><span class="line"></span><br><span class="line">%end</span><br><span class="line"></span><br><span class="line">%anaconda</span><br><span class="line">pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty</span><br><span class="line">pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok</span><br><span class="line">pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty</span><br><span class="line">%end</span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 7 修改文件权限，启动http服务</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# chmod a+r /var/www/html/ks.cfg</span><br><span class="line">[root@zutuanxue ~]# systemctl start httpd</span><br><span class="line">[root@zutuanxue ~]# systemctl start httpd</span><br><span class="line">[root@zutuanxue ~]# systemctl status httpd</span><br><span class="line">[root@zutuanxue ~]# netstat -antlp | grep :80</span><br><span class="line">tcp6       0      0 :::80                   :::*                    LISTEN      33976/httpd         </span><br></pre></td></tr></table></figure>
+
+<p><strong>Step 8 测试</strong></p>
+<p>新建虚拟机的是要选择自定义使用UEFI</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/DDL%E8%AF%AD%E5%8F%A5/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/Linux%20%E6%97%B6%E9%97%B4%E6%9C%8D%E5%8A%A1%E5%99%A8/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

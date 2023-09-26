@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="可以在数据库图表中的表之间创建关系，以显示一个表中的列与另一个表中的列是如何相链接的。 在一个关系型数据库中，利用关系可以避免多余的数据。 一、表与表之间关系概述1.1、什么是表与表之间关系在关系型数据库中，为了避免数据冗余，我们的一些表与表之间肯定是有一定的关系。 如：学生表与老师表，部门表与员工表，用户表与权限表等。 在表设计的时候，就应该体现出来表与表之间的这种关系。 1.2、表与表之间关系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/%E8%A1%A8%E4%B8%8E%E8%A1%A8%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="可以在数据库图表中的表之间创建关系，以显示一个表中的列与另一个表中的列是如何相链接的。 在一个关系型数据库中，利用关系可以避免多余的数据。 一、表与表之间关系概述1.1、什么是表与表之间关系在关系型数据库中，为了避免数据冗余，我们的一些表与表之间肯定是有一定的关系。 如：学生表与老师表，部门表与员工表，用户表与权限表等。 在表设计的时候，就应该体现出来表与表之间的这种关系。 1.2、表与表之间关系">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241036981.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241052871.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241065129.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241079269.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241161787.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241222140.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.322Z">
+<meta property="article:modified_time" content="2022-06-04T05:54:38.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241036981.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%A1%A8%E4%B8%8E%E8%A1%A8%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB%E6%A6%82%E8%BF%B0"><span class="toc-text">一、表与表之间关系概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E8%A1%A8%E4%B8%8E%E8%A1%A8%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB"><span class="toc-text">1.1、什么是表与表之间关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81%E8%A1%A8%E4%B8%8E%E8%A1%A8%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB%E5%88%86%E7%B1%BB"><span class="toc-text">1.2、表与表之间关系分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1%E3%80%81%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%85%B3%E7%B3%BB"><span class="toc-text">1.2.1、一对多关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-2%E3%80%81%E4%B8%80%E5%AF%B9%E4%B8%80%E5%85%B3%E7%B3%BB"><span class="toc-text">1.2.2、一对一关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-3%E3%80%81%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%85%B3%E7%B3%BB"><span class="toc-text">1.2.3、多对多关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E4%B8%80%E5%AF%B9%E5%A4%9A%E5%BA%94%E7%94%A8"><span class="toc-text">2、一对多应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%80%E5%AF%B9%E4%B8%80%E5%BA%94%E7%94%A8"><span class="toc-text">三、一对一应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E5%A4%9A%E5%AF%B9%E5%A4%9A%E5%BA%94%E7%94%A8"><span class="toc-text">4、多对多应用</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.322Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>可以在数据库图表中的表之间创建关系，以显示一个表中的列与另一个表中的列是如何相链接的。</p>
+<p>在一个关系型数据库中，利用关系可以避免多余的数据。</p>
+<h2 id="一、表与表之间关系概述"><a href="#一、表与表之间关系概述" class="headerlink" title="一、表与表之间关系概述"></a>一、表与表之间关系概述</h2><h3 id="1-1、什么是表与表之间关系"><a href="#1-1、什么是表与表之间关系" class="headerlink" title="1.1、什么是表与表之间关系"></a>1.1、什么是表与表之间关系</h3><p>在关系型数据库中，为了避免数据冗余，我们的一些表与表之间肯定是有一定的关系。</p>
+<p>如：学生表与老师表，部门表与员工表，用户表与权限表等。</p>
+<p>在表设计的时候，就应该体现出来表与表之间的这种关系。</p>
+<h3 id="1-2、表与表之间关系分类"><a href="#1-2、表与表之间关系分类" class="headerlink" title="1.2、表与表之间关系分类"></a>1.2、表与表之间关系分类</h3><h4 id="1-2-1、一对多关系"><a href="#1-2-1、一对多关系" class="headerlink" title="1.2.1、一对多关系"></a>1.2.1、一对多关系</h4><p>一对多关系是最普通的一种关系。在这种关系中，A 表中的一行可以匹配 B 表中的多行，但是 B 表中的一行只能匹配 A 表中的一行。</p>
+<p>只有当一个相关列是一个主键或具有唯一约束时，才能创建一对多关系。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241036981.png" alt="image20200215112949021.png"/></div><div class="image-meta"><span class="image-caption center">image20200215112949021.png</span></div></div>
+
+<p><strong>注意：</strong></p>
+<p>一对多的创建原则：</p>
+<p>主外键关连</p>
+<h4 id="1-2-2、一对一关系"><a href="#1-2-2、一对一关系" class="headerlink" title="1.2.2、一对一关系"></a>1.2.2、一对一关系</h4><p>在一对一关系中，A 表中的一行最多只能匹配于 B 表中的一行，反之亦然。如果相关列都是主键或都具有唯一约束，则可以创建一对一关系。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241052871.png" alt="image20200215122050731.png"/></div><div class="image-meta"><span class="image-caption center">image20200215122050731.png</span></div></div>
+
+<p><strong>注意：</strong></p>
+<p>一对一的创建原则：</p>
+<p>外键唯一：主表的主键和从表的外键（唯一），形成主外键关系，外键唯一 UNIQUE</p>
+<p>外键是主键：主表的主键和从表的主键，形成主外键关系</p>
+<h4 id="1-2-3、多对多关系"><a href="#1-2-3、多对多关系" class="headerlink" title="1.2.3、多对多关系"></a>1.2.3、多对多关系</h4><p>在多对多关系中，A 表中的一行可以匹配 B 表中的多行，反之亦然。要创建这种关系，需要定义第三个表，称为结合表，它的主键由 A 表和 B 表的外部键组成。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241065129.png" alt="image20200215121200999.png"/></div><div class="image-meta"><span class="image-caption center">image20200215121200999.png</span></div></div>
+
+<p><strong>注意：</strong></p>
+<p>多对多的创建原则：</p>
+<p>二个表与中间表创建1对多的关系。</p>
+<h2 id="2、一对多应用"><a href="#2、一对多应用" class="headerlink" title="2、一对多应用"></a>2、一对多应用</h2><p>创建一对多关系：主外键关连</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241079269.png" alt="image20200215123556759.png"/></div><div class="image-meta"><span class="image-caption center">image20200215123556759.png</span></div></div>
+
+<p>新华出版社（Python爬虫、Linux）</p>
+<p>海燕出版社（操作系统、数学）</p>
+<p>摆渡出版社（英语、网页设计）</p>
+<p>大众出版社（）</p>
+<p><strong>案例：</strong></p>
+<p>这是一个书和出版社的一个例子，书要关联出版社（多个书可以是一个出版社，一个出版社也可以有好多书）。</p>
+<p>表的创建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#出版社表（被关联表）</span><br><span class="line">create table press(</span><br><span class="line">id int primary key auto_increment, </span><br><span class="line">name char(20)-- 出版社名字</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">#书表（关联表）</span><br><span class="line">create table book(</span><br><span class="line">book_id int primary key auto_increment,</span><br><span class="line">book_name varchar(20),</span><br><span class="line">book_price int,</span><br><span class="line">press_id int,</span><br><span class="line">constraint fk_pressid_id foreign key(press_id) references press(id)</span><br><span class="line">on delete cascade</span><br><span class="line">on update cascade</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>插入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into press(name) values(&#x27;新华出版社&#x27;), (&#x27;海燕出版社&#x27;), (&#x27;摆渡出版社&#x27;), (&#x27;大众出版社&#x27;);</span><br><span class="line">Query OK, 4 rows affected (0.09 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into book(book_name,book_price,press_id) values(&#x27;Python爬虫&#x27;,100,1), (&#x27;Linux&#x27;,80,1), (&#x27;操作系统&#x27;,70,2), (&#x27;数学&#x27;,50,2), (&#x27;英语&#x27;,103,3), (&#x27;网页设计&#x27;,22,3);</span><br><span class="line">Query OK, 6 rows affected (0.07 秒)</span><br></pre></td></tr></table></figure>
+
+<p>查看数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from press;</span><br><span class="line">+----+-----------------+</span><br><span class="line">| id | name            |</span><br><span class="line">+----+-----------------+</span><br><span class="line">| 1  | 新华出版社 |</span><br><span class="line">| 2  | 海燕出版社 |</span><br><span class="line">| 3  | 摆渡出版社 |</span><br><span class="line">| 4  | 大众出版社 |</span><br><span class="line">+----+-----------------+</span><br><span class="line">4 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from book;</span><br><span class="line">+---------+--------------+------------+----------+</span><br><span class="line">| book_id | book_name    | book_price | press_id |</span><br><span class="line">+---------+--------------+------------+----------+</span><br><span class="line">| 1       | Python爬虫 | 100        | 1        |</span><br><span class="line">| 2       | Linux        | 80         | 1        |</span><br><span class="line">| 3       | 操作系统 | 70         | 2        |</span><br><span class="line">| 4       | 数学       | 50         | 2        |</span><br><span class="line">| 5       | 英语       | 103        | 3        |</span><br><span class="line">| 6       | 网页设计 | 22         | 3        |</span><br><span class="line">+---------+--------------+------------+----------+</span><br><span class="line">6 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、一对一应用"><a href="#三、一对一应用" class="headerlink" title="三、一对一应用"></a>三、一对一应用</h2><p>创建一对一：外键唯一，user_id唯一对应一个uid，user_id必须在uid里出现</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241161787.png" alt="image20200215164955805.png"/></div><div class="image-meta"><span class="image-caption center">image20200215164955805.png</span></div></div>
+
+<p><strong>案例：</strong></p>
+<p>用户和管理员（只有管理员才可以登录，一个管理员对应一个用户）</p>
+<p>表创建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#用户表（被关联表）</span><br><span class="line">create table user(</span><br><span class="line">id int primary key auto_increment, #主键自增</span><br><span class="line">name char(10)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">#管理员表（关联表）</span><br><span class="line">create table manager(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">user_id int unique,</span><br><span class="line">password varchar(16),</span><br><span class="line">foreign key(user_id) references user(id)</span><br><span class="line">on delete cascade</span><br><span class="line">on update cascade</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>插入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into user(name)values(&#x27;susan1&#x27;),(&#x27;susan2&#x27;),(&#x27;susan3&#x27;),(&#x27;susan4&#x27;),(&#x27;susan5&#x27;),(&#x27;susan6&#x27;);</span><br><span class="line">Query OK, 6 rows affected (0.02 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into manager(user_id,password) values(4,&#x27;sds156&#x27;),(2,&#x27;531561&#x27;),(6,&#x27;f3swe&#x27;);</span><br><span class="line">Query OK, 3 rows affected (0.03 秒)</span><br></pre></td></tr></table></figure>
+
+<p>查看数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user;</span><br><span class="line">+----+--------+</span><br><span class="line">| id | name   |</span><br><span class="line">+----+--------+</span><br><span class="line">| 1  | susan1 |</span><br><span class="line">| 2  | susan2 |</span><br><span class="line">| 3  | susan3 |</span><br><span class="line">| 4  | susan4 |</span><br><span class="line">| 5  | susan5 |</span><br><span class="line">| 6  | susan6 |</span><br><span class="line">+----+--------+</span><br><span class="line">6 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from manager;</span><br><span class="line">+----+---------+----------+</span><br><span class="line">| id | user_id | password |</span><br><span class="line">+----+---------+----------+</span><br><span class="line">| 1  | 4       | sds156   |</span><br><span class="line">| 2  | 2       | 531561   |</span><br><span class="line">| 3  | 6       | f3swe    |</span><br><span class="line">+----+---------+----------+</span><br><span class="line">3 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、多对多应用"><a href="#4、多对多应用" class="headerlink" title="4、多对多应用"></a>4、多对多应用</h2><p>创建多对多：要把book_id和author_id设置成联合唯一</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/21/1603241222140.png" alt="image20200215161523092.png"/></div><div class="image-meta"><span class="image-caption center">image20200215161523092.png</span></div></div>
+
+<p>九阳神功（egon、e3）</p>
+<p>葵花宝典（egon、e4）</p>
+<p>辟邪剑谱（e1、e2、e3）</p>
+<p>降龙十巴掌（e4）</p>
+<p><strong>或者</strong></p>
+<p>egon（九阳神功、葵花宝典）</p>
+<p>e1（辟邪剑谱）</p>
+<p>e2（辟邪剑谱）</p>
+<p>e3（九阳神功、辟邪剑谱）</p>
+<p>e4（葵花宝典、降龙十巴掌）</p>
+<p><strong>案例：</strong></p>
+<p>这是一个书和作者的一个例子，书要关联作者（一个作者可以写多个书，一本书也可以有多个作者，双向的一对多，即多对多）。</p>
+<p>表创建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#书表（被关联表）</span><br><span class="line">create table book1(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(10),</span><br><span class="line">price float(3,2)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">#作者表（被关联表）</span><br><span class="line">create table author(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name char(5)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">#作者和书表（关联表）</span><br><span class="line">create table author2book(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">book_id int not null,</span><br><span class="line">author_id int not null,</span><br><span class="line">unique(book_id,author_id),</span><br><span class="line">foreign key(book_id) references book1(id)</span><br><span class="line">on delete cascade</span><br><span class="line">on update cascade,</span><br><span class="line">foreign key(author_id) references author(id)</span><br><span class="line">on delete cascade</span><br><span class="line">on update cascade</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>插入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into book1(name,price) values(&#x27;九阳神功&#x27;,9.9), (&#x27;葵花宝典&#x27;,9.5), (&#x27;辟邪剑谱&#x27;,5),  (&#x27;降龙十巴掌&#x27;,7.3);</span><br><span class="line">Query OK, 4 rows affected (0.09 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into author(name) values(&#x27;egon&#x27;),(&#x27;e1&#x27;),(&#x27;e2&#x27;),(&#x27;e3&#x27;),(&#x27;e4&#x27;);</span><br><span class="line">Query OK, 5 rows affected (0.07 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into author2book(book_id,author_id) values(1,1),(1,4),(2,1),(2,5),(3,2),(3,3),(3,4),(4,5);</span><br><span class="line">Query OK, 8 rows affected (0.03 秒)</span><br></pre></td></tr></table></figure>
+
+<p>查看数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from book1;</span><br><span class="line">+----+-----------------+-------+</span><br><span class="line">| id | name            | price |</span><br><span class="line">+----+-----------------+-------+</span><br><span class="line">| 1  | 九阳神功    | 9.90  |</span><br><span class="line">| 2  | 葵花宝典    | 9.50  |</span><br><span class="line">| 3  | 辟邪剑谱    | 5.00  |</span><br><span class="line">| 4  | 降龙十巴掌 | 7.30  |</span><br><span class="line">+----+-----------------+-------+</span><br><span class="line">4 行于数据集 (0.02 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from author;</span><br><span class="line">+----+------+</span><br><span class="line">| id | name |</span><br><span class="line">+----+------+</span><br><span class="line">| 1  | egon |</span><br><span class="line">| 2  | e1   |</span><br><span class="line">| 3  | e2   |</span><br><span class="line">| 4  | e3   |</span><br><span class="line">| 5  | e4   |</span><br><span class="line">+----+------+</span><br><span class="line">5 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from author2book;</span><br><span class="line">+----+---------+-----------+</span><br><span class="line">| id | book_id | author_id |</span><br><span class="line">+----+---------+-----------+</span><br><span class="line">| 1  | 1       | 1         |</span><br><span class="line">| 2  | 1       | 4         |</span><br><span class="line">| 3  | 2       | 1         |</span><br><span class="line">| 4  | 2       | 5         |</span><br><span class="line">| 5  | 3       | 2         |</span><br><span class="line">| 6  | 3       | 3         |</span><br><span class="line">| 7  | 3       | 4         |</span><br><span class="line">| 8  | 4       | 5         |</span><br><span class="line">+----+---------+-----------+</span><br><span class="line">8 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Apache/Apacha%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

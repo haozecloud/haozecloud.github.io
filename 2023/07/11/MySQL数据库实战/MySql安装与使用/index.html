@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="mysql是目前最流行的关系型数据库管理系统,在WEB应用方面MySQL是最好的RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。 MySQL是非常灵活的一款数据库，虽然它不是绝对完美，但它的灵活足够适应很多高要求的环境。为了发挥MySQL的性能并很好的使用它，我们就得先了解其设计。MySQL的灵活主要体现在我们可以通过不同的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySql%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="mysql是目前最流行的关系型数据库管理系统,在WEB应用方面MySQL是最好的RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。 MySQL是非常灵活的一款数据库，虽然它不是绝对完美，但它的灵活足够适应很多高要求的环境。为了发挥MySQL的性能并很好的使用它，我们就得先了解其设计。MySQL的灵活主要体现在我们可以通过不同的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186097183.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186112844.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186134688.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186163795.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186172227.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186189059.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186208888.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.277Z">
+<meta property="article:modified_time" content="2022-06-04T05:51:38.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186097183.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81mysql%E6%A6%82%E8%BF%B0"><span class="toc-text">一、mysql概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.1、关系型数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.2、MySQL数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E3%80%81RDBMS%E6%9C%AF%E8%AF%AD"><span class="toc-text">1.3、RDBMS术语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4%E3%80%81mysql%E4%B8%8B%E8%BD%BD"><span class="toc-text">1.4、mysql下载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81mysql%E5%AE%89%E8%A3%85"><span class="toc-text">2、mysql安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E6%8C%87%E5%AE%9A%E5%AE%89%E8%A3%85%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="toc-text">2.1、指定安装文件位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81%E8%A7%A3%E5%8E%8B"><span class="toc-text">2.2、解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E3%80%81%E6%94%B9%E5%90%8D"><span class="toc-text">2.3、改名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4%E3%80%81%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">2.4、创建用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5%E3%80%81%E4%BF%AE%E6%94%B9MySQL%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">2.5、修改MySQL配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6%E3%80%81%E5%88%9B%E5%BB%BAdata%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-text">2.6、创建data文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7%E3%80%81%E6%9B%B4%E6%94%B9mysql%E7%9B%AE%E5%BD%95%E6%9D%83%E9%99%90"><span class="toc-text">2.7、更改mysql目录权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">2.8、初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9%E3%80%81%E5%90%AF%E5%8A%A8mysql%E6%9C%8D%E5%8A%A1"><span class="toc-text">2.9、启动mysql服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-10%E3%80%81%E4%BF%AE%E6%94%B9root%E5%AF%86%E7%A0%81"><span class="toc-text">2.10、修改root密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81mysql%E6%93%8D%E4%BD%9C"><span class="toc-text">3、mysql操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%93%8D%E4%BD%9C"><span class="toc-text">3.1、服务器操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2%E3%80%81%E8%AE%BE%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="toc-text">3.2、设置远程连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81mysql%E5%8D%B8%E8%BD%BD"><span class="toc-text">4、mysql卸载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%E3%80%81%E5%81%9C%E6%AD%A2mysql%E6%9C%8D%E5%8A%A1"><span class="toc-text">4.1、停止mysql服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%E3%80%81%E6%9F%A5%E6%89%BE%E6%89%80%E6%9C%89mysql%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-text">4.2、查找所有mysql相关文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3%E3%80%81%E5%88%A0%E9%99%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">4.3、删除配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4%E3%80%81%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">4.4、删除用户组</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.277Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>mysql是目前最流行的关系型数据库管理系统,在WEB应用方面MySQL是最好的RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。</p>
+<p>MySQL是非常灵活的一款数据库，虽然它不是绝对完美，但它的灵活足够适应很多高要求的环境。为了发挥MySQL的性能并很好的使用它，我们就得先了解其设计。MySQL的灵活主要体现在我们可以通过不同的配置使他在不同的硬件上都能运行的很好。但是MySQL最重要，与众不同的特性是它的存储引擎架构，这种架构将查询处理及其他系统任务和数据的存储&#x2F;提取相分离。</p>
+<h2 id="一、mysql概述"><a href="#一、mysql概述" class="headerlink" title="一、mysql概述"></a>一、mysql概述</h2><h3 id="1-1、关系型数据库"><a href="#1-1、关系型数据库" class="headerlink" title="1.1、关系型数据库"></a>1.1、关系型数据库</h3><p>关系型数据库天然就是二维表格，因此存储在数据表的行和列中。数据表可以彼此关联协作存储，也很容易提取数据。</p>
+<h3 id="1-2、MySQL数据库"><a href="#1-2、MySQL数据库" class="headerlink" title="1.2、MySQL数据库"></a>1.2、MySQL数据库</h3><p>MySQL是一个关系型数据库管理系统，由瑞典MySQL AB公司开发，目前属于Oracle公司。</p>
+<p>MySQL可将数据保存在不同的表中，而不是将所有数据放在一个大的仓库内，从而加快了访问速度并提高了灵活性。</p>
+<p>MySQL 使用了标准的 SQL 语言形式。支持大型的数据库，可以处理拥有上千万条记录的大型数据库。MySQL 还可用于多种系统中，且支持多种语言。</p>
+<h3 id="1-3、RDBMS术语"><a href="#1-3、RDBMS术语" class="headerlink" title="1.3、RDBMS术语"></a>1.3、RDBMS术语</h3><p>数据库：数据库是一些关联表的集合。</p>
+<p>数据表：表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格。</p>
+<p>列：一列（数据元素）包含了相同的数据，例如邮政编码的数据。</p>
+<p>行：一行（&#x3D;元组，或者记录）是一组相关的数据，例如一条用户订阅的数据。</p>
+<p>亢余：存储两倍数据，亢余降低了性能，但是提高了数据的安全性。</p>
+<p>主键：主键是唯一的，一个数据表中只能够包含一个主键，你可以使用主键来查询数据。</p>
+<p>外键：外键用于关联两个表。</p>
+<p>复合键：复合键（组合键）将多个列作为一个索引键，一般用于复合索引。</p>
+<p>索引：使用索引可快速访问数据库表中的特定信息。索引是对数据库表中一列或者多列的值进行排序的一种结构。类似于书籍的目录。</p>
+<h3 id="1-4、mysql下载"><a href="#1-4、mysql下载" class="headerlink" title="1.4、mysql下载"></a>1.4、mysql下载</h3><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186097183.png" alt="image20200223135527926.png"/></div><div class="image-meta"><span class="image-caption center">image20200223135527926.png</span></div></div>
+
+<p>点击“Download”后，我们要先登录Oracle，才能进行下载。</p>
+<h2 id="2、mysql安装"><a href="#2、mysql安装" class="headerlink" title="2、mysql安装"></a>2、mysql安装</h2><h3 id="2-1、指定安装文件位置"><a href="#2-1、指定安装文件位置" class="headerlink" title="2.1、指定安装文件位置"></a>2.1、指定安装文件位置</h3><p>将mysql安装包放到&#x2F;usr&#x2F;local&#x2F;下面</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186112844.png" alt="image20200223011252870.png"/></div><div class="image-meta"><span class="image-caption center">image20200223011252870.png</span></div></div>
+
+<h3 id="2-2、解压"><a href="#2-2、解压" class="headerlink" title="2.2、解压"></a>2.2、解压</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue local]# xz -d mysql-8.0.17-linux-glibc2.12-x86_64.tar.xz </span><br><span class="line">[root@zutuanxue local]# tar -xvf mysql-8.0.17-linux-glibc2.12-x86_64.tar </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3、改名"><a href="#2-3、改名" class="headerlink" title="2.3、改名"></a>2.3、改名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue local]# mv mysql-8.0.17-linux-glibc2.12-x86_64 mysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4、创建用户组"><a href="#2-4、创建用户组" class="headerlink" title="2.4、创建用户组"></a>2.4、创建用户组</h3><p>mysql用户组、mysql用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue local]# groupadd mysql</span><br><span class="line">[root@zutuanxue local]# useradd -r -g mysql mysql</span><br><span class="line">[root@zutuanxue local]# passwd mysql</span><br><span class="line">#更改密码：Ww1985929wW</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5、修改MySQL配置文件"><a href="#2-5、修改MySQL配置文件" class="headerlink" title="2.5、修改MySQL配置文件"></a>2.5、修改MySQL配置文件</h3><p>&#x2F;etc&#x2F;my.cnf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># For advice on how to change settings please see</span><br><span class="line"># http://dev.mysql.com/doc/refman/5.6/en/server-configuration-defaults.html</span><br><span class="line"># *** DO NOT EDIT THIS FILE. It&#x27;s a template which will be copied to the</span><br><span class="line"># *** default location during install, and will be replaced if you</span><br><span class="line"># *** upgrade to a newer version of MySQL.</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line"># Remove leading # and set to the amount of RAM for the most important data</span><br><span class="line"># cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.</span><br><span class="line"># innodb_buffer_pool_size = 128M</span><br><span class="line"></span><br><span class="line"># Remove leading # to turn on a very important data integrity option: logging</span><br><span class="line"># changes to the binary log between backups.</span><br><span class="line"># log_bin</span><br><span class="line"></span><br><span class="line"># These are commonly set, remove the # and set as required.</span><br><span class="line">basedir = /usr/local/mysql</span><br><span class="line">datadir = /usr/local/mysql/data</span><br><span class="line">port = 3306</span><br><span class="line"># server_id = .....</span><br><span class="line">socket = /tmp/mysql.sock</span><br><span class="line">character-set-server = utf8</span><br><span class="line">skip-name-resolve</span><br><span class="line">log-error = /usr/local/mysql/data/error.log</span><br><span class="line">pid-file = /usr/local/mysql/data/mysql.pid</span><br><span class="line"></span><br><span class="line"># Remove leading # to set options mainly useful for reporting servers.</span><br><span class="line"># The server defaults are faster for transactions and fast SELECTs.</span><br><span class="line"># Adjust sizes as needed, experiment to find the optimal values.</span><br><span class="line"># join_buffer_size = 128M</span><br><span class="line"># sort_buffer_size = 2M</span><br><span class="line"># read_rnd_buffer_size = 2M </span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6、创建data文件夹"><a href="#2-6、创建data文件夹" class="headerlink" title="2.6、创建data文件夹"></a>2.6、创建data文件夹</h3><p>data文件夹是用于存储数据库文件，他的位置是在mysql目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# mkdir data</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7、更改mysql目录权限"><a href="#2-7、更改mysql目录权限" class="headerlink" title="2.7、更改mysql目录权限"></a>2.7、更改mysql目录权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# chown -R mysql .</span><br><span class="line">[root@zutuanxue mysql]# chgrp -R mysql .</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186134688.png" alt="image20200223012815486.png"/></div><div class="image-meta"><span class="image-caption center">image20200223012815486.png</span></div></div>
+
+<h3 id="2-8、初始化数据库"><a href="#2-8、初始化数据库" class="headerlink" title="2.8、初始化数据库"></a>2.8、初始化数据库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# ./bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data</span><br></pre></td></tr></table></figure>
+
+<p>执行完后查看初始密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# vim /usr/local/mysql/data/error.log</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186163795.png" alt="image20200223013228179.png"/></div><div class="image-meta"><span class="image-caption center">image20200223013228179.png</span></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186172227.png" alt="image20200223182708100.png"/></div><div class="image-meta"><span class="image-caption center">image20200223182708100.png</span></div></div>
+
+<h3 id="2-9、启动mysql服务"><a href="#2-9、启动mysql服务" class="headerlink" title="2.9、启动mysql服务"></a>2.9、启动mysql服务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# ./support-files/mysql.server start</span><br><span class="line">Starting MySQL... SUCCESS! </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-10、修改root密码"><a href="#2-10、修改root密码" class="headerlink" title="2.10、修改root密码"></a>2.10、修改root密码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# ./bin/mysql -uroot -prj%-:yqHb98g</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186189059.png" alt="image20200223014851493.png"/></div><div class="image-meta"><span class="image-caption center">image20200223014851493.png</span></div></div>
+
+<p><strong>修改密码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified by &#x27;Root123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.05 sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、mysql操作"><a href="#3、mysql操作" class="headerlink" title="3、mysql操作"></a>3、mysql操作</h2><h3 id="3-1、服务器操作"><a href="#3-1、服务器操作" class="headerlink" title="3.1、服务器操作"></a>3.1、服务器操作</h3><p>启动、停止、重启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# ./support-files/mysql.server restart</span><br><span class="line">Shutting down MySQL. SUCCESS! </span><br><span class="line">Starting MySQL.. SUCCESS! </span><br><span class="line">[root@zutuanxue mysql]# ./support-files/mysql.server stop</span><br><span class="line">Shutting down MySQL.. SUCCESS! </span><br><span class="line">[root@zutuanxue mysql]# ./support-files/mysql.server start</span><br><span class="line">Starting MySQL.. SUCCESS! </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2、设置远程连接"><a href="#3-2、设置远程连接" class="headerlink" title="3.2、设置远程连接"></a>3.2、设置远程连接</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create user &#x27;root&#x27;@&#x27;%&#x27; identified with mysql_native_password by &#x27;Root123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; grant all on *.* to &#x27;root&#x27;@&#x27;%&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p><strong>遇到问题：</strong></p>
+<p>Can’t connect to MySQL server on ‘192.168.1.121’ (61)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# systemctl stop firewalld.service </span><br><span class="line">[root@zutuanxue mysql]# firewall-cmd --state</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、mysql卸载"><a href="#4、mysql卸载" class="headerlink" title="4、mysql卸载"></a>4、mysql卸载</h2><h3 id="4-1、停止mysql服务"><a href="#4-1、停止mysql服务" class="headerlink" title="4.1、停止mysql服务"></a>4.1、停止mysql服务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# ./support-files/mysql.server stop</span><br><span class="line">Shutting down MySQL.... SUCCESS! </span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2、查找所有mysql相关文件夹"><a href="#4-2、查找所有mysql相关文件夹" class="headerlink" title="4.2、查找所有mysql相关文件夹"></a>4.2、查找所有mysql相关文件夹</h3><p>查找</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# find / -name mysql</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603186208888.png" alt="image20200223024128126.png"/></div><div class="image-meta"><span class="image-caption center">image20200223024128126.png</span></div></div>
+
+<p>删除所有查出来的文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# rm -rf /var/lib/selinux/targeted/active/modules/100/mysql</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3、删除配置文件"><a href="#4-3、删除配置文件" class="headerlink" title="4.3、删除配置文件"></a>4.3、删除配置文件</h3><p>配置文件一般有&#x2F;etc&#x2F;my.cnf 或&#x2F;etc&#x2F;init.d&#x2F;mysql.server，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# rm -f /etc/my.cnf</span><br><span class="line">[root@zutuanxue mysql]# rm -rf /etc/init.d/mysql.server</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4、删除用户组"><a href="#4-4、删除用户组" class="headerlink" title="4.4、删除用户组"></a>4.4、删除用户组</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue mysql]# userdel mysql</span><br><span class="line">[root@zutuanxue mysql]# id mysql</span><br><span class="line">id: “mysql”：无此用户</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySql%E5%AE%A2%E6%88%B7%E7%AB%AF/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySQL%E5%AD%90%E6%9F%A5%E8%AF%A2/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="事务（Transaction），一般是指要做的或所做的事情。在计算机术语中是指访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。事务通常由高级数据库操纵语言或编程语言（如SQL，C++或Java）书写的用户程序的执行所引起，并用形如begin transaction和end transaction语句（或函数调用）来界定。事务由事务开始(begin transaction)和事务结束">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySQL%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="事务（Transaction），一般是指要做的或所做的事情。在计算机术语中是指访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。事务通常由高级数据库操纵语言或编程语言（如SQL，C++或Java）书写的用户程序的执行所引起，并用形如begin transaction和end transaction语句（或函数调用）来界定。事务由事务开始(begin transaction)和事务结束">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603518979561.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603518996760.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519029171.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519053659.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519068528.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519086079.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519101214.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519132024.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519178063.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.265Z">
+<meta property="article:modified_time" content="2022-06-04T05:55:40.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603518979561.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0"><span class="toc-text">一、事务概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8B%E5%8A%A1"><span class="toc-text">1.1、什么是事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">1.2、事务的应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E3%80%81%E4%BA%8B%E5%8A%A1%E6%8F%90%E4%BA%A4%E6%96%B9%E5%BC%8F"><span class="toc-text">1.3、事务提交方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BA%8B%E5%8A%A1%E6%89%8B%E5%8A%A8%E6%8F%90%E4%BA%A4"><span class="toc-text">二、事务手动提交</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E6%89%8B%E5%8A%A8%E6%8F%90%E4%BA%A4%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">2.1、手动提交的过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="toc-text">2.2、语法格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BA%8B%E5%8A%A1%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4"><span class="toc-text">三、事务自动提交</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E3%80%81%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E4%BA%8B%E5%8A%A1"><span class="toc-text">3.1、自动提交事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2%E3%80%81%E5%8F%96%E6%B6%88%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4"><span class="toc-text">3.2、取消自动提交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86"><span class="toc-text">4、事务原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%E3%80%81%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-text">4.1、自动提交原理图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%E3%80%81%E6%89%8B%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-text">4.2、手动提交原理图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3%E3%80%81%E4%BA%8B%E5%8A%A1%E6%8F%90%E4%BA%A4%E6%AD%A5%E9%AA%A4"><span class="toc-text">4.3、事务提交步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A"><span class="toc-text">5、事务回滚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">六、事务隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1%E3%80%81%E4%BA%8B%E5%8A%A1%E7%89%B9%E6%80%A7"><span class="toc-text">6.1、事务特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="toc-text">6.2、事务的并发问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3%E3%80%81%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">6.3、事务的隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4%E3%80%81%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E5%91%BD%E4%BB%A4"><span class="toc-text">6.4、事务隔离命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81%E8%84%8F%E8%AF%BB"><span class="toc-text">7、脏读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1%E3%80%81%E8%AE%BE%E7%BD%AE%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">7.1、设置隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2%E3%80%81%E8%84%8F%E8%AF%BB"><span class="toc-text">7.2、脏读</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="toc-text">八、不可重复读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1%E3%80%81%E8%AE%BE%E7%BD%AE%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">8.1、设置隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2%E3%80%81%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="toc-text">8.2、不可重复读</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%B9%BB%E8%AF%BB"><span class="toc-text">九、幻读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1%E3%80%81%E8%AE%BE%E7%BD%AE%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">9.1、设置隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2%E3%80%81%E5%B9%BB%E8%AF%BB"><span class="toc-text">9.2、幻读</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.265Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>事务（Transaction），一般是指要做的或所做的事情。在计算机术语中是指访问并可能更新数据库中各种数据项的一个程序执行单元(unit)。事务通常由高级数据库操纵语言或编程语言（如SQL，C++或Java）书写的用户程序的执行所引起，并用形如begin transaction和end transaction语句（或函数调用）来界定。事务由事务开始(begin transaction)和事务结束(end transaction)之间执行的全体操作组成。</p>
+<h2 id="一、事务概述"><a href="#一、事务概述" class="headerlink" title="一、事务概述"></a>一、事务概述</h2><h3 id="1-1、什么是事务"><a href="#1-1、什么是事务" class="headerlink" title="1.1、什么是事务"></a>1.1、什么是事务</h3><p>MySQL 事务主要用于处理操作量大，复杂度高的数据。比如说，在人员管理系统中，你删除一个人员，你既需要删除人员的基本资料，也要删除和该人员相关的信息，如信箱，文章等等，这样，这些数据库操作语句就构成一个事务！</p>
+<p>事务是一个事件处理的完整的过程。比如：存款、取款、转帐等操作都可以称之为一个事务。</p>
+<h3 id="1-2、事务的应用场景"><a href="#1-2、事务的应用场景" class="headerlink" title="1.2、事务的应用场景"></a>1.2、事务的应用场景</h3><p>我们想完成一次转帐业务，那么他会多次去访问我们的数据库。转帐实上就是从一个帐户上扣钱，在往一个帐户上加钱。这样我们执行了二次sql，如果其中一个sql失败，那么整个业务就没有执行成功。所有的sql都需要回滚，整个业务失败。</p>
+<p><strong>数据准备</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#创建数据表</span><br><span class="line">create table yh(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(20),</span><br><span class="line">money double</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">-- 添加数据</span><br><span class="line">insert into yh(name,money)values(&#x27;张三&#x27;, 1000),(&#x27;李四&#x27;, 1000);</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>模拟张三给李四转500元钱</p>
+<p>分析：</p>
+<p>先从张三的帐户减出500，在往李四的帐户加入500元</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money-500 where name=&#x27;张三&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.02 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; update yh set money=money+500 where name=&#x27;李四&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.04 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 500   |</span><br><span class="line">| 2  | 李四 | 1500  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.04 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果转帐时出现问题：</strong></p>
+<p>当张三账号上-500 元,服务器崩溃了。李四的账号并没有+500 元，数据就出现问题了。</p>
+<p>因为他们是一个整体的业务，所以我们需要保证其中一条 SQL 语句出现问题，整个转账就算失败。只有两条 SQL 都成功了转账才算成功。这个时候就需要用到事务。</p>
+<h3 id="1-3、事务提交方式"><a href="#1-3、事务提交方式" class="headerlink" title="1.3、事务提交方式"></a>1.3、事务提交方式</h3><p>mysql中有两种事务提交方式：</p>
+<p>手动提交</p>
+<p>自动提交</p>
+<h2 id="二、事务手动提交"><a href="#二、事务手动提交" class="headerlink" title="二、事务手动提交"></a>二、事务手动提交</h2><h3 id="2-1、手动提交的过程"><a href="#2-1、手动提交的过程" class="headerlink" title="2.1、手动提交的过程"></a>2.1、手动提交的过程</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603518979561.png" alt="image20200215230939254.png"/></div><div class="image-meta"><span class="image-caption center">image20200215230939254.png</span></div></div>
+
+<p>事务执行成功的过程：开启事务-&gt;执行多条件SQL语句-&gt;成功-&gt;事务提交</p>
+<p>事务执行失败的过程：开启事务-&gt;执行多条件SQL语句-&gt;失败-&gt;事务回滚</p>
+<h3 id="2-2、语法格式"><a href="#2-2、语法格式" class="headerlink" title="2.2、语法格式"></a>2.2、语法格式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">start transaction; #开启事务 </span><br><span class="line">commit; #提交事务 </span><br><span class="line">rollback; #回滚事务 </span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>事务的成功提交：模拟张三给李四转 500 元钱（成功） 目前数据库数据如下：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603518996760.png" alt="image20200215232438482.png"/></div><div class="image-meta"><span class="image-caption center">image20200215232438482.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#开启事务</span><br><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line">#执行从张三帐户扣出500元</span><br><span class="line">mysql&gt; update yh set money=money-500 where name=&#x27;张三&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line">#执行往李四帐户加入500元</span><br><span class="line">mysql&gt; update yh set money=money+500 where name=&#x27;李四&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line">#提交事务</span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.08 秒)</span><br><span class="line">#查看帐户</span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 0     |</span><br><span class="line">| 2  | 李四 | 2000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>事务回滚：模拟李四给张三转 500 元钱（失败） 目前数据库数据如下：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519029171.png" alt="image20200215232946263.png"/></div><div class="image-meta"><span class="image-caption center">image20200215232946263.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#开启事务</span><br><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.02 秒)</span><br><span class="line">#执行从李四帐户扣出500元</span><br><span class="line">mysql&gt; update yh set money=money-500 where name=&#x27;李四&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line">#执行往张三帐户加入500元，但是加了600</span><br><span class="line">mysql&gt; update yh set money=money+600 where name=&#x27;张三&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line">#事务回滚</span><br><span class="line">mysql&gt; rollback;</span><br><span class="line">Query OK, 0 rows affected (0.02 秒)</span><br><span class="line">#查看帐户</span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 0     |</span><br><span class="line">| 2  | 李四 | 2000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、事务自动提交"><a href="#三、事务自动提交" class="headerlink" title="三、事务自动提交"></a>三、事务自动提交</h2><p>MySQL 默认每一条 DML(增删改)语句都是一个单独的事务，每条语句都会自动开启一个事务，语句执行完毕自动提交事务，MySQL 默认开始自动提交事务。</p>
+<p>如：</p>
+<p>事务开始-&gt;update&#x2F;delete&#x2F;insert into-&gt;事务提交</p>
+<h3 id="3-1、自动提交事务"><a href="#3-1、自动提交事务" class="headerlink" title="3.1、自动提交事务"></a>3.1、自动提交事务</h3><p><strong>案例：</strong></p>
+<p>自动事务提交：往张三的帐户里存入1000元，目前数据库数据如下：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519053659.png" alt="image20200215233931488.png"/></div><div class="image-meta"><span class="image-caption center">image20200215233931488.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money+1000 where name=&#x27;张三&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.05 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 2000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2、取消自动提交"><a href="#3-2、取消自动提交" class="headerlink" title="3.2、取消自动提交"></a>3.2、取消自动提交</h3><p>查看 MySQL 是否开启自动提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">select @@autocommit;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p>@@表示全局变量，1 表示开启，0 表示关闭</p>
+<p>取消自动提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">set autocommit=0;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select @@autocommit;</span><br><span class="line">+--------------+</span><br><span class="line">| @@autocommit |</span><br><span class="line">+--------------+</span><br><span class="line">| 1            |</span><br><span class="line">+--------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; set autocommit=0;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select @@autocommit;</span><br><span class="line">+--------------+</span><br><span class="line">| @@autocommit |</span><br><span class="line">+--------------+</span><br><span class="line">| 0            |</span><br><span class="line">+--------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>从李四的帐户取出1000元，目前数据库数据如下：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519068528.png" alt="image20200215234548334.png"/></div><div class="image-meta"><span class="image-caption center">image20200215234548334.png</span></div></div>
+
+<p><strong>注意：</strong></p>
+<p>要在窗口A、窗口B中验证</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#窗口A</span><br><span class="line">mysql&gt; update yh set money=money-1000 where name=&#x27;李四&#x27;;</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">#在窗口B中查询银行帐户(第一次验证)</span><br><span class="line"></span><br><span class="line">#提交</span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.10 秒)</span><br><span class="line"></span><br><span class="line">#在窗口B中查询银行帐户(第二次验证)</span><br></pre></td></tr></table></figure>
+
+<p>在打开一个窗口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#窗口B</span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 2000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、事务原理"><a href="#4、事务原理" class="headerlink" title="4、事务原理"></a>4、事务原理</h2><p>一个事务会涉及到大量的cpu计算和IO操作，这些操作被打包成一个执行单元,要么同时都完成，要么同时都不完成。</p>
+<h3 id="4-1、自动提交原理图"><a href="#4-1、自动提交原理图" class="headerlink" title="4.1、自动提交原理图"></a>4.1、自动提交原理图</h3><p>如果没有显示启动事务,数据库会根据autocommit的值.默认每条sql操作都会自动提交。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519086079.png" alt="image20200218000643813.png"/></div><div class="image-meta"><span class="image-caption center">image20200218000643813.png</span></div></div>
+
+<h3 id="4-2、手动提交原理图"><a href="#4-2、手动提交原理图" class="headerlink" title="4.2、手动提交原理图"></a>4.2、手动提交原理图</h3><p>如果开启了事务，其中有任何一条语句因为崩溃或者其它原因无法执行，那么该组中所有的sql语句都不会执行。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519101214.png" alt="image20200218001646389.png"/></div><div class="image-meta"><span class="image-caption center">image20200218001646389.png</span></div></div>
+
+<h3 id="4-3、事务提交步骤"><a href="#4-3、事务提交步骤" class="headerlink" title="4.3、事务提交步骤"></a>4.3、事务提交步骤</h3><p>客户端连接上服务器端，创建连接同时创建当前用户的临时事务日志文件。</p>
+<p>开启事务，改变原有的操作机制（所有的操作都会先写入临时日志文件）。</p>
+<p>写入SQL，接收并执行SQL，所有的SQL操作都会写入临时文件；返回数据时，从数据库表拿取数据，但要通过临时日志文件加工在返回。</p>
+<p>事务的提交或回滚，提交：同步临时日志文件中的SQL操作结果到数据库表；回滚：清除临时日志文件</p>
+<h2 id="5、事务回滚"><a href="#5、事务回滚" class="headerlink" title="5、事务回滚"></a>5、事务回滚</h2><p>我们可以在mysql事务处理过程中定义保存点(SAVEPOINT)，然后回滚到指定的保存点前的状态。</p>
+<p>定义保存点，以及回滚到指定保存点前状态的语法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">savepoint 保存点名; #定义保存点</span><br><span class="line">rollback to savepoint 保存点名;  #回滚到指定保存点</span><br><span class="line">或</span><br><span class="line">rollback to 保存点名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>数据表准备</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#创建一个管理员表</span><br><span class="line">create table manager(</span><br><span class="line">  id int primary key auto_increment,</span><br><span class="line">  uname varchar(20),</span><br><span class="line">  pword varchar(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">#插入数据</span><br><span class="line">insert into manager(uname,pword) values(&#x27;zhangsan&#x27;,&#x27;zhangsan&#x27;),(&#x27;lisi&#x27;,&#x27;lisi&#x27;);</span><br><span class="line"></span><br><span class="line">#插入数据</span><br><span class="line">insert into manager(uname,pword) values(&#x27;wangwu&#x27;,&#x27;wangwu&#x27;),(&#x27;zhaoliu&#x27;,&#x27;zhaoliu&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>开启事务</p>
+<p>向表中插入二条件记录</p>
+<p>设置保存点，保存点的名字为：insert_point</p>
+<p>向表中插入二条件记录</p>
+<p>回到保存点：insert_point</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into manager(uname,pword) values(&#x27;zhangsan&#x27;,&#x27;zhangsan&#x27;),(&#x27;lisi&#x27;,&#x27;lisi&#x27;);</span><br><span class="line">Query OK, 2 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from manager;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | uname    | pword    |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| 1  | zhangsan | zhangsan |</span><br><span class="line">| 2  | lisi     | lisi     |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; savepoint insert_point;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into manager(uname,pword) values(&#x27;wangwu&#x27;,&#x27;wangwu&#x27;),(&#x27;zhaoliu&#x27;,&#x27;zhaoliu&#x27;);</span><br><span class="line">Query OK, 2 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from manager;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | uname    | pword    |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| 1  | zhangsan | zhangsan |</span><br><span class="line">| 2  | lisi     | lisi     |</span><br><span class="line">| 3  | wangwu   | wangwu   |</span><br><span class="line">| 4  | zhaoliu  | zhaoliu  |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">4 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; rollback to savepoint insert_point;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from manager;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | uname    | pword    |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| 1  | zhangsan | zhangsan |</span><br><span class="line">| 2  | lisi     | lisi     |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p>设置保存点可以让我们在失败的时候回到保存点，而不是回到事务开启的时候。</p>
+<h2 id="六、事务隔离级别"><a href="#六、事务隔离级别" class="headerlink" title="六、事务隔离级别"></a>六、事务隔离级别</h2><h3 id="6-1、事务特性"><a href="#6-1、事务特性" class="headerlink" title="6.1、事务特性"></a>6.1、事务特性</h3><p><strong>原子性（Atomicity）：</strong> 事务内的操作要嘛全部完成，要嘛全部回滚。</p>
+<p><strong>一致性(Consistency)：</strong> 事务执行的前后都是合法的数据状态，不会违反任何的数据完整性。</p>
+<p><strong>隔离性（Isolation）:</strong> 主要是事务之间的相互的影响，根据隔离有不同的影响效果。</p>
+<p><strong>持久性（Durability）：</strong> 事务一旦提交，就会体现在数据库上，不能回滚。</p>
+<h3 id="6-2、事务的并发问题"><a href="#6-2、事务的并发问题" class="headerlink" title="6.2、事务的并发问题"></a>6.2、事务的并发问题</h3><p><strong>脏读：</strong> 比如事务A执行的过程中，读到了事务B未提交的内容。</p>
+<p><strong>不可重复读：</strong> 指一个事务在前后两次查询的结果不一致。</p>
+<p><strong>幻读：</strong> 幻读是指前后两次相同条件下的查询，后一次查询读到了前一次查询没有的行数据。</p>
+<h3 id="6-3、事务的隔离级别"><a href="#6-3、事务的隔离级别" class="headerlink" title="6.3、事务的隔离级别"></a>6.3、事务的隔离级别</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519132024.png" alt="image20200218012806058.png"/></div><div class="image-meta"><span class="image-caption center">image20200218012806058.png</span></div></div>
+
+<p>注意：</p>
+<p>隔离级别越高，性能越差，安全性越高。</p>
+<h3 id="6-4、事务隔离命令"><a href="#6-4、事务隔离命令" class="headerlink" title="6.4、事务隔离命令"></a>6.4、事务隔离命令</h3><p>查看隔离级别</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#格式：</span><br><span class="line">select @@transaction_isolation;</span><br><span class="line"></span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| REPEATABLE-READ         |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>设置隔离级别</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#格式：</span><br><span class="line">set global transaction_isolation=级别字符串</span><br><span class="line"></span><br><span class="line">mysql&gt; set global transaction_isolation=&#x27;read-committed&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>重启客户端，查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| READ-COMMITTED          |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="7、脏读"><a href="#7、脏读" class="headerlink" title="7、脏读"></a>7、脏读</h2><h3 id="7-1、设置隔离级别"><a href="#7-1、设置隔离级别" class="headerlink" title="7.1、设置隔离级别"></a>7.1、设置隔离级别</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;read-uncommitted&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| READ-UNCOMMITTED        |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2、脏读"><a href="#7-2、脏读" class="headerlink" title="7.2、脏读"></a>7.2、脏读</h3><p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519178063.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，转帐操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money-500 where id=1;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; update yh set money=money+500 where id=2;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户，钱已经到帐</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 500   |</span><br><span class="line">| 2  | 李四 | 1500  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行回滚</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; rollback;</span><br><span class="line">Query OK, 0 rows affected (0.05 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户，钱不见了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>脏读是比较危险的事情，如果张三在李四那里买了一个汽球花了500元，那么张三转帐给李四后，李四发货给张三，张三收到货物后把事务回滚，这样李四再也没有看到钱。</p>
+<p><strong>要解决脏读的问题我们要提高隔离级别？</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;read-committed&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| READ-COMMITTED        |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，转帐操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money-500 where id=1;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; update yh set money=money+500 where id=2;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户，帐户没有变化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，事务提交</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.05 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户，钱到帐了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 500   |</span><br><span class="line">| 2  | 李四 | 1500  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就解决了脏读的问题，提高我们的隔离级别。</p>
+<h2 id="八、不可重复读"><a href="#八、不可重复读" class="headerlink" title="八、不可重复读"></a>八、不可重复读</h2><h3 id="8-1、设置隔离级别"><a href="#8-1、设置隔离级别" class="headerlink" title="8.1、设置隔离级别"></a>8.1、设置隔离级别</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;read-committed&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| READ-COMMITTED        |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2、不可重复读"><a href="#8-2、不可重复读" class="headerlink" title="8.2、不可重复读"></a>8.2、不可重复读</h3><p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000   |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里更新数据，并提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money+500 where id=1;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里在次执行，查看帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1500  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<p>看着这二个数据本身觉得没有什么问题，如果这二次的数据分别是显示在银行职员的显示器上和发送给客户，那么银行的工作人员都不知道以什么为准了。</p>
+<p><strong>要解决不可重复读的问题我们要提高隔离级别？</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;repeatable-read&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| REPEATABLE-READ         |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查看帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000   |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里更新数据，并提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update yh set money=money+500 where id=1;</span><br><span class="line">Query OK, 1 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里在次执行，查看帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1000  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就解决了不可重复读的问题，提高我们的隔离级别。</p>
+<h2 id="九、幻读"><a href="#九、幻读" class="headerlink" title="九、幻读"></a>九、幻读</h2><h3 id="9-1、设置隔离级别"><a href="#9-1、设置隔离级别" class="headerlink" title="9.1、设置隔离级别"></a>9.1、设置隔离级别</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;repeatable-read&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| REPEATABLE-READ         |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2、幻读"><a href="#9-2、幻读" class="headerlink" title="9.2、幻读"></a>9.2、幻读</h3><p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，查询ID为3的帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh where id=3;</span><br><span class="line">空的数据集 (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查询ID为3的帐户，没有就添加记录，并提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh where id=3;</span><br><span class="line">空的数据集 (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into yh values(3,&#x27;王五&#x27;,1000);</span><br><span class="line">Query OK, 1 rows affected (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1500  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">| 3  | 王五 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">3 行于数据集 (0.01 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected (0.09 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，添加id为3的帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into yh values(3,&#x27;王五&#x27;,1000);</span><br><span class="line">Duplicate entry &#x27;3&#x27; for key &#x27;PRIMARY&#x27;</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from yh;</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| id | name   | money |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">| 1  | 张三 | 1500  |</span><br><span class="line">| 2  | 李四 | 1000  |</span><br><span class="line">+----+--------+-------+</span><br><span class="line">2 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>我们在A窗口中看不到新加人员的王五信息，但是我们想自己增加王五的信息也无加入的我们的数据库，这就是幻读。</p>
+<p><strong>要解决幻读的问题我们要提高隔离级别？</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; set global transaction_isolation=&#x27;serializable&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br><span class="line"></span><br><span class="line">#重启窗口查看隔离级别</span><br><span class="line">mysql&gt; select @@transaction_isolation;</span><br><span class="line">+-------------------------+</span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+-------------------------+</span><br><span class="line">| SERIALIZABLE            |</span><br><span class="line">+-------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>恢复yh表中的数据为：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/24/1603519359501.png" alt="image20200218104028518.png"/></div><div class="image-meta"><span class="image-caption center">image20200218104028518.png</span></div></div>
+
+<p>打开A，B两个窗口，分别开启事务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; start transaction;</span><br><span class="line">Query OK, 0 rows affected (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在A窗口里执行，查询ID为3的帐户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh where id=3;</span><br><span class="line">空的数据集 (0.00 秒)</span><br></pre></td></tr></table></figure>
+
+<p>在B窗口里执行，查询ID为3的帐户，没有就添加记录，并提交事务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from yh where id=3;</span><br><span class="line">空的数据集 (0.00 秒)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into yh values(3,&#x27;王五&#x27;，1000);</span><br><span class="line">|  #光标闪烁，不能执行下去</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就解决了幻读的问题，提高我们了融离级别。</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySQL%E5%A4%9A%E4%B8%BB%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%88%98/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/MySQL%20%E7%B4%A2%E5%BC%95/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

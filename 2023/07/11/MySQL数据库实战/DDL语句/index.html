@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="数据库模式定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言。 数据库模式定义语言并非程序设计语言，DDL数据库模式定义语言是SQL语言（结构化查询语言）的组成部分。DDL描述的模式，必须由计算机软件进行编译，转换为便于计算机存储、查询和操纵的格式，完成这个转换工作的程序称为模式编译器。 模式编译器处理模式定义主要产生两种类型的数据：数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/DDL%E8%AF%AD%E5%8F%A5/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="数据库模式定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言。 数据库模式定义语言并非程序设计语言，DDL数据库模式定义语言是SQL语言（结构化查询语言）的组成部分。DDL描述的模式，必须由计算机软件进行编译，转换为便于计算机存储、查询和操纵的格式，完成这个转换工作的程序称为模式编译器。 模式编译器处理模式定义主要产生两种类型的数据：数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187353636.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187402867.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187415619.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187429998.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187442067.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187455034.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.029Z">
+<meta property="article:modified_time" content="2022-06-04T05:52:42.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187353636.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C-%E4%B8%8A"><span class="toc-text">一、数据库操作-上</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81DDL%E6%A6%82%E8%BF%B0"><span class="toc-text">1.1、DDL概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.2、创建数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E3%80%81%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.3、查看数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C-%E4%B8%8B"><span class="toc-text">二、数据库操作-下</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">2.1、修改数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">2.2、删除数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E3%80%81%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">2.3、使用数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%93%8D%E4%BD%9C-%E4%B8%8A"><span class="toc-text">三、数据库表操作-上</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E3%80%81%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="toc-text">3.1、创建表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%88mysql%EF%BC%89"><span class="toc-text">3.2、数据类型（mysql）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3%E3%80%81%E6%9F%A5%E7%9C%8B%E8%A1%A8"><span class="toc-text">3.3、查看表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%93%8D%E4%BD%9C-%E4%B8%AD"><span class="toc-text">4、数据库表操作-中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%E3%80%81%E5%BF%AB%E9%80%9F%E5%BB%BA%E8%A1%A8"><span class="toc-text">4.1、快速建表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%E3%80%81%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="toc-text">4.2、删除表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%93%8D%E4%BD%9C-%E4%B8%8B"><span class="toc-text">5、数据库表操作-下</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1%E3%80%81%E4%BF%AE%E6%94%B9%E8%A1%A8"><span class="toc-text">5.1、修改表</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.029Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>数据库模式定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言。</p>
+<p>数据库模式定义语言并非程序设计语言，DDL数据库模式定义语言是SQL语言（结构化查询语言）的组成部分。DDL描述的模式，必须由计算机软件进行编译，转换为便于计算机存储、查询和操纵的格式，完成这个转换工作的程序称为模式编译器。</p>
+<p>模式编译器处理模式定义主要产生两种类型的数据：数据字典以及数据类型和结构定义。</p>
+<h2 id="一、数据库操作-上"><a href="#一、数据库操作-上" class="headerlink" title="一、数据库操作-上"></a>一、数据库操作-上</h2><h3 id="1-1、DDL概述"><a href="#1-1、DDL概述" class="headerlink" title="1.1、DDL概述"></a>1.1、DDL概述</h3><p>DDL（data definition language）数据库定义语言：其实就是我们在创建表的时候用到的一些sql，比如说：CREATE、ALTER、DROP等。DDL主要是用在操作数据库，定义或改变数据库表的结构，数据类型等初始化工作。</p>
+<h3 id="1-2、创建数据库"><a href="#1-2、创建数据库" class="headerlink" title="1.2、创建数据库"></a>1.2、创建数据库</h3><p><strong>直接创建数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">create database 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>判断数据库是否已经存在，不存在则创建</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">create database if not exists 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建数据库并指定字符集</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">create database 数据库名 character set 字符集;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#创建数据库</span><br><span class="line">mysql&gt; create database zutuanxue;</span><br><span class="line">Query OK, 1 rows affected (0.08 秒)#创建成功</span><br><span class="line">#在次创建同名数据库</span><br><span class="line">mysql&gt; create database zutuanxue;</span><br><span class="line">Can&#x27;t create database &#x27;zutuanxue&#x27;; database exists #无法创建数据库“zutuanxue”；数据库存在</span><br><span class="line">#判断是否存在，如果不存在则创建数据库zutuanxue</span><br><span class="line">mysql&gt; create database if not exists zutuanxue;</span><br><span class="line">Query OK, 1 rows affected, 1 warnings (0.01 秒)</span><br><span class="line">#创建数据库并指定字符集为 gbk</span><br><span class="line">mysql&gt; create database zutuanxue01 default character set gbk;</span><br><span class="line">Query OK, 1 rows affected (0.03 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> default 可以不要</p>
+<p><strong>补充：了解字符集查看</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#查看字符集</span><br><span class="line">mysql&gt; show character set;</span><br><span class="line">+----------+---------------------------------+---------------------+--------+</span><br><span class="line">| Charset  | Description                     | Default collation   | Maxlen |</span><br><span class="line">+----------+---------------------------------+---------------------+--------+</span><br><span class="line">| armscii8 | ARMSCII-8 Armenian              | armscii8_general_ci | 1      |</span><br><span class="line">| ascii    | US ASCII                        | ascii_general_ci    | 1      |</span><br><span class="line">| big5     | Big5 Traditional Chinese        | big5_chinese_ci     | 2      |</span><br><span class="line">| binary   | Binary pseudo charset           | binary              | 1      |</span><br><span class="line">| cp1250   | Windows Central European        | cp1250_general_ci   | 1      |</span><br><span class="line">| cp1251   | Windows Cyrillic                | cp1251_general_ci   | 1      |</span><br><span class="line">| cp1256   | Windows Arabic                  | cp1256_general_ci   | 1      |</span><br><span class="line">| cp1257   | Windows Baltic                  | cp1257_general_ci   | 1      |</span><br><span class="line">| cp850    | DOS West European               | cp850_general_ci    | 1      |</span><br><span class="line">| cp852    | DOS Central European            | cp852_general_ci    | 1      |</span><br><span class="line">| cp866    | DOS Russian                     | cp866_general_ci    | 1      |</span><br><span class="line">| cp932    | SJIS for Windows Japanese       | cp932_japanese_ci   | 2      |</span><br><span class="line">| dec8     | DEC West European               | dec8_swedish_ci     | 1      |</span><br><span class="line">| eucjpms  | UJIS for Windows Japanese       | eucjpms_japanese_ci | 3      |</span><br><span class="line">| euckr    | EUC-KR Korean                   | euckr_korean_ci     | 2      |</span><br><span class="line">| gb18030  | China National Standard GB18030 | gb18030_chinese_ci  | 4      |</span><br><span class="line">| gb2312   | GB2312 Simplified Chinese       | gb2312_chinese_ci   | 2      |</span><br><span class="line">| gbk      | GBK Simplified Chinese          | gbk_chinese_ci      | 2      |</span><br><span class="line">| geostd8  | GEOSTD8 Georgian                | geostd8_general_ci  | 1      |</span><br><span class="line">| greek    | ISO 8859-7 Greek                | greek_general_ci    | 1      |</span><br><span class="line">| hebrew   | ISO 8859-8 Hebrew               | hebrew_general_ci   | 1      |</span><br><span class="line">| hp8      | HP West European                | hp8_english_ci      | 1      |</span><br><span class="line">| keybcs2  | DOS Kamenicky Czech-Slovak      | keybcs2_general_ci  | 1      |</span><br><span class="line">| koi8r    | KOI8-R Relcom Russian           | koi8r_general_ci    | 1      |</span><br><span class="line">| koi8u    | KOI8-U Ukrainian                | koi8u_general_ci    | 1      |</span><br><span class="line">| latin1   | cp1252 West European            | latin1_swedish_ci   | 1      |</span><br><span class="line">| latin2   | ISO 8859-2 Central European     | latin2_general_ci   | 1      |</span><br><span class="line">| latin5   | ISO 8859-9 Turkish              | latin5_turkish_ci   | 1      |</span><br><span class="line">| latin7   | ISO 8859-13 Baltic              | latin7_general_ci   | 1      |</span><br><span class="line">| macce    | Mac Central European            | macce_general_ci    | 1      |</span><br><span class="line">| macroman | Mac West European               | macroman_general_ci | 1      |</span><br><span class="line">| sjis     | Shift-JIS Japanese              | sjis_japanese_ci    | 2      |</span><br><span class="line">| swe7     | 7bit Swedish                    | swe7_swedish_ci     | 1      |</span><br><span class="line">| tis620   | TIS620 Thai                     | tis620_thai_ci      | 1      |</span><br><span class="line">| ucs2     | UCS-2 Unicode                   | ucs2_general_ci     | 2      |</span><br><span class="line">| ujis     | EUC-JP Japanese                 | ujis_japanese_ci    | 3      |</span><br><span class="line">| utf16    | UTF-16 Unicode                  | utf16_general_ci    | 4      |</span><br><span class="line">| utf16le  | UTF-16LE Unicode                | utf16le_general_ci  | 4      |</span><br><span class="line">| utf32    | UTF-32 Unicode                  | utf32_general_ci    | 4      |</span><br><span class="line">| utf8     | UTF-8 Unicode                   | utf8_general_ci     | 3      |</span><br><span class="line">| utf8mb4  | UTF-8 Unicode                   | utf8mb4_0900_ai_ci  | 4      |</span><br><span class="line">+----------+---------------------------------+---------------------+--------+</span><br><span class="line">41 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3、查看数据库"><a href="#1-3、查看数据库" class="headerlink" title="1.3、查看数据库"></a>1.3、查看数据库</h3><p><strong>查看所有数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看某个数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">show create database 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#查看所有数据库</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| mb                 |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">| zutuanxue           |</span><br><span class="line">| zutuanxue01         |</span><br><span class="line">+--------------------+</span><br><span class="line">7 行于数据集 (0.01 秒)</span><br><span class="line">#查看数据库zutuanxue的信息</span><br><span class="line">mysql&gt; show create database zutuanxue;</span><br><span class="line">+----------+-------------------------------------------------------------------------------------------------+</span><br><span class="line">| Database | Create Database                                                                                 |</span><br><span class="line">+----------+-------------------------------------------------------------------------------------------------+</span><br><span class="line">| zutuanxue | CREATE DATABASE `zutuanxue` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ |</span><br><span class="line">+----------+-------------------------------------------------------------------------------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、数据库操作-下"><a href="#二、数据库操作-下" class="headerlink" title="二、数据库操作-下"></a>二、数据库操作-下</h2><h3 id="2-1、修改数据库"><a href="#2-1、修改数据库" class="headerlink" title="2.1、修改数据库"></a>2.1、修改数据库</h3><p><strong>修改字符集</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter database 数据库名 character set 字符集;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#需求：将zutuanxue01数据库的字符集改成 utf8</span><br><span class="line">mysql&gt; alter database zutuanxue01 character set utf8;</span><br><span class="line">Query OK, 1 rows affected, 1 warnings (0.09 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p>为什么修改的不是数据库名？</p>
+<p>容易引起数据丢失。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename database 旧数据库名 to 新数据库名;</span><br></pre></td></tr></table></figure>
+
+<p>这个是5.1.7到5.1.23版本可以用，但是官方不推荐，会有丢失数据的危险</p>
+<h3 id="2-2、删除数据库"><a href="#2-2、删除数据库" class="headerlink" title="2.2、删除数据库"></a>2.2、删除数据库</h3><p><strong>删除数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式:</span><br><span class="line">drop database 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#需求：删除zutuanxue01数据库</span><br><span class="line">mysql&gt; drop database zutuanxue01;</span><br><span class="line">Query OK, 0 rows affected (0.07 秒)</span><br><span class="line">#查看所有数据库</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| mb                 |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">| zutuanxue           |</span><br><span class="line">+--------------------+</span><br><span class="line">6 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3、使用数据库"><a href="#2-3、使用数据库" class="headerlink" title="2.3、使用数据库"></a>2.3、使用数据库</h3><p><strong>查看当前数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">select database();#mysql中的全局函数</span><br></pre></td></tr></table></figure>
+
+<p><strong>切换数据库</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">use 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#查看当前使用的数据库</span><br><span class="line">mysql&gt; select database();</span><br><span class="line">+------------+</span><br><span class="line">| database() |</span><br><span class="line">+------------+</span><br><span class="line">| NULL       |#当前没有使用的数据库</span><br><span class="line">+------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br><span class="line">#切换或指定当前使用的数据库</span><br><span class="line">mysql&gt; use zutuanxue;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line">#查看当前使用的数据库</span><br><span class="line">mysql&gt; select database();</span><br><span class="line">+------------+</span><br><span class="line">| database() |</span><br><span class="line">+------------+</span><br><span class="line">| zutuanxue   |#当前使用的数据库为zutuanxue</span><br><span class="line">+------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、数据库表操作-上"><a href="#三、数据库表操作-上" class="headerlink" title="三、数据库表操作-上"></a>三、数据库表操作-上</h2><h3 id="3-1、创建表"><a href="#3-1、创建表" class="headerlink" title="3.1、创建表"></a>3.1、创建表</h3><p><strong>创建表结构</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">create table 数据库表名(</span><br><span class="line">  字段名1 字段类型1,</span><br><span class="line">  字段名2 字段类型2,</span><br><span class="line">  ...</span><br><span class="line">  字段名n 字段类型n</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键字说明</strong></p>
+<p>create：创建</p>
+<p>table：表</p>
+<h3 id="3-2、数据类型（mysql）"><a href="#3-2、数据类型（mysql）" class="headerlink" title="3.2、数据类型（mysql）"></a>3.2、数据类型（mysql）</h3><p><strong>数字类型</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187353636.png" alt="image20200206171122469.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171122469.png</span></div></div>
+
+<p><strong>日期类型</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187402867.png" alt="image20200206171204522.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171204522.png</span></div></div>
+
+<p><strong>字符串类型</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187415619.png" alt="image20200206171241199.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171241199.png</span></div></div>
+
+<p><strong>BLOB&#x2F;TEXT</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187429998.png" alt="image20200206171350662.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171350662.png</span></div></div>
+
+<p><strong>BINARY&#x2F;VARBINARY</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187442067.png" alt="image20200206171423603.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171423603.png</span></div></div>
+
+<p><strong>ENUM&#x2F;SET</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/20/1603187455034.png" alt="image20200206171501339.png"/></div><div class="image-meta"><span class="image-caption center">image20200206171501339.png</span></div></div>
+
+<p><strong>案例：</strong></p>
+<p>创建一个学生表，里面包含了编号、学生名字、出生年月等数据</p>
+<p><strong>分析：</strong></p>
+<p>表名：students</p>
+<p>字段有：编号（id,int类型）、学生名字（sname,varchar()类型）、出生日期（birthday date类型）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">create table students(</span><br><span class="line">   id int, -- 学生id</span><br><span class="line">   sname varchar(20), -- 学生名字</span><br><span class="line">   birthday date -- 学生出生日期</span><br><span class="line">);</span><br><span class="line">#想要创建数据库表先进入，数据库</span><br><span class="line">mysql&gt; use zutuanxue;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line">#创建表</span><br><span class="line">mysql&gt; create table students(id int ,sname varchar(20),birthday date);</span><br><span class="line">Query OK, 0 rows affected (0.05 秒)</span><br><span class="line">#查看所有表</span><br><span class="line">mysql&gt; show tables;</span><br><span class="line">+--------------------+</span><br><span class="line">| Tables_in_zutuanxue |</span><br><span class="line">+--------------------+</span><br><span class="line">| students           |</span><br><span class="line">+--------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3、查看表"><a href="#3-3、查看表" class="headerlink" title="3.3、查看表"></a>3.3、查看表</h3><p><strong>查看所有表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">show tables;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看表结构</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">desc 数据库表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看表SQL信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">show create table 数据库表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>查看zutuanxue数据库下的所有表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#进入mysql数据库</span><br><span class="line">mysql&gt; use zutuanxue;</span><br><span class="line">Query OK, 0 rows affected (0.01 秒)</span><br><span class="line">#查看数据库里的所有表</span><br><span class="line">mysql&gt; show tables;</span><br><span class="line">+--------------------+</span><br><span class="line">| Tables_in_zutuanxue |</span><br><span class="line">+--------------------+</span><br><span class="line">| students           |</span><br><span class="line">+--------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>查看students数据库表的结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; desc students;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">3 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p>查看students数据库表的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#查看students数据库表SQL信息</span><br><span class="line">mysql&gt; show create table students;</span><br><span class="line">+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Table    | Create Table                                                                                                                                                                                 |</span><br><span class="line">+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| students | CREATE TABLE `students` (</span><br><span class="line">  `id` int(11) DEFAULT NULL,</span><br><span class="line">  `sname` varchar(20) DEFAULT NULL,</span><br><span class="line">  `birthday` date DEFAULT NULL</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |</span><br><span class="line">+----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4、数据库表操作-中"><a href="#4、数据库表操作-中" class="headerlink" title="4、数据库表操作-中"></a>4、数据库表操作-中</h2><h3 id="4-1、快速建表"><a href="#4-1、快速建表" class="headerlink" title="4.1、快速建表"></a>4.1、快速建表</h3><p><strong>建新表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">create table 新数据库表名 like 旧数据库表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>创建一个students01表，要求表结构与students相同</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#创建一个新表与旧表结构相同</span><br><span class="line">mysql&gt; create table students01 like students;</span><br><span class="line">Query OK, 0 rows affected (0.11 秒)</span><br><span class="line">#查看表结构</span><br><span class="line">mysql&gt; desc students01;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">3 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2、删除表"><a href="#4-2、删除表" class="headerlink" title="4.2、删除表"></a>4.2、删除表</h3><p><strong>直接删除表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">drop table 数据库表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>判断表是否存在，存在则删除</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">drop table if exists 数据库表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#直接删除students01;</span><br><span class="line">mysql&gt; drop table students01;</span><br><span class="line">Query OK, 0 rows affected (0.09 秒)</span><br><span class="line">#有就删除students01,没有就不删除;</span><br><span class="line">mysql&gt; drop table if exists students01;</span><br><span class="line">Query OK, 0 rows affected, 1 warnings (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、数据库表操作-下"><a href="#5、数据库表操作-下" class="headerlink" title="5、数据库表操作-下"></a>5、数据库表操作-下</h2><h3 id="5-1、修改表"><a href="#5-1、修改表" class="headerlink" title="5.1、修改表"></a>5.1、修改表</h3><p><strong>添加表字段</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter table 数据库表名 add 字段名 字段类型；</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>为students表添加一个字段性别（sex char类型)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#增加字段</span><br><span class="line">mysql&gt; alter table students add sex char;</span><br><span class="line">Query OK, 0 rows affected (0.05 秒)</span><br><span class="line">#查看表结构</span><br><span class="line">mysql&gt; desc students;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">| sex      | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">4 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改表字段类型</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter table 数据库表名 modify 字段名 新字段类型;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>将students表中字段性别（sex）的字段类型改为varchar(2)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#修改字段类型</span><br><span class="line">mysql&gt; alter table students modify sex varchar(2);</span><br><span class="line">Query OK, 0 rows affected (0.06 秒)</span><br><span class="line">#查看表结构</span><br><span class="line">mysql&gt; desc students;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">| sex      | varchar(2)  | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">4 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改表字段名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter table 数据库表名 change 旧字段名 新字段名 字段类型;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>将students表中的性别（sex）改成班级（classes）类型为varchar(10)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#修改字段名</span><br><span class="line">mysql&gt; alter table students change sex classes varchar(10);</span><br><span class="line">Query OK, 0 rows affected (0.07 秒)</span><br><span class="line">#查看表结构</span><br><span class="line">mysql&gt; desc students;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">| classes  | varchar(10) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">4 行于数据集 (0.02 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除表中字段</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter table 数据库表名 drop 字段名;</span><br></pre></td></tr></table></figure>
+
+<p>案例：</p>
+<p>删除students表中的班级（classes）字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#删除字段</span><br><span class="line">mysql&gt; alter table students drop classes;</span><br><span class="line">Query OK, 0 rows affected (0.05 秒)</span><br><span class="line">#查看表结构</span><br><span class="line">mysql&gt; desc students;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">3 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改表名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">rename table 数据库表名 to 新数据库表;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#修改表名</span><br><span class="line">mysql&gt; rename table students to student;</span><br><span class="line">Query OK, 0 rows affected (0.04 秒)</span><br><span class="line">#查看所有表</span><br><span class="line">mysql&gt; show tables;</span><br><span class="line">+--------------------+</span><br><span class="line">| Tables_in_zutuanxue |</span><br><span class="line">+--------------------+</span><br><span class="line">| student            |</span><br><span class="line">+--------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改字符集</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">格式：</span><br><span class="line">alter table 数据库表名 character set 字符集;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例：</strong></p>
+<p>修改student表的字符集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#修改数据库表字符集</span><br><span class="line">mysql&gt; alter table student character set gbk;</span><br><span class="line">Query OK, 0 rows affected (0.07 秒)</span><br><span class="line">#查看数据库表SQL信息</span><br><span class="line">mysql&gt; show create table student;</span><br><span class="line">+---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Table   | Create Table                                                                                                                                                                                                  |</span><br><span class="line">+---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| student | CREATE TABLE `student` (</span><br><span class="line">  `id` int(11) DEFAULT NULL,</span><br><span class="line">  `sname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,</span><br><span class="line">  `birthday` date DEFAULT NULL</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=gbk |</span><br><span class="line">+---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">1 行于数据集 (0.01 秒)</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E6%88%98/DML%E8%AF%AD%E5%8F%A5/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/%E9%83%A8%E7%BD%B2linux%E7%BD%91%E7%BB%9C%E5%AE%89%E8%A3%85%E6%9C%8D%E5%8A%A1%E5%99%A8/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

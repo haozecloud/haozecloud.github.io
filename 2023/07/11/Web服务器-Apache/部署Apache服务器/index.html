@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="安装步骤 安装apr 安装apr-util 安装apr-iconv 安装apache 启动apache 测试apache MPM  一、安装依赖安装依赖 [root@zutuanxue ~]# yum install -y pcre-devel libxml2 expat-devel 二、 apr介绍及安装APR(Apache portable Run-time libraries，Apache可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Apache/%E9%83%A8%E7%BD%B2Apache%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="安装步骤 安装apr 安装apr-util 安装apr-iconv 安装apache 启动apache 测试apache MPM  一、安装依赖安装依赖 [root@zutuanxue ~]# yum install -y pcre-devel libxml2 expat-devel 二、 apr介绍及安装APR(Apache portable Run-time libraries，Apache可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1603010761940.png">
+<meta property="article:published_time" content="2023-07-11T11:44:40.617Z">
+<meta property="article:modified_time" content="2022-06-03T14:38:32.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1603010761940.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-text">安装步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-text">一、安装依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-apr%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85"><span class="toc-text">二、 apr介绍及安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81APR-util%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85"><span class="toc-text">三、APR-util介绍及安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81apr-iconv%E4%BB%8B%E7%BB%8D%E5%8F%8A%E5%AE%89%E8%A3%85"><span class="toc-text">四、apr-iconv介绍及安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81apache%E5%AE%89%E8%A3%85"><span class="toc-text">五、apache安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81apache%E5%90%AF%E5%8A%A8"><span class="toc-text">六、apache启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81apache%E7%8A%B6%E6%80%81%E6%B5%8B%E8%AF%95"><span class="toc-text">七、apache状态测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81MPM%E5%A4%9A%E5%A4%84%E7%90%86%E6%A8%A1%E5%9D%97"><span class="toc-text">八、MPM多处理模块</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.617Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><ul>
+<li>安装apr</li>
+<li>安装apr-util</li>
+<li>安装apr-iconv</li>
+<li>安装apache</li>
+<li>启动apache</li>
+<li>测试apache</li>
+<li>MPM</li>
+</ul>
+<h2 id="一、安装依赖"><a href="#一、安装依赖" class="headerlink" title="一、安装依赖"></a>一、安装依赖</h2><p>安装依赖</p>
+<p>[root@zutuanxue ~]# yum install -y pcre-devel libxml2 expat-devel</p>
+<h2 id="二、-apr介绍及安装"><a href="#二、-apr介绍及安装" class="headerlink" title="二、 apr介绍及安装"></a>二、 apr介绍及安装</h2><p>APR(Apache portable Run-time libraries，Apache可移植运行库)的目的如其名称一样，主要为上层的应用程序提供一个可以跨越多操作系统平台使用的底层支持接口库。在早期 的Apache版本中，应用程序本身必须能够处理各种具体操作系统平台的细节，并针对不同的平台调用不同的处理函数。</p>
+<p>[root@zutuanxue ~]# wget <a target="_blank" rel="noopener" href="https://www.apache.org/dist/apr/apr-1.7.0.tar.bz2">https://www.apache.org/dist/apr/apr-1.7.0.tar.bz2</a></p>
+<p>[root@zutuanxue ~]# tar xf apr-1.7.0.tar.bz2</p>
+<p>[root@zutuanxue ~]# cd apr-1.7.0</p>
+<p>[root@zutuanxue apr-1.7.0]# .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr</p>
+<p>[root@zutuanxue apr-1.7.0]# make</p>
+<p>[root@zutuanxue apr-1.7.0]# make install</p>
+<h2 id="三、APR-util介绍及安装"><a href="#三、APR-util介绍及安装" class="headerlink" title="三、APR-util介绍及安装"></a>三、APR-util介绍及安装</h2><p>apr-util该目录中也是包含了一些常用的开发组件。这些组件与apr目录下的相比，它们与apache的关系更加密切一些。比如存储段和存储段组，加密等等。</p>
+<p>[root@zutuanxue ~]# wget <a target="_blank" rel="noopener" href="https://www.apache.org/dist/apr/apr-util-1.6.1.tar.bz2">https://www.apache.org/dist/apr/apr-util-1.6.1.tar.bz2</a></p>
+<p>[root@zutuanxue ~]# tar xf apr-util-1.6.1.tar.bz2</p>
+<p>[root@zutuanxue ~]# cd apr-util-1.6.1</p>
+<p>[root@zutuanxue apr-util-1.6.1]# yum install -y expat-devel</p>
+<p>[root@zutuanxue apr-util-1.6.1]# .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr&#x2F;</p>
+<p>[root@zutuanxue apr-util-1.6.1]# make</p>
+<p>[root@zutuanxue apr-util-1.6.1]# make install</p>
+<h2 id="四、apr-iconv介绍及安装"><a href="#四、apr-iconv介绍及安装" class="headerlink" title="四、apr-iconv介绍及安装"></a>四、apr-iconv介绍及安装</h2><p>apr-iconv包中的文件主要用于实现iconv编码。目前的大部分编码转换过程都是与本地编码相关的。在进行转换之前必须能够正确地设置本地编码。因此假如两个非本地编码A和B需要转换，则转换过程大致为A-&gt;Local以及Local-&gt;B或者B-&gt;Local以及Local-&gt;A。</p>
+<p>[root@zutuanxue ~]# wget <a target="_blank" rel="noopener" href="https://www.apache.org/dist/apr/apr-iconv-1.2.2.tar.bz2">https://www.apache.org/dist/apr/apr-iconv-1.2.2.tar.bz2</a></p>
+<p>[root@zutuanxue ~]# tar xf apr-iconv-1.2.2.tar.bz2</p>
+<p>[root@zutuanxue ~]# cd apr-iconv-1.2.2</p>
+<p>[root@zutuanxue apr-iconv-1.2.2]# .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-iconv –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr</p>
+<p>[root@zutuanxue apr-iconv-1.2.2]# make</p>
+<p>[root@zutuanxue apr-iconv-1.2.2]# make install</p>
+<h2 id="五、apache安装"><a href="#五、apache安装" class="headerlink" title="五、apache安装"></a>五、apache安装</h2><p>[root@zutuanxue ~]# wget <a target="_blank" rel="noopener" href="https://www.apache.org/dist/httpd/httpd-2.4.39.tar.gz">https://www.apache.org/dist/httpd/httpd-2.4.39.tar.gz</a></p>
+<p>[root@zutuanxue ~]# tar xf httpd-2.4.39.tar.gz</p>
+<p>[root@zutuanxue ~]# cd httpd-2.4.39</p>
+<p>[root@zutuanxue httpd-2.4.39]# .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apache –enable-mpms-shared&#x3D;all –with-mpm&#x3D;event –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr –with-apr-util&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util –enable-so –enable-remoteip –enable-proxy –enable-proxy-fcgi –enable-proxy-uwsgi –enable-deflate&#x3D;shared –enable-expires&#x3D;shared –enable-rewrite&#x3D;shared –enable-cache –enable-file-cache –enable-mem-cache –enable-disk-cache –enable-static-support –enable-static-ab –disable-userdir –enable-nonportable-atomics –disable-ipv6 –with-sendfile</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">--prefix=/usr/local/apache                         指定安装目录</span><br><span class="line">--enable-mpms-shared=all --with-mpm=event                 开启动态MPM切换        </span><br><span class="line">--with-apr=/usr/local/apr --with-apr-util=/usr/local/apr-util         指定依赖包apr apr-util安装路径</span><br><span class="line">--enable-so                                  打开 so 模块，so 模块是用来提 dso 支持的 apache 核心模块</span><br><span class="line">--enable-remoteip                             支持基于客户端IP做访问控制                        </span><br><span class="line">--enable-proxy --enable-proxy-fcgi --enable-proxy-uwsgi         启用代理支持PHP Python网站</span><br><span class="line">--enable-deflate=shared                         开启压缩</span><br><span class="line">--enable-expires=shared                          开启客户端缓存</span><br><span class="line">--enable-rewrite=shared                         开启URL重写</span><br><span class="line">--enable-cache --enable-file-cache --enable-mem-cache --enable-disk-cache 开启服务器缓存    </span><br><span class="line">--enable-static-support                         支持静态连接</span><br><span class="line">--enable-static-ab                             使用静态连接编译 ab - apache http 服务器性能测试工具</span><br><span class="line">--disable-userdir                             禁用用户主目录提供页面访问</span><br><span class="line">--enable-nonportable-atomics                         对新式CPU支持，支持原子的比较交换(compare-and -swap, CAS)操作指令</span><br><span class="line">--disable-ipv6                              禁用IPV6</span><br><span class="line">--with-sendfile                             开启sendfile 0复制机制</span><br></pre></td></tr></table></figure>
+
+<p>[root@zutuanxue httpd-2.4.39]# make</p>
+<p>[root@zutuanxue httpd-2.4.39]# make install</p>
+<p>##相关目录</p>
+<p>[root@zutuanxue apache]# tree -L 1</p>
+<p>.</p>
+<p>├── bin 二进制命令</p>
+<p>├── build</p>
+<p>├── cgi-bin cgi脚本目录</p>
+<p>├── conf 配置文件目录</p>
+<p>├── error 错误记录</p>
+<p>├── htdocs 默认网站根目录</p>
+<p>├── icons 小图标</p>
+<p>├── include 一些C语言文件</p>
+<p>├── logs 日志目录</p>
+<p>├── man 帮助手册</p>
+<p>├── manual 在线手册</p>
+<p>└── modules 存放apache运行需要的模块</p>
+<h2 id="六、apache启动"><a href="#六、apache启动" class="headerlink" title="六、apache启动"></a>六、apache启动</h2><p>[root@zutuanxue ~]# &#x2F;usr&#x2F;local&#x2F;apache&#x2F;bin&#x2F;httpd</p>
+<h2 id="七、apache状态测试"><a href="#七、apache状态测试" class="headerlink" title="七、apache状态测试"></a>七、apache状态测试</h2><p>[root@zutuanxue ~]# elinks <a target="_blank" rel="noopener" href="http://192.168.11.251/">http://192.168.11.251</a> -dump</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">It works!</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、MPM多处理模块"><a href="#八、MPM多处理模块" class="headerlink" title="八、MPM多处理模块"></a>八、MPM多处理模块</h2><p>Apache HTTP 服务器被设计为一个功能强大，并且灵活的 web 服务器， 可以在很多平台与环境中工作。不同平台和不同的环境往往需要不同 的特性，或可能以不同的方式实现相同的特性最有效率。Apache httpd 通过模块化的设计来适应各种环境。这种设计允许网站管理员通过在 编译时或运行时，选择哪些模块将会加载在服务器中，来选择服务器特性。</p>
+<p>Apache HTTP 服务器 2.0 扩展此模块化设计到最基本的 web 服务器功能。 它提供了可以选择的多处理模块(MPM)，用来绑定到网络端口上，接受请求， 以及调度子进程处理请求。</p>
+<p>扩展到这一级别的服务器模块化设计，带来两个重要的好处:</p>
+<p>Apache httpd 能更优雅，更高效率的支持不同的平台。尤其是 Apache httpd 的 Windows 版本现在更有效率了，因为 mpm_winnt 能使用原生网络特性取代在 Apache httpd 1.3 中使用的 POSIX 层。它也可以扩展到其它平台 来使用专用的 MPM。</p>
+<p>Apache httpd 能更好的为有特殊要求的站点定制。例如，要求 更高伸缩性的站点可以选择使用线程的 MPM，即 worker 或 event； 需要可靠性或者与旧软件兼容的站点可以使用 prefork。</p>
+<p>在用户看来，MPM 很像其它 Apache httpd 模块。主要是区别是，在任何时间， 必须有一个，而且只有一个 MPM 加载到服务器中。可用的 MPM 列表位于 模块索引页面。</p>
+<p><strong>默认MPM</strong></p>
+<p>下表列出了不同系统的默认 MPM。如果你不在编译时选择，那么它就是你将要使用的 MPM。</p>
+<p>Netware mpm_netware</p>
+<p>OS&#x2F;2 mpmt_os2</p>
+<p>Unix prefork，worker 或 event，取决于平台特性</p>
+<p>Windows mpm_winnt</p>
+<p><strong>构建 MPM 为静态模块</strong></p>
+<p>在全部平台中，MPM 都可以构建为静态模块。在构建时选择一种 MPM，链接到服务器中。如果要改变 MPM，必须重新构建。</p>
+<p>为了使用指定的 MPM，请在执行 configure 脚本 时，使用参数 –with-mpm&#x3D;NAME。NAME 是指定的 MPM 名称。</p>
+<p>编译完成后，可以使用 .&#x2F;httpd -l 来确定选择的 MPM。 此命令会列出编译到服务器程序中的所有模块，包括 MPM。</p>
+<p><strong>构建 MPM 为动态模块</strong></p>
+<p>在 Unix 或类似平台中，MPM 可以构建为动态模块，与其它动态模块一样在运行时加载。 构建 MPM 为动态模块允许通过修改 LoadModule 指令内容来改变 MPM，而不用重新构建服务器程序。</p>
+<p>在执行 configure 脚本时，使用 –enable-mpms-shared 选项可以启用此特性。 当给出的参数为 all 时，所有此平台支持的 MPM 模块都会被安装。还可以在参数中给出模块列表。</p>
+<p>默认 MPM，可以自动选择或者在执行 configure 脚本时通过 –with-mpm 选项来指定，然后出现在生成的服务器配置文件中。 编辑 LoadModule 指令内容可以选择不同的 MPM。</p>
+<p><strong>–enable-mpms-shared&#x3D;all –with-mpm&#x3D;event</strong></p>
+<p><strong>Apache三种MPM介绍</strong></p>
+<p>**Prefork MPM **: 这个多路处理模块(MPM)实现了一个非线程型的、预派生的web服务器，它的工作方式类似于Apache 1.3。它适合于没有线程安全库，需要避免线程兼容性问题的系统。它是要求将每个请求相互独立的情况下最好的MPM，这样若一个请求出现问题就不会影响到其他请求。</p>
+<p>这个MPM具有很强的自我调节能力，只需要很少的配置指令调整。最重要的是将MaxClients设置为一个足够大的数值以处理潜在的请求高峰，同时又不能太大，以致需要使用的内存超出物理内存的大小。</p>
+<p><strong>Worker MPM</strong> : 此多路处理模块(MPM)使网络服务器支持混合的多线程多进程。由于使用线程来处理请求，所以可以处理海量请求，而系统资源的开销小于基于进程的MPM。但是，它也使用了多进程，每个进程又有多个线程，以获得基于进程的MPM的稳定性。</p>
+<p>每个进程可以拥有的线程数量是固定的。服务器会根据负载情况增加或减少进程数量。一个单独的控制进程(父进程)负责子进程的建立。每个子进程可以建立ThreadsPerChild数量的服务线程和一个监听线程，该监听线程监听接入请求并将其传递给服务线程处理和应答。</p>
+<p>不管是Worker模式或是Prefork 模式，Apache总是试图保持一些备用的(spare)或者是空闲的子进程（空闲的服务线程池）用于迎接即将到来的请求。这样客户端就不需要在得到服务前等候子进程的产生。</p>
+<p><strong>Event MPM</strong>：以上两种稳定的MPM方式在非常繁忙的服务器应用下都有些不足。尽管HTTP的Keepalive方式能减少TCP连接数量和网络负载，但是 Keepalive需要和服务进程或者线程绑定，这就导致一个繁忙的服务器会耗光所有的线程。 Event MPM是解决这个问题的一种新模型，它把服务进程从连接中分离出来。在服务器处理速度很快，同时具有非常高的点击率时，可用的线程数量就是关键的资源限制，此时Event MPM方式是最有效的。一个以Worker MPM方式工作的繁忙服务器能够承受每秒好几万次的访问量（例如在大型新闻服务站点的高峰时），而Event MPM可以用来处理更高负载。在event工作模式中，会有一些专门的线程用来管理这些keep-alive类型的线程，当有真实请求过来的时候，将请求传递给服务器的线程，执行完毕后，又允许它释放。这增强了在高并发场景下的请求处理</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1603010761940.png" alt="apachempm.png"/></div><div class="image-meta"><span class="image-caption center">apachempm.png</span></div></div>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Apache/%E9%83%A8%E7%BD%B2lamp-MySQL%E5%AE%89%E8%A3%85/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Apache/lamp%E9%83%A8%E7%BD%B2-WordPress%E7%AB%99%E7%82%B9%E4%B8%8A%E7%BA%BF/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

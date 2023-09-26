@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="DNS：域名系统（英文：Domain Name System)是一个域名系统，是万维网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。类似于生活中的114服务，可以通过人名找到电话号码，也可以通过电话号码找到人名(生活中没有那么准确的原因是人名有重名，而域名是全世界唯一的)。 DNS协议运行在UDP协议之上，使用端口号53 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://haozecloud.github.io/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/DNS%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="DNS：域名系统（英文：Domain Name System)是一个域名系统，是万维网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。类似于生活中的114服务，可以通过人名找到电话号码，也可以通过电话号码找到人名(生活中没有那么准确的原因是人名有重名，而域名是全世界唯一的)。 DNS协议运行在UDP协议之上，使用端口号53 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998062358.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998078641.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998138816.png">
+<meta property="article:published_time" content="2023-07-11T11:44:39.787Z">
+<meta property="article:modified_time" content="2022-06-03T14:33:08.000Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998062358.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81DNS%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、DNS介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81DNS%E7%9A%84%E8%A7%A3%E6%9E%90%E5%8E%9F%E7%90%86"><span class="toc-text">二、DNS的解析原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81DNS%E6%9F%A5%E8%AF%A2"><span class="toc-text">三、DNS查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2"><span class="toc-text">四、DNS服务器部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%EF%BC%89DNS%E5%AE%89%E8%A3%85"><span class="toc-text">4.1）DNS安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%EF%BC%89DNS%E5%90%AF%E5%8A%A8"><span class="toc-text">4.2）DNS启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3%EF%BC%89DNS%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">4.3）DNS配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AA%E6%AD%A3%E5%90%91%E8%A7%A3%E6%9E%90"><span class="toc-text">五、部署一个正向解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1%EF%BC%89%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B"><span class="toc-text">5.1）教学案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2%EF%BC%89%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="toc-text">5.2）测试方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AA%E5%8F%8D%E5%90%91%E8%A7%A3%E6%9E%90"><span class="toc-text">六、部署一个反向解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%86%97%E4%BD%99"><span class="toc-text">七、DNS服务器冗余</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%99%BA%E8%83%BDDNS"><span class="toc-text">八、智能DNS</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.787Z">2023-07-11</time></div></div>
+
+<article class='md-text content post'>
+
+<p>DNS：域名系统（英文：Domain Name System)是一个域名系统，是万维网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的IP数串。类似于生活中的114服务，可以通过人名找到电话号码，也可以通过电话号码找到人名(生活中没有那么准确的原因是人名有重名，而域名是全世界唯一的)。</p>
+<p>DNS协议运行在UDP协议之上，使用端口号53</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">域名:</span><br><span class="line">域名是一个网站的逻辑地址，比如www.zutuanxue.com，相比IP地址更加方便人类记忆，所以被广泛使用。</span><br></pre></td></tr></table></figure>
+
+<h2 id="一、DNS介绍"><a href="#一、DNS介绍" class="headerlink" title="一、DNS介绍"></a>一、DNS介绍</h2><p>计算机的发展起源于上世纪60年代，最初只有美国的几所高校在使用，计算机之间通信需要知道对方的地址(IP地址)，但是人们对IP地址的记忆又是不敏感的(就像生活中你能记住多少个好友的手机号码一样)。为了方便人类记忆，大学的科学家们把计算机的名字和对应的IP地址写入到计算机中的hosts文件，以此文件来做解析。</p>
+<p>但是随着计算机和网络的发展出现了局域网，计算机的数量随之增加；后来为了解决方便通信问题，我们使用了wins服务器来进行计算机名和IP的注册服务，通过一个名称服务器来自动管理局域网中的计算机，并提供解析服务。人们在局域网中通过计算机名就能连接到了对应的计算机。该技术中要求计算机名称必须唯一，正是由于这个原因使得局域网中的计算机又不能太多。</p>
+<p>微型计算机的出现和局域网的发展推动了广域网的发展，hosts文件只能针对极少的计算机网络，wins可以管理局域网的解析。到了广域网，人们就迫切需要一个新的服务做解析服务器，使解析方便、快速、高效的应对广域网环境。为了解决广域网解析问题，美国人研发出了DNS服务，以及成立了管理DNS相关的机构，并提出了域名命名规则。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">域名管理机构</span><br><span class="line">Internet 域名与地址管理机构（ICANN）是为承担域名系统管理，IP地址分配，协议参数配置，以及主服务器系统管理等职能而设立的非盈利机构.</span><br><span class="line">现由IANA和其他实体与美国政府约定进行管理。</span><br><span class="line"></span><br><span class="line">域名分国际域名和国内域名两种，对于国际域名而言，其命名规则是：</span><br><span class="line">域名可以由（a-z、A-Z大小写等价）26个英文字母、数字（0-9）以及连接符“-”组成，但是域名的首位必须是字母或数字。对于域名的长度也有一定</span><br><span class="line">的限制：国际通用顶级域名长度不得超过26个字符，中国国家顶级域名长度不得超过20个字符</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、DNS的解析原理"><a href="#二、DNS的解析原理" class="headerlink" title="二、DNS的解析原理"></a>二、DNS的解析原理</h2><p>目前，因特网的命名方法是层次树状结构的方法。采用这种命名方法，任何一个连接在因特网上的主机或设备，都有一个某一的层次结构的名字，即域名(domain name)。域是名字空间中一个可被管理的划分。域可以继续按层次划分为子域，如二级域、三级域等等。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998062358.png" alt="image20200114172132398.png"/></div><div class="image-meta"><span class="image-caption center">image20200114172132398.png</span></div></div>
+
+<h2 id="三、DNS查询"><a href="#三、DNS查询" class="headerlink" title="三、DNS查询"></a>三、DNS查询</h2><p>递归查询:一般客户机和服务器之间属递归查询，即当客户机向DNS服务器发出请求后,若DNS服务器本身不能解析,则会向另外的DNS服务器发出查询请求，得到结果后转交给客户机；如果主机所询问的本地域名服务器不知道被查询的域名的IP地址，那本地 DNS就会扮演DNS客户的角色，去代理原客户去帮忙找根域名服务器发出请求，递归即递给服务器，所有操作都有服务器来完成。</p>
+<p>迭代查询:一般DNS服务器之间属迭代查询，如：DNS1问DNS2,DNS2不知道会告诉DNS1一个DNS3的IP地址，让DNS1去问问DNS3知不知道，以此类推，就是迭代查询。</p>
+<p>关于递归和迭代举个生活例子帮助大家理解：比如你问张老师一个问题，张老师告诉他答案这之间的叫递归查询。这期间也许张老师也不会，这时张老师问李老师，张老师去问崔老师，这之间的查询叫迭代查询！</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998078641.png" alt="image20200114180942259.png"/></div><div class="image-meta"><span class="image-caption center">image20200114180942259.png</span></div></div>
+
+<p>正向查找：将域名解析为IP</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">www.zutuanxue.com  ---&gt; 118.190.209.153</span><br></pre></td></tr></table></figure>
+
+<p>反向查找：将IP解析为域名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">118.290.209.153  ---&gt; www.zutuanxue.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、DNS服务器部署"><a href="#四、DNS服务器部署" class="headerlink" title="四、DNS服务器部署"></a>四、DNS服务器部署</h2><p><strong>约定：本实验中使用过的机器为centos8.0_x86_64系统，IP地址192.168.11.16&#x2F;24.请关闭防火墙和SELINUX。</strong></p>
+<h3 id="4-1）DNS安装"><a href="#4-1）DNS安装" class="headerlink" title="4.1）DNS安装"></a>4.1）DNS安装</h3><p>DNS服务是由bind程序提供的，所以要实现DNS服务就需要安装bind程序包。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# dnf -y install bind bind-chroot</span><br><span class="line">bind  DNS主程序包</span><br><span class="line">bind-chroot DNS安全包，改变默认DNS根目录，将DNS运行在监牢模式</span><br><span class="line"></span><br><span class="line">说明:chroot监牢模式</span><br><span class="line">监牢是一个软件机制，其功能是使得某个程序无法访问规定区域之外的资源，同样也为了增强安全性（LCTT 译注：chroot “监牢”，所谓“监牢”就是指通过chroot机制来更改某个进程所能看到的根目录，即将某进程限制在指定目录中，保证该进程只能对该目录及其子目录的文件进行操作，从而保证整个服务器的安全）。Bind Chroot DNS 服务器的默认“监牢”为 /var/named/chroot。</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2）DNS启动"><a href="#4-2）DNS启动" class="headerlink" title="4.2）DNS启动"></a>4.2）DNS启动</h3><p>DNS的守护进程叫做named,DNS是以named用户身份来运行，named用户在安装包的时候会在系统中自动创建。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">CentOS8下安装了bind-chroot之后，若要使用named-chroot.service，则需要关闭named.service。两者只能运行一个</span><br><span class="line"></span><br><span class="line">方法一: 不使用chroot模式启动DNS</span><br><span class="line">开启开机启动</span><br><span class="line">[root@zutuanxue ~]# systemctl enable named</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/named.service to /usr/lib/systemd/system/named.service.</span><br><span class="line"></span><br><span class="line">启动DNS服务</span><br><span class="line">[root@zutuanxue ~]# systemctl start named</span><br><span class="line"></span><br><span class="line">验证启动</span><br><span class="line">[root@zutuanxue ~]# lsof -i :53</span><br><span class="line">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">dnsmasq 1520 nobody    5u  IPv4  27001      0t0  UDP bogon:domain </span><br><span class="line">dnsmasq 1520 nobody    6u  IPv4  27002      0t0  TCP bogon:domain (LISTEN)</span><br><span class="line">named   2553  named   21u  IPv4  38662      0t0  TCP localhost:domain (LISTEN)</span><br><span class="line">named   2553  named   22u  IPv6  38664      0t0  TCP localhost:domain (LISTEN)</span><br><span class="line">named   2553  named  512u  IPv4  38660      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  513u  IPv4  38660      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  514u  IPv4  38660      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  515u  IPv4  38660      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  516u  IPv6  38663      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  517u  IPv6  38663      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  518u  IPv6  38663      0t0  UDP localhost:domain </span><br><span class="line">named   2553  named  519u  IPv6  38663      0t0  UDP localhost:domain</span><br><span class="line"></span><br><span class="line">方法二: 使用chroot模式DNS</span><br><span class="line">将对应的文件移动到chroot根目录</span><br><span class="line">主配文件</span><br><span class="line">[root@zutuanxue ~]# cp /etc/named.conf /var/named/chroot/etc/</span><br><span class="line">[root@zutuanxue ~]# chgrp named /var/named/chroot/etc/named.conf</span><br><span class="line">[root@zutuanxue ~]# named-checkconf /var/named/chroot/etc/named.conf</span><br><span class="line"></span><br><span class="line">区域数据库文件</span><br><span class="line">[root@zutuanxue named]# cd /var/named/</span><br><span class="line">[root@zutuanxue named]# cp -r data /var/named/chroot/var/named/</span><br><span class="line">[root@zutuanxue named]# cp -r dynamic /var/named/chroot/var/named/</span><br><span class="line">[root@zutuanxue named]# cp named.* /var/named/chroot/var/named/</span><br><span class="line">[root@zutuanxue named]# cd /var/named/chroot/var/named/</span><br><span class="line">[root@zutuanxue named]# chown -R named.named *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">启动DNS服务</span><br><span class="line">开机启动</span><br><span class="line">[root@zutuanxue ~]# systemctl enable named-chroot.service </span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/named-chroot.service to /usr/lib/systemd/system/named-chroot.service.</span><br><span class="line">启动服务</span><br><span class="line">[root@zutuanxue ~]# mv /etc/named.conf /root/</span><br><span class="line">[root@zutuanxue ~]# systemctl start named-chroot</span><br><span class="line"></span><br><span class="line">验证启动</span><br><span class="line">[root@zutuanxue ~]# lsof -i :53</span><br><span class="line">COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME</span><br><span class="line">dnsmasq 1525 nobody    5u  IPv4  27359      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named   21u  IPv4  44717      0t0  TCP localhost:domain (LISTEN)</span><br><span class="line">named   2877  named   22u  IPv4  44719      0t0  TCP bogon:domain (LISTEN)</span><br><span class="line">named   2877  named   23u  IPv4  44721      0t0  TCP bogon:domain (LISTEN)</span><br><span class="line">named   2877  named  512u  IPv4  44715      0t0  UDP localhost:domain </span><br><span class="line">named   2877  named  513u  IPv4  44715      0t0  UDP localhost:domain </span><br><span class="line">named   2877  named  514u  IPv4  44715      0t0  UDP localhost:domain </span><br><span class="line">named   2877  named  515u  IPv4  44715      0t0  UDP localhost:domain </span><br><span class="line">named   2877  named  516u  IPv4  44718      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  517u  IPv4  44718      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  518u  IPv4  44718      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  519u  IPv4  44718      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  520u  IPv4  44720      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  521u  IPv4  44720      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  522u  IPv4  44720      0t0  UDP bogon:domain </span><br><span class="line">named   2877  named  523u  IPv4  44720      0t0  UDP bogon:domain</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3）DNS配置文件"><a href="#4-3）DNS配置文件" class="headerlink" title="4.3）DNS配置文件"></a>4.3）DNS配置文件</h3><p>默认情况下，如果不安装bind-chroot这个包，配置文件的路径如下：</p>
+<p>配置文件:&#x2F;etc&#x2F;named.conf</p>
+<p>区域数据库文件:&#x2F;var&#x2F;named&#x2F;</p>
+<p>由于我们安装了bind-chroot这个用于改变默认DNS配置文件的路径的包，所以相对应的配置文件的路径也发生了变化。</p>
+<p>变化如下：</p>
+<p>配置文件:&#x2F;var&#x2F;named&#x2F;chroot&#x2F;etc&#x2F;named.conf</p>
+<p>区域数据库文件:&#x2F;var&#x2F;named&#x2F;chroot&#x2F;var&#x2F;named&#x2F;</p>
+<p>a、主配文件详解</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// named.conf</span><br><span class="line">//</span><br><span class="line">// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS</span><br><span class="line">// server as a caching only nameserver (as a localhost DNS resolver only).</span><br><span class="line">//</span><br><span class="line">// See /usr/share/doc/bind*/sample/ for example named configuration files.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">options</span><br><span class="line">&#123;</span><br><span class="line">		</span><br><span class="line">    #IPv4监听端口为53，只允许本机连接</span><br><span class="line">    listen-on port 53    &#123; 127.0.0.1; &#125;;</span><br><span class="line">    #IPv6监听端口为53，只允许本机连接</span><br><span class="line">    listen-on-v6 port 53    &#123; ::1; &#125;;</span><br><span class="line">		#定义工作目录</span><br><span class="line">    directory         &quot;/var/named&quot;; </span><br><span class="line">    #CACHE文件路径,指定服务器在收到rndc dump命令时，转储数据到文件的路径。默认cache_dump.db</span><br><span class="line">    dump-file         &quot;data/cache_dump.db&quot;;</span><br><span class="line">    #静态文件路径,指定服务器在收到rndc stats命令时，追加统计数据的文件路径。默认named.stats</span><br><span class="line">    statistics-file     &quot;data/named_stats.txt&quot;;</span><br><span class="line">    #内存静态文件路径,服务器在退出时，将内存统计写到文件的路径。默认named.mem_stats</span><br><span class="line">    memstatistics-file     &quot;data/named_mem_stats.txt&quot;;</span><br><span class="line">        #在收到rndc secroots指令后，服务器转储安全根的目的文件的路径名。默认named.secroots</span><br><span class="line">    secroots-file        &quot;data/named.secroots&quot;;</span><br><span class="line">    # 指定服务器在通过rndc recursing命令指定转储当前递归请求到的文件路径。默认named.recursing</span><br><span class="line">    recursing-file        &quot;data/named.recursing&quot;;</span><br><span class="line">    </span><br><span class="line">    #指定允许哪些主机可以进行普通的DNS查询,可以是关键字:any/localhost/none,也可以是IPV4,IPV6地址</span><br><span class="line">    allow-query        &#123; localhost; &#125;;</span><br><span class="line">    #指定允许哪些主机可以对缓存的访问</span><br><span class="line">    allow-query-cache    &#123; localhost; &#125;;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.</span><br><span class="line">    假如你建立的是一个权威DNS你不需要开启递归</span><br><span class="line">     - If you are building a RECURSIVE (caching) DNS server, you need to enable recursion. </span><br><span class="line">    假如你建立的是一个递归DNS,你需要开启递归服务</span><br><span class="line">     - If your recursive DNS server has a public IP address, you MUST enable access control to limit queries to your legitimate users. Failing to do so will</span><br><span class="line">     如果你的递归DNS是具有公网IP，你必须要设置访问控制来限制对合法用户的查询.</span><br><span class="line">       cause your server to become part of large scale DNS amplification </span><br><span class="line">    否则你的DNS会被大规模的攻击</span><br><span class="line">       attacks. Implementing BCP38 within your network would greatly</span><br><span class="line">    在您的网络中实现BCP38将非常重要减少此类攻击面</span><br><span class="line">       reduce such attack surface </span><br><span class="line">     */</span><br><span class="line">    #开启递归</span><br><span class="line">    recursion yes;</span><br><span class="line"></span><br><span class="line">    #开启DNSSEC在权威或者递归服务器之间信任服务</span><br><span class="line">    dnssec-enable yes;</span><br><span class="line"></span><br><span class="line">    #开启DNSSEC验证在递归服务器</span><br><span class="line">    dnssec-validation yes;</span><br><span class="line"></span><br><span class="line">    #指定目录，其中保存着跟踪被管理DNSSEC密钥文件。默认为工作目录。</span><br><span class="line">    managed-keys-directory &quot;/var/named/dynamic&quot;;</span><br><span class="line">    </span><br><span class="line">    #PID文件路径</span><br><span class="line">    pid-file &quot;/run/named/named.pid&quot;;</span><br><span class="line">    #session-keyfile文件路径</span><br><span class="line">    session-keyfile &quot;/run/named/session.key&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">logging </span><br><span class="line">&#123;</span><br><span class="line">#开启DNS日志记录</span><br><span class="line">        channel default_debug &#123;</span><br><span class="line">                file &quot;data/named.run&quot;;</span><br><span class="line">                severity dynamic;</span><br><span class="line">        &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    #定义一个根域</span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">        #域类型为hint,还有master slave forward等类型</span><br><span class="line">            type hint;</span><br><span class="line">        #区域数据库文件路径</span><br><span class="line">            file &quot;/var/named/named.ca&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">    #包含两个子配置文件</span><br><span class="line">    include &quot;/etc/named.rfc1912.zones&quot;;</span><br><span class="line">    include &quot;/etc/named.root.key&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>b、区域数据库文件详解</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">正向解析</span><br><span class="line">[root@zutuanxue ~]# cat /var/named/named.localhost </span><br><span class="line">;缓存时间</span><br><span class="line">$TTL 1D</span><br><span class="line">;@表示相应的域名</span><br><span class="line">	@    				IN 	SOA        @ 					rname.invalid. (</span><br><span class="line">;解析的域名   类型 授权域    授权域名服务器   管理员邮箱</span><br><span class="line">                    0    ; serial  </span><br><span class="line">         序列号,每次更新该文件系列号都应该变大</span><br><span class="line">                    1D    ; refresh </span><br><span class="line">刷新时间,即规定从域名服务器多长时间查询一个主服务器，以保证从服务器的数据是最新的</span><br><span class="line">                    1H    ; retry   </span><br><span class="line">重试时间,即当从服务试图在主服务器上查询更时，而连接失败了，则这个值规定了从服务多长时间后再试 </span><br><span class="line">                    1W    ; expire  </span><br><span class="line">   过期时间,从服务器在向主服务更新失败后多长时间后清除对应的记录</span><br><span class="line">                    3H )    ; minimum </span><br><span class="line">   这个数据用来规定缓存服务器不能与主服务联系上后多长时间清除相应的记录</span><br><span class="line">    NS   				@</span><br><span class="line">    ;NS 名称服务器，表示这个主机为域名服务器</span><br><span class="line">    			A    		127.0.0.1</span><br><span class="line">;主机头  	A记录   	IP</span><br><span class="line">    AAAA    		::1</span><br><span class="line">;   AAAA 				解析为IPV6地址</span><br><span class="line"></span><br><span class="line">#反向解析</span><br><span class="line">[root@zutuanxue ~]# cat named.loopback </span><br><span class="line">$TTL 1D</span><br><span class="line">@    IN SOA    @ rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">    NS    		@</span><br><span class="line">    PTR    		localhost</span><br><span class="line">;IP 反向指针     主机名</span><br><span class="line">;PTR 反向指针 反解</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、部署一个正向解析"><a href="#五、部署一个正向解析" class="headerlink" title="五、部署一个正向解析"></a>五、部署一个正向解析</h2><h3 id="5-1）教学案例"><a href="#5-1）教学案例" class="headerlink" title="5.1）教学案例"></a>5.1）教学案例</h3><p><strong>对zutuanxue.com域名做解析，解析要求如下：</strong></p>
+<p><strong>www 解析为A记录 IP地址为 192.168.11.88</strong></p>
+<p><strong>news 做别名解析CNAME 解析为 www</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">1）主配置文件</span><br><span class="line">[root@zutuanxue ~]# cat /var/named/chroot/etc/named.conf </span><br><span class="line">options &#123;</span><br><span class="line">    listen-on port 53 &#123; any; &#125;;</span><br><span class="line">    directory     &quot;/var/named&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义根域</span><br><span class="line">//用于DNS向根递归查询</span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">    type hint;</span><br><span class="line">    //保存了DNS根级服务器的地址</span><br><span class="line">    file &quot;named.ca&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义一个主域</span><br><span class="line">//注意每行都要;结尾</span><br><span class="line">zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">//类型为master</span><br><span class="line">    type master;</span><br><span class="line">//区域数据库文件名称</span><br><span class="line">    file &quot;zutuanxue.com.zone&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2）区域数据库文件</span><br><span class="line">[root@zutuanxue named]# cat zutuanxue.com.zone </span><br><span class="line">$TTL 1D</span><br><span class="line">zutuanxue.com.    IN SOA    ns1.zutuanxue.com. rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">;zutuanxue.com.  需要做解析的域名</span><br><span class="line">;ns1.zutuanxue.com.  为zutuanxue.com.做解析的DNS    这里我们既是DNS也同时为自己域名做了解析</span><br><span class="line"></span><br><span class="line">    NS    ns1.zutuanxue.com.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;A         域名机械为IP</span><br><span class="line">;PTR        IP解析为域名</span><br><span class="line">;MX        邮件标记</span><br><span class="line">;CNAME        别名</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ns1    A    192.168.11.16</span><br><span class="line">www    A    192.168.11.88</span><br><span class="line">news  CNAME    www</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2）测试方法"><a href="#5-2）测试方法" class="headerlink" title="5.2）测试方法"></a>5.2）测试方法</h3><p>域名解析linux系统为大家提供了三个命令，看大家喜欢用哪个都可以。</p>
+<p>a、host采用非交互式解析，</p>
+<p>b、nslookup可以采用交互或非交互式解析</p>
+<p>c、dig显示详细的解析流程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">测试注意：请将你的测试客户端机器的DNS指向你自己的DNS服务器的IP地址。本例中我使用DNS服务器给自己当测试端，我修改了自己的DNS服务器地址</span><br><span class="line">[root@zutuanxue ~]# cat /etc/resolv.conf </span><br><span class="line"># Generated by NetworkManager</span><br><span class="line">nameserver 192.168.11.16</span><br><span class="line"></span><br><span class="line">#host命令</span><br><span class="line">[root@zutuanxue ~]# host news.zutuanxue.com</span><br><span class="line">news.zutuanxue.com is an alias for www.zutuanxue.com.</span><br><span class="line">www.zutuanxue.com has address 192.168.11.88</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#nslookup 命令---交互式解析</span><br><span class="line">[root@zutuanxue ~]# nslookup</span><br><span class="line">&gt; news.zutuanxue.com</span><br><span class="line">Server:        192.168.11.16</span><br><span class="line">Address:    192.168.11.16#53</span><br><span class="line"></span><br><span class="line">news.zutuanxue.com    canonical name = www.zutuanxue.com.</span><br><span class="line">Name:    www.zutuanxue.com</span><br><span class="line">Address: 192.168.11.88</span><br><span class="line">&gt; exit</span><br><span class="line"></span><br><span class="line">#nslookup 命令---非交互式解析</span><br><span class="line">[root@zutuanxue ~]# nslookup news.zutuanxue.com</span><br><span class="line">Server:        192.168.11.16</span><br><span class="line">Address:    192.168.11.16#53</span><br><span class="line"></span><br><span class="line">news.zutuanxue.com    canonical name = www.zutuanxue.com.</span><br><span class="line">Name:    www.zutuanxue.com</span><br><span class="line">Address: 192.168.11.88</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#dig命令</span><br><span class="line">[root@zutuanxue ~]# dig news.zutuanxue.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-73.el7_6 &lt;&lt;&gt;&gt; news.zutuanxue.com</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28487</span><br><span class="line">;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 1, ADDITIONAL: 1</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 4096</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;news.zutuanxue.com.        IN    A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">news.zutuanxue.com.    86400    IN    CNAME    www.zutuanxue.com.</span><br><span class="line">www.zutuanxue.com.    86400    IN    A    192.168.11.88</span><br><span class="line"></span><br><span class="line">;; AUTHORITY SECTION:</span><br><span class="line">zutuanxue.com.        86400    IN    NS    www.zutuanxue.com.</span><br><span class="line"></span><br><span class="line">;; Query time: 0 msec</span><br><span class="line">;; SERVER: 192.168.11.16#53(192.168.11.16)</span><br><span class="line">;; WHEN: 一 2月 25 10:52:19 CST 2019</span><br><span class="line">;; MSG SIZE  rcvd: 93</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">技巧：</span><br><span class="line">在dig解析中，后面跟上+trace来显示详细解析流程</span><br><span class="line">[root@zutuanxue ~]# dig www.zutuanxue.com +trace</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、部署一个反向解析"><a href="#六、部署一个反向解析" class="headerlink" title="六、部署一个反向解析"></a>六、部署一个反向解析</h2><p><strong>案例:对<a href="http://www.zutuanxue.com做反向解析，其对应的IP地址为192.168.11.88">www.zutuanxue.com做反向解析，其对应的IP地址为192.168.11.88</a></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">1）主配置文件添加反向解析zone</span><br><span class="line">[root@zutuanxue ~]# cat /var/named/chroot/etc/named.conf </span><br><span class="line">options &#123;</span><br><span class="line">    listen-on port 53 &#123; any; &#125;;</span><br><span class="line">    directory     &quot;/var/named&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义根域</span><br><span class="line">//用于DNS向根递归查询</span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">    type hint;</span><br><span class="line">    //保存了DNS根级服务器的地址</span><br><span class="line">    file &quot;named.ca&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义一个主域</span><br><span class="line">//注意每行都要;结尾</span><br><span class="line">zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">//类型为master</span><br><span class="line">    type master;</span><br><span class="line">//区域数据库文件名称</span><br><span class="line">    file &quot;zutuanxue.com.zone&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义一个反向解析</span><br><span class="line">//此处需要倒写网段</span><br><span class="line">zone &quot;11.168.192.in-addr.arpa&quot; IN &#123;</span><br><span class="line">    type master;</span><br><span class="line">    file &quot;192.168.11.arpa&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2）区域数据库文件设置</span><br><span class="line">[root@zutuanxue named]# cat 192.168.11.arpa </span><br><span class="line">$TTL 1D</span><br><span class="line">11.168.192.in-addr.arpa.    IN SOA    ns1.zutuanxue.com. rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">    NS    ns1.zutuanxue.com.</span><br><span class="line">88    PTR    www.zutuanxue.com.</span><br><span class="line"></span><br><span class="line">注意：文件的所有者和所有者组都是named</span><br><span class="line">3）使用nslookup测试</span><br><span class="line">[root@zutuanxue ~]# nslookup 192.168.11.88</span><br><span class="line">Server:        192.168.11.16</span><br><span class="line">Address:    192.168.11.16#53</span><br><span class="line"></span><br><span class="line">88.11.168.192.in-addr.arpa    name = www.zutuanxue.com.</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、DNS服务器冗余"><a href="#七、DNS服务器冗余" class="headerlink" title="七、DNS服务器冗余"></a>七、DNS服务器冗余</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602998138816.png" alt="image20200114172337009.png"/></div><div class="image-meta"><span class="image-caption center">image20200114172337009.png</span></div></div>
+
+<p>DNS服务器在网络中为全世界的服务器提供了域名解析服务，扮演着至关重要的角色。网络中的某台DNS一旦宕机，就会造成部分域名无法解析，用户无法顺利访问到对应的服务器。但是我们学习的过程中也发现了，我们的DNS部署在单台服务器上，如果出现单点故障，我们应该如何应对呢？我们可以通过部署多台相同解析的DNS来解决单点故障，就算一台DNS服务器出现问题，也不会影响解析服务。怎么部署呢？如何保障多台之间的解析一致？这就是我们要讨论的问题了。我们来学习辅助DNS吧！</p>
+<p>辅助DNS是从主DNS拉取区域数据库文件的的，当主DNS解析的域名对应的区域数据库文件发生变化，辅助就会去找主DNS拉取新的区域数据库文件，保证和主的解析一致，而且是自动的不需要人为干预的，确保了主从DNS的区域数据库文件的一致性。</p>
+<p><strong>教学案例:按照图例,为主DNS(192.168.11.16）部署一台辅助DNS(192.168.11.116)，实现数据同步。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">辅助DNS设置</span><br><span class="line">a、软件包安装</span><br><span class="line">[root@slave ~]# dnf -y install bind bind-chroot</span><br><span class="line"></span><br><span class="line">b、设置主配文件</span><br><span class="line">[root@slave etc]# cat /var/named/chroot/etc/named.conf</span><br><span class="line">options &#123;</span><br><span class="line">    listen-on port 53 &#123; any; &#125;;</span><br><span class="line">    directory     &quot;/var/named&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义根域</span><br><span class="line">//用于DNS向根递归查询</span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">    type hint;</span><br><span class="line">    //保存了DNS根级服务器的地址</span><br><span class="line">    file &quot;named.ca&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义一个主域</span><br><span class="line">//注意每行都要;结尾</span><br><span class="line">zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">//类型为slave  代表辅助</span><br><span class="line">    type slave;</span><br><span class="line">//区域数据库文件名称</span><br><span class="line">    file &quot;zutuanxue.com.zone&quot;;</span><br><span class="line">//设置主DNS IP,向该IP去同步数据</span><br><span class="line">    masters &#123; 192.168.11.16; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义一个反向解析</span><br><span class="line">//此处需要倒写网段</span><br><span class="line">zone &quot;11.168.192.in-addr.arpa&quot; IN &#123;</span><br><span class="line">//类型写slave  代表辅助</span><br><span class="line">    type slave;</span><br><span class="line">    file &quot;192.168.11.arpa&quot;;</span><br><span class="line">//设置主DNS IP,向该IP去同步数据</span><br><span class="line">    masters &#123; 192.168.11.16; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">修改权限</span><br><span class="line">[root@slave etc]# chgrp named named.conf </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c、启动服务</span><br><span class="line">[root@slave chroot]# systemctl enable named-chroot.service </span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/named-chroot.service to</span><br><span class="line"> /usr/lib/systemd/system/named-chroot.service.</span><br><span class="line">[root@slave chroot]# systemctl start named-chroot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">d、验证</span><br><span class="line">[root@slave ~]# ls /var/named/chroot/var/named/</span><br><span class="line">192.168.11.arpa  zutuanxue.com.zone  chroot  data  dynamic  named.ca  named.empty  named.localhost  named.loopback  slaves</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">发现192.168.11.arpa  zutuanxue.com.zone 这两个数据库文件已经同步过来了，解析一下看看吧！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">设置客户端的DNS IP为192.168.11.116，我的测试机就是这台slave机器，所以设置为192.168.11.116即可</span><br><span class="line">[root@slave ~]# cat /etc/resolv.conf </span><br><span class="line">nameserver 192.168.11.116</span><br><span class="line"></span><br><span class="line">使用nslookup验证一下</span><br><span class="line">[root@slave ~]# nslookup news.zutuanxue.com</span><br><span class="line">Server:        192.168.11.116</span><br><span class="line">Address:    192.168.11.116#53</span><br><span class="line"></span><br><span class="line">news.zutuanxue.com    canonical name = www.zutuanxue.com.</span><br><span class="line">Name:    www.zutuanxue.com</span><br><span class="line">Address: 192.168.11.88</span><br><span class="line"></span><br><span class="line">[root@slave ~]# nslookup 192.168.11.88</span><br><span class="line">Server:        192.168.11.116</span><br><span class="line">Address:    192.168.11.116#53</span><br><span class="line"></span><br><span class="line">88.11.168.192.in-addr.arpa    name = www.11.168.192.in-addr.arpa.</span><br><span class="line"></span><br><span class="line">看到结果了，完美！！</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、智能DNS"><a href="#八、智能DNS" class="headerlink" title="八、智能DNS"></a>八、智能DNS</h2><p>在我们访问WEB的时候，发现有的网站打开的速度非常快，有的网站打开的非常慢，这是为什么呢？原因就是很多公司为了提升用户的体验，自己的网站使用了CDN内容加速服务，让你直接在你本地城市的服务器上拿数据并展示给你看。什么是CDN我们暂且理解为本地缓存服务器就好，那么你是怎么准确知道你本地的缓存服务器的呢！因为很多CDN公司的DNS使用了智能解析服务，根据你的源IP判断你属于哪个城市，让后再把本地的缓存服务器解析给你，你就会直接去找该服务器拿数据了。</p>
+<p>智能解析原理</p>
+<p>在DNS中植入全世界的IP库以及IP对应的地域，当用户来请求解析时，DNS会根据其源IP来定位他属于哪个区域，然后去找这个区域的view视图查询对应的域名的区域数据库文件做解析。从而使得不同地域的用户解析不同。</p>
+<p><strong>教学案例:部署一台DNS智能解析服务器，对zutuanxue.com域名做智能解析：</strong></p>
+<p><strong>上海的用户解析IP为 1.1.1.1</strong></p>
+<p><strong>北京的用户解析IP为 2.2.2.2</strong></p>
+<p><strong>其他用户解析为 3.3.3.3</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">智能解析</span><br><span class="line">a、设置主配文件</span><br><span class="line">定义IP库，DNS根据IP库判断源IP属于哪个区域</span><br><span class="line">根据地域定义视图，将该区域的客户端的解析请求都由该视图中的zone来解析</span><br><span class="line"></span><br><span class="line">[root@master named]# cat /var/named/chroot/etc/named.conf</span><br><span class="line">options &#123;</span><br><span class="line">    directory     &quot;/var/named&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//定义IP库</span><br><span class="line"></span><br><span class="line">acl shanghai &#123; 192.168.11.50; &#125;;</span><br><span class="line">acl beijing &#123; 192.168.11.100; &#125;;</span><br><span class="line"></span><br><span class="line">//定义视图，通过IP匹配后，通过不同的区域数据库文件进行解析</span><br><span class="line">view sh &#123;</span><br><span class="line">	match-clients &#123; shanghai; &#125;;</span><br><span class="line">	zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">    type master;</span><br><span class="line">    file &quot;zutuanxue.com.zone.sh&quot;;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">view bj &#123;</span><br><span class="line">	match-clients &#123; beijing; &#125;;</span><br><span class="line">	zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;zutuanxue.com.zone.bj&quot;;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">view other &#123;</span><br><span class="line">	match-clients &#123; any; &#125;;</span><br><span class="line">  zone &quot;zutuanxue.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;zutuanxue.com.zone.any&quot;;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">b、根据主配文件设置不同的区域数据库文件</span><br><span class="line">[root@master named]# cd /var/named/chroot/var/named</span><br><span class="line">[root@master named]# cp zutuanxue.com.zone zutuanxue.com.zone.bj</span><br><span class="line">[root@master named]# cp zutuanxue.com.zone zutuanxue.com.zone.sh</span><br><span class="line">[root@master named]# cp zutuanxue.com.zone zutuanxue.com.zone.any</span><br><span class="line">[root@master named]# chgrp named  zutuanxue.com.zone.*</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@master named]# cat /var/named/chroot/var/named/zutuanxue.com.zone.sh </span><br><span class="line">$TTL 1D</span><br><span class="line">@    IN SOA    zutuanxue.com. rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">    NS    www.zutuanxue.com.</span><br><span class="line">www    A    1.1.1.1</span><br><span class="line"></span><br><span class="line">[root@master named]# cat /var/named/chroot/var/named/zutuanxue.com.zone.bj</span><br><span class="line">$TTL 1D</span><br><span class="line">@    IN SOA    zutuanxue.com. rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">    NS    www.zutuanxue.com.</span><br><span class="line">www    A    2.2.2.2</span><br><span class="line"></span><br><span class="line">[root@master named]# cat /var/named/chroot/var/named/zutuanxue.com.zone.any </span><br><span class="line">$TTL 1D</span><br><span class="line">@    IN SOA    zutuanxue.com. rname.invalid. (</span><br><span class="line">                    0    ; serial</span><br><span class="line">                    1D    ; refresh</span><br><span class="line">                    1H    ; retry</span><br><span class="line">                    1W    ; expire</span><br><span class="line">                    3H )    ; minimum</span><br><span class="line">    NS    www.zutuanxue.com.</span><br><span class="line">www    A    3.3.3.3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c、测试</span><br><span class="line">依次修改主配的IP库中的IP为本机，观看解析情况</span><br><span class="line"></span><br><span class="line">[root@master named]# nslookup www.zutuanxue.com</span><br><span class="line">Server:        192.168.11.16</span><br><span class="line">Address:    192.168.11.16#53</span><br><span class="line"></span><br><span class="line">Name:    www.zutuanxue.com</span><br><span class="line">Address: 1.1.1.1</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/FTP%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/">2023-07-11</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/11/Linux%E5%B8%B8%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98/DHCP%E6%9C%8D%E5%8A%A1/">2023-07-11</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
