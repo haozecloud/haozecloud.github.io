@@ -5,7 +5,7 @@
   <meta name="generator" content="Hexo 6.3.0">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
   <meta charset="utf-8">
-  <meta name="robots" content="noindex,follow">
+  
 
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
@@ -20,16 +20,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>归档 - 原点独白</title>
+  <title>sysctl - 原点独白</title>
 
   
-    <meta name="description" content="专注于技术研究、信息安全、服务器运维、云计算及各种主流前后端技术。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="https://haozecloud.github.io/archives/2023/index.html">
+    <meta name="description" content="可以通过&#x2F;etc&#x2F;sysctl.conf控制和配置Linux内核及网络设置。123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354# 避免放大攻击net.ipv4.icmp_echo_ignore_broadcasts &#x3D; 1# 开启恶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sysctl">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/25/sysctl/sysctl/index.html">
 <meta property="og:site_name" content="原点独白">
-<meta property="og:description" content="专注于技术研究、信息安全、服务器运维、云计算及各种主流前后端技术。">
+<meta property="og:description" content="可以通过&#x2F;etc&#x2F;sysctl.conf控制和配置Linux内核及网络设置。123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354# 避免放大攻击net.ipv4.icmp_echo_ignore_broadcasts &#x3D; 1# 开启恶">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T08:37:54.000Z">
+<meta property="article:modified_time" content="2023-09-26T06:36:33.816Z">
 <meta property="article:author" content="Zhang Hao Ze">
 <meta name="twitter:card" content="summary">
   
@@ -62,8 +64,10 @@
   
 
 
+
+
   <div class='l_body' id='start'>
-    <aside class='l_left' layout=''>
+    <aside class='l_left' layout='post'>
     
 
   
@@ -77,168 +81,42 @@
 <div class="widgets">
 <widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
 
-<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/09/25/sysctl/sysctl/"><span class="title">sysctl</span></a><a class="item title" href="/2023/09/26/dns/DNS/"><span class="title">DNS����</span></a><a class="item title" href="/2023/09/26/dhcp/DHCP/"><span class="title">DHCP配置</span></a><a class="item title" href="/2023/09/25/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BDmysqldump/"><span class="title">MySQL数据库备份mysqldump</span></a><a class="item title" href="/2023/09/25/Linux%E4%B8%8B%E5%91%BD%E4%BB%A4find%E5%91%BD%E4%BB%A4%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE/"><span class="title">Linux下命令find命令文件查找</span></a></div></widget>
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">sysctl</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87-etc-sysctl-conf%E6%8E%A7%E5%88%B6%E5%92%8C%E9%85%8D%E7%BD%AELinux%E5%86%85%E6%A0%B8%E5%8F%8A%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE%E3%80%82"><span class="toc-text">可以通过&#x2F;etc&#x2F;sysctl.conf控制和配置Linux内核及网络设置。</span></a></li></ol></div></div></widget>
+
+
 
 
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
 
     </aside>
-    <div class='l_main list'>
+    <div class='l_main'>
       
-  
-
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div></header>
-
-
 
       
 
-  
-  
 
-<div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a href="/categories">分类</a><a class="active" href="/archives">归档</a></nav></div>
 
-  <div class='post-list'>
-  	
-  	
-  		
-  		
-  			
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  		
-  		
-  	
-  	
-  		<article class='' id='archive'>
-  			<div class='archive-header h4'>2023</div>
-  			
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				
-  		    
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/26/dhcp/DHCP/">
-    					<time>09-26</time>
-    					<span>
-                
-      						DHCP配置
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/26/dns/DNS/">
-    					<time>09-26</time>
-    					<span>
-                
-      						DNS����
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BDmysqldump/">
-    					<time>09-25</time>
-    					<span>
-                
-      						MySQL数据库备份mysqldump
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/Linux%E4%B8%8B%E5%91%BD%E4%BB%A4find%E5%91%BD%E4%BB%A4%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE/">
-    					<time>09-25</time>
-    					<span>
-                
-      						Linux下命令find命令文件查找
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/Linux%E4%B8%ADmotd%E6%96%87%E4%BB%B6/">
-    					<time>09-25</time>
-    					<span>
-                
-      						Linux中/etc/issue、/etc/motd文件
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/Linux%20%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD%E6%96%B9%E5%BC%8F/">
-    					<time>09-25</time>
-    					<span>
-                
-      						Linux 磁盘挂载
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/sysctl/sysctl/">
-    					<time>09-25</time>
-    					<span>
-                
-      						sysctl
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  				<div class='archive-list'>
-            <a class='post fs14' href="/2023/09/25/Linux%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E7%AD%96%E7%95%A5setfacl%E5%91%BD%E4%BB%A4/">
-    					<time>09-25</time>
-    					<span>
-                
-      						Linux文件权限策略setfacl命令
-      					
-              </span>
-    				</a>
-          </div>
-  			
-  		</article>
-  	
-  </div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">基础操作</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-25T08:37:54.000Z">2023-09-25</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>sysctl</span></h1>
+<h4 id="可以通过-etc-sysctl-conf控制和配置Linux内核及网络设置。"><a href="#可以通过-etc-sysctl-conf控制和配置Linux内核及网络设置。" class="headerlink" title="可以通过&#x2F;etc&#x2F;sysctl.conf控制和配置Linux内核及网络设置。"></a>可以通过&#x2F;etc&#x2F;sysctl.conf控制和配置Linux内核及网络设置。</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">避免放大攻击</span></span><br><span class="line">net.ipv4.icmp_echo_ignore_broadcasts = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启恶意icmp错误消息保护</span></span><br><span class="line">net.ipv4.icmp_ignore_bogus_error_responses = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启SYN洪水攻击保护</span></span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启并记录欺骗，源路由和重定向包</span></span><br><span class="line">net.ipv4.conf.all.log_martians = 1</span><br><span class="line">net.ipv4.conf.default.log_martians = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">处理无源路由的包</span></span><br><span class="line">net.ipv4.conf.all.accept_source_route = 0</span><br><span class="line">net.ipv4.conf.default.accept_source_route = 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启反向路径过滤</span></span><br><span class="line">net.ipv4.conf.all.rp_filter = 1</span><br><span class="line">net.ipv4.conf.default.rp_filter = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">确保无人能修改路由表</span></span><br><span class="line">net.ipv4.conf.all.accept_redirects = 0</span><br><span class="line">net.ipv4.conf.default.accept_redirects = 0</span><br><span class="line">net.ipv4.conf.all.secure_redirects = 0</span><br><span class="line">net.ipv4.conf.default.secure_redirects = 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">不充当路由器</span></span><br><span class="line">net.ipv4.ip_forward = 0</span><br><span class="line">net.ipv4.conf.all.send_redirects = 0</span><br><span class="line">net.ipv4.conf.default.send_redirects = 0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启execshild</span></span><br><span class="line">kernel.exec-shield = 1</span><br><span class="line">kernel.randomize_va_space = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">IPv6设置</span></span><br><span class="line">net.ipv6.conf.default.router_solicitations = 0</span><br><span class="line">net.ipv6.conf.default.accept_ra_rtr_pref = 0</span><br><span class="line">net.ipv6.conf.default.accept_ra_pinfo = 0</span><br><span class="line">net.ipv6.conf.default.accept_ra_defrtr = 0</span><br><span class="line">net.ipv6.conf.default.autoconf = 0</span><br><span class="line">net.ipv6.conf.default.dad_transmits = 0</span><br><span class="line">net.ipv6.conf.default.max_addresses = 1</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">优化LB使用的端口</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">增加系统文件描述符限制</span></span><br><span class="line">fs.file-max = 65535</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">允许更多的PIDs (减少滚动翻转问题); may <span class="built_in">break</span> some programs 32768</span></span><br><span class="line">kernel.pid_max = 65536</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">增加系统IP端口限制</span></span><br><span class="line">net.ipv4.ip_local_port_range = 2000 65000</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">增加TCP最大缓冲区大小</span></span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 8388608</span><br><span class="line">net.ipv4.tcp_wmem = 4096 87380 8388608</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">增加Linux自动调整TCP缓冲区限制</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">最小，默认和最大可使用的字节数</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">最大值不低于4MB，如果你使用非常高的BDP路径可以设置得更高</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Tcp窗口等</span></span><br><span class="line">net.core.rmem_max = 8388608</span><br><span class="line">net.core.wmem_max = 8388608</span><br><span class="line">net.core.netdev_max_backlog = 5000</span><br><span class="line">net.ipv4.tcp_window_scaling = 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/25/Linux%20%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD%E6%96%B9%E5%BC%8F/">Linux 磁盘挂载</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/25/Linux%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E7%AD%96%E7%95%A5setfacl%E5%91%BD%E4%BB%A4/">Linux文件权限策略setfacl命令</a></div></section></div>
+
+
+
+
+
+
 
 
       
