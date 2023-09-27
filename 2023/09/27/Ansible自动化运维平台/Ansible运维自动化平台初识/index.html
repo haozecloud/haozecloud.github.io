@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Ansible运维自动化平台初识 - 原点独白</title>
+
+  
+    <meta name="description" content="一、运维自动化平台介绍1.1、自动化运维平台介绍运维自动化平台是由管理机器[S]和业务机器[C]组成的,C&#x2F;S。 管理机器：任务定制及发布； 业务机器：接收任务并执行任务。 运维自动化平台组成.png  1.2、运维自动化平台的优势： 一次性任务定制：任务一次性发布给所有机器 节省任务执行时间：任务主机并发完成任务，节省部署时间 错误率低：避免重复，保证一次任务定制准确即可  二、常见的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible运维自动化平台初识">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E5%88%9D%E8%AF%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、运维自动化平台介绍1.1、自动化运维平台介绍运维自动化平台是由管理机器[S]和业务机器[C]组成的,C&#x2F;S。 管理机器：任务定制及发布； 业务机器：接收任务并执行任务。 运维自动化平台组成.png  1.2、运维自动化平台的优势： 一次性任务定制：任务一次性发布给所有机器 节省任务执行时间：任务主机并发完成任务，节省部署时间 错误率低：避免重复，保证一次任务定制准确即可  二、常见的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601965978453.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601966026674.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601966060853.png">
+<meta property="article:published_time" content="2023-09-27T00:24:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:24:57.155Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601965978453.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">Ansible运维自动化平台初识</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、运维自动化平台介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E3%80%81%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E4%BB%8B%E7%BB%8D"><span class="toc-text">1.1、自动化运维平台介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E3%80%81%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E7%9A%84%E4%BC%98%E5%8A%BF%EF%BC%9A"><span class="toc-text">1.2、运维自动化平台的优势：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B7%A5%E5%85%B7"><span class="toc-text">二、常见的自动化运维工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7"><span class="toc-text">2.1、常见的运维自动化工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81ansible%E4%BB%8B%E7%BB%8D"><span class="toc-text">2.2、ansible介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81ansible%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="toc-text">三、ansible运行原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AD%A6%E4%B9%A0%E8%A7%86%E9%A2%91"><span class="toc-text">四、学习视频</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/">Ansible自动化运维平台</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>Ansible运维自动化平台初识</span></h1>
+<h2 id="一、运维自动化平台介绍"><a href="#一、运维自动化平台介绍" class="headerlink" title="一、运维自动化平台介绍"></a>一、运维自动化平台介绍</h2><h3 id="1-1、自动化运维平台介绍"><a href="#1-1、自动化运维平台介绍" class="headerlink" title="1.1、自动化运维平台介绍"></a>1.1、自动化运维平台介绍</h3><p>运维自动化平台是由管理机器[S]和业务机器[C]组成的,C&#x2F;S。</p>
+<p>管理机器：任务定制及发布；</p>
+<p>业务机器：接收任务并执行任务。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601965978453.png" alt="运维自动化平台组成.png"/></div><div class="image-meta"><span class="image-caption center">运维自动化平台组成.png</span></div></div>
+
+<h3 id="1-2、运维自动化平台的优势："><a href="#1-2、运维自动化平台的优势：" class="headerlink" title="1.2、运维自动化平台的优势："></a>1.2、运维自动化平台的优势：</h3><ul>
+<li>一次性任务定制：任务一次性发布给所有机器</li>
+<li>节省任务执行时间：任务主机并发完成任务，节省部署时间</li>
+<li>错误率低：避免重复，保证一次任务定制准确即可</li>
+</ul>
+<h2 id="二、常见的自动化运维工具"><a href="#二、常见的自动化运维工具" class="headerlink" title="二、常见的自动化运维工具"></a>二、常见的自动化运维工具</h2><h3 id="2-1、常见的运维自动化工具"><a href="#2-1、常见的运维自动化工具" class="headerlink" title="2.1、常见的运维自动化工具"></a>2.1、常见的运维自动化工具</h3><ul>
+<li><strong>Puppet</strong></li>
+<li><strong>Ansible</strong></li>
+<li><strong>SaltStack</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">puppet：</span><br><span class="line">基于Ruby开发，有产品线已经在用，优点是历史悠久，比较成熟，在可远程可本地，功能强劲，批量执行需要写专门的配置文件，费力费时。而且有客户端在，和授权系统结合比较麻烦。</span><br><span class="line"></span><br><span class="line">saltstack:</span><br><span class="line">saltstack和ansible都是python流的，而且就功能上来讲，两者也极为相似，不同之处是salt stack是有客户端的，并且execution模块还用0MQ实现了pub-sub，命令和执行结果因此可以高效并行传输，不过成也萧何败也萧何，第一个sub阶段（将querystring下发到所有机器，然后收集机器响应的阶段）太依赖与客户端返回了，如果客户端未能及时返回或未响应的话，playbook执行阶段可能会直接漏掉这部分机器而没有任何提示，这对于运维来说是不可接受的。</span><br><span class="line"></span><br><span class="line">ansible:</span><br><span class="line">与前两者比起来，在特性上似乎并不抢眼，配置管理方面（playbook）绝对比不过老大哥puppet，批量执行方面也只是多线程，不像saltstack那么高大上，不过ansible搜索热度高出saltstack三倍多，显然靠的不是吹牛，至少，ansible至少不会悄悄的丢机器，这给了我们一个定心丸，而且仅依赖ssh，与登录授权管理系统天然集成，简单即有效，没有比这更美妙的事情了。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、ansible介绍"><a href="#2-2、ansible介绍" class="headerlink" title="2.2、ansible介绍"></a>2.2、ansible介绍</h3><p>ansible是一种由Python开发的自动化运维工具，集合了众多运维工具（puppet、cfengine、chef、func、fabric）的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能。<strong>ansible是基于模块工作的，本身没有批量部署的能力</strong>。<strong>真正具有批量部署的是ansible所运行的模块，ansible只是提供一种框架</strong>。主要包括：</p>
+<ol>
+<li>连接插件connection plugins：负责和被监控端实现通信；<strong>ansible管理端和客户端基于ssh协议通信</strong></li>
+<li>host inventory：指定操作的主机，是一个配置文件里面定义监控的主机；<strong>提供主机管理列表，定义管理谁</strong></li>
+<li>各种模块核心模块、command模块、自定义模块；<strong>提供了日常模块</strong></li>
+<li>借助于插件完成记录日志邮件等功能； <strong>根据需求后续添加模块，邮件、日志模块</strong></li>
+<li>playbook：剧本执行多个任务时，非必需可以让节点一次性运行多个任务。<strong>一次发布多条指令给客户端</strong></li>
+</ol>
+<p><strong>特性</strong></p>
+<ol>
+<li>no agents：不需要在被管控主机上安装任何客户端；</li>
+<li>no server：无服务器端，使用时直接运行命令即可；</li>
+<li>modules in any languages：基于模块工作，可使用任意语言开发模块；</li>
+<li>yaml，not code：使用yaml语言定制剧本playbook；</li>
+<li>ssh by default：基于SSH工作；</li>
+<li>strong multi-tier solution：可实现多级指挥。</li>
+</ol>
+<p><strong>优点</strong></p>
+<ol>
+<li>轻量级，无需在客户端安装agent，更新时，只需在操作机上进行一次更新即可；</li>
+<li>批量任务执行可以写成脚本，而且不用分发到远程就可以执行；</li>
+<li>使用python编写，维护更简单，ruby语法过于复杂；</li>
+<li>支持sudo</li>
+</ol>
+<p><strong>基本架构</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601966026674.png" alt="ansible3.png"/></div><div class="image-meta"><span class="image-caption center">ansible3.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">· 核心引擎：即ansible</span><br><span class="line">· 核心模块（core modules）：这些都是ansible自带的模块，ansible模块资源分发到远程节点使其执行特定任务或匹配一个特定的状态。</span><br><span class="line">· 自定义模块（custom modules）：如果核心模块不足以完成某种功能，可以添加自定义模块。</span><br><span class="line">· 插件（plugins）：完成模块功能的补充，借助于插件完成记录日志、邮件等功能</span><br><span class="line">· 剧本（playbook）：定义ansible任务的配置文件，可以将多个任务定义在一个剧本中，由ansible自动执行，剧本执行支持多个任务，可以由控制主机运行多个任务，同时对多台远程主机进行管理。</span><br><span class="line">· playbook是ansible的配置、部署和编排语言，可以描述一个你想要的远程系统执行策略，或一组步骤的一般过程。如果ansible模块作为你的工作室工具，playbook就是设计方案。在基本层面上，剧本可以用于管理配置和部署远程机器。在更高级的应用中，可以序列多层应用及滚动更新，并可以把动作委托给其他主机，与监控服务器和负载平衡器交互。</span><br><span class="line">· 连接插件（connection plugins）：ansible基于连接插件连接到各个主机上，负责和被管理节点实现通信。虽然ansible是使用ssh连接到各被管理节点，但它还支持其他的连接方法，所以需要有连接插件。</span><br><span class="line">· 主机清单（host inventory）：定义ansible管理的主机策略，默认是在ansible的hosts配置文件中定义被管节点，同时也支持自定义动态主机清单和指定配置文件路径。</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>ansible采用paramiko协议库（Fabric也使用这个，基于python开发，支持SSHV2），通过ssh或者ZeroMQ等连接主机。ansible在控制主机主机将ansible模块通过ssh协议（或者Kerberos、LDAP）推送到被管节点执行，执行完之后自动删除。控制主机与被管理节点之间支持local、SSH、ZeroMQ三种连接方式，默认使用基于SSH的连接。在规模较大的情况下使用ZeroMQ连接方式会明显改善执行速度。</p>
+<h2 id="三、ansible运行原理"><a href="#三、ansible运行原理" class="headerlink" title="三、ansible运行原理"></a>三、ansible运行原理</h2><p>ansible是如何工作的呢？我们通过一个图片来说明一下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601966060853.png" alt="ansible工作原理1132928.png"/></div><div class="image-meta"><span class="image-caption center">ansible工作原理1132928.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">工作原理：</span><br><span class="line">1、用户登录管理机器：通过ansible剧本或者单行命令针对业务机器组或者单个机器部署任务</span><br><span class="line"></span><br><span class="line">2、管理机器读取用户的部署任务：根据自己hosts文件中定义的业务机器组查找对应的机器地址(ip或者域名)</span><br><span class="line"></span><br><span class="line">3、管理机下发任务：管理机通过ssh免密连接业务机器，下发任务给业务机器</span><br><span class="line"></span><br><span class="line">4、业务机器执行任务</span><br><span class="line"></span><br><span class="line">5、业务机器将执行结果发送给ansible管理机器</span><br><span class="line">	反馈字体颜色</span><br><span class="line">	绿色  未发生变化</span><br><span class="line">	黄色  更改生效</span><br><span class="line">	红色  执行错误</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、学习视频"><a href="#四、学习视频" class="headerlink" title="四、学习视频"></a>四、学习视频</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19J41167sM/">视频：ansible课程介绍</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19J41167sM?p=2">视频：自动化运维平台课程介绍</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19J41167sM?p=3">视频：自动化运维平台介绍</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19J41167sM?p=4">视频：ansible介绍</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19J41167sM?p=5">视频：ansible工作原理</a></p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AC%94%E8%AE%B0/">网络工程师笔记</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-Logstash%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/">ELK-Logstash日志收集</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

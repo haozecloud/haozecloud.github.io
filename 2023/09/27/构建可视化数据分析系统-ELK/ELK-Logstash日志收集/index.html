@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>ELK-Logstash日志收集 - 原点独白</title>
+
+  
+    <meta name="description" content="ES负责存储、分析数据，但是这一切前提是需要有数据，ES本身是不能够收集数据的，数据的收集如何来做呢？我们可以通过两个软件来实现数据的收集，那就是：  Logstash:收集、处理数据然后交给ES  Beats:收集数据交给ES 两者不同点在于Logstash能够更像一个数据中转站，它能够收集数据，并且对收集的数据进行处理，所以logstash消耗的计算机资源也是比较大的。Beats只负责收集数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK-Logstash日志收集">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-Logstash%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="ES负责存储、分析数据，但是这一切前提是需要有数据，ES本身是不能够收集数据的，数据的收集如何来做呢？我们可以通过两个软件来实现数据的收集，那就是：  Logstash:收集、处理数据然后交给ES  Beats:收集数据交给ES 两者不同点在于Logstash能够更像一个数据中转站，它能够收集数据，并且对收集的数据进行处理，所以logstash消耗的计算机资源也是比较大的。Beats只负责收集数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976604309.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976891197.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976909179.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976960545.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976984569.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976999108.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977015184.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977041244.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977059027.png">
+<meta property="article:published_time" content="2023-09-27T00:10:39.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:10:40.463Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976604309.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">ELK-Logstash日志收集</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81logstash%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、logstash介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81logstash%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="toc-text">二、logstash安装部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%85%8D%E7%BD%AElogstash%E6%9C%8D%E5%8A%A1%E7%9B%91%E5%90%AC%E5%9C%B0%E5%9D%80%E4%B8%BA%E6%9C%AC%E6%9C%BA%E7%BD%91%E5%8D%A1IP"><span class="toc-text">三、配置logstash服务监听地址为本机网卡IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%94%B6%E9%9B%86%E6%9C%AC%E6%9C%BAmessages%E6%97%A5%E5%BF%97%E7%BB%99ES"><span class="toc-text">四、收集本机messages日志给ES</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81logstash%E5%A4%9A%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86"><span class="toc-text">五、logstash多日志收集</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/">构建可视化数据分析系统-ELK</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>ELK-Logstash日志收集</span></h1>
+<p>ES负责存储、分析数据，但是这一切前提是需要有数据，ES本身是不能够收集数据的，数据的收集如何来做呢？我们可以通过两个软件来实现数据的收集，那就是：</p>
+<p> Logstash:收集、处理数据然后交给ES</p>
+<p> Beats:收集数据交给ES</p>
+<p>两者不同点在于Logstash能够更像一个数据中转站，它能够收集数据，并且对收集的数据进行处理，所以logstash消耗的计算机资源也是比较大的。Beats只负责收集数据，将数据收集后交给ES，和logstash相比其消耗的计算机资源更少，可以忽略。</p>
+<h2 id="一、logstash介绍"><a href="#一、logstash介绍" class="headerlink" title="一、logstash介绍"></a>一、logstash介绍</h2><p>logstash是一个开源的数据采集工具,通过数据源采集数据.然后进行过滤,并自定义格式输出到目的地。</p>
+<p>数据分为:</p>
+<ol>
+<li>结构化数据 如:mysql数据库里的表等</li>
+<li>半结构化数据 如: xml,yaml,json等</li>
+<li>非结构化数据 如:文档,图片,音频,视频等</li>
+</ol>
+<p>logstash可以采集任何格式的数据,当然我们这里主要是讨论采集系统日志,服务日志等日志类型数据。</p>
+<p>官方产品介绍:<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/products/logstash">https://www.elastic.co/cn/products/logstash</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976604309.png" alt="logstash工作流.png"/></div><div class="image-meta"><span class="image-caption center">logstash工作流.png</span></div></div>
+
+<p>input插件: 用于导入日志源 (<strong>配置必须</strong>)</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/input-plugins.html">https://www.elastic.co/guide/en/logstash/current/input-plugins.html</a></p>
+<p>filter插件: 用于过滤(<strong>不是配置必须的</strong>)</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/filter-plugins.html">https://www.elastic.co/guide/en/logstash/current/filter-plugins.html</a></p>
+<p>output插件: 用于导出(<strong>配置必须</strong>)</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/logstash/current/output-plugins.html">https://www.elastic.co/guide/en/logstash/current/output-plugins.html</a></p>
+<h2 id="二、logstash安装部署"><a href="#二、logstash安装部署" class="headerlink" title="二、logstash安装部署"></a>二、logstash安装部署</h2><p>a、安装前准备</p>
+<p>机器准备：node3</p>
+<ul>
+<li>静态IP(要求能上公网,最好用虚拟机的NAT网络类型上网)</li>
+<li>主机名及主机名绑定</li>
+<li>关闭防火墙和selinux</li>
+<li>时间同步</li>
+<li>yum源(centos安装完系统后的默认yum源就OK)</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">安装前准备参考https://www.zutuanxue.com/home/4/52_138</span><br><span class="line">本文通过自定义脚本init_linux_os.sh脚本来完成</span><br><span class="line"></span><br><span class="line"># cat init_linux_os.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line">#Description: initialize linux OS from ZUTUANXUE(http://www.zutuanxue.com)</span><br><span class="line">#Release: 1.0</span><br><span class="line">#Auther: www.zutuanxue.com</span><br><span class="line">#Email: </span><br><span class="line">#OS: Centos 8.X</span><br><span class="line">################</span><br><span class="line">hosts() &#123;</span><br><span class="line">        echo &quot;&quot; &gt; /etc/hosts</span><br><span class="line">        cat &gt;&gt; /etc/hosts&lt;&lt;EOF</span><br><span class="line">127.0.0.1   localhost</span><br><span class="line">::1         localhost </span><br><span class="line">192.168.98.200  manage01</span><br><span class="line">192.168.98.201  node1</span><br><span class="line">192.168.98.202  node2</span><br><span class="line">192.168.98.203  node3</span><br><span class="line">192.168.98.204  node4</span><br><span class="line">EOF</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">################</span><br><span class="line">cat &lt;&lt;EOF</span><br><span class="line">#Description: initialize linux OS from ZUTUANXUE(http://www.zutuanxue.com)</span><br><span class="line">#Release: 1.0</span><br><span class="line">#Auther: www.zutuanxue.com</span><br><span class="line">#Email: </span><br><span class="line">#OS: Centos 8.X</span><br><span class="line"></span><br><span class="line">#1、disable firewall</span><br><span class="line">#2、disable selinux</span><br><span class="line">#3、set chrony client</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#</span><br><span class="line">hosts</span><br><span class="line"></span><br><span class="line">#disable fireall</span><br><span class="line">systemctl disable firewalld</span><br><span class="line">systemctl stop firewalld</span><br><span class="line">iptables -F</span><br><span class="line">iptables -t nat -F</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#disable selinux</span><br><span class="line">sed -i -r &#x27;/SELINUX=/c\SELINUX=disabled&#x27; /etc/selinux/config</span><br><span class="line"></span><br><span class="line">#set chrony client</span><br><span class="line">sed -i.bak &#x27;/^pool 2.centos.pool.ntp.org iburst$/s//#/&#x27; /etc/chrony.conf </span><br><span class="line">cat &gt;&gt; /etc/chrony.conf &lt;&lt;EOF</span><br><span class="line">server ntp1.aliyun.com</span><br><span class="line">server ntp2.aliyun.com</span><br><span class="line">server ntp3.aliyun.com</span><br><span class="line">server ntp4.aliyun.com</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">if systemctl restart chronyd.service;then</span><br><span class="line">       echo -e &quot;\033[32m SUCCESS \033[0m&quot;</span><br><span class="line">else</span><br><span class="line">       echo -e &quot;\033[31m FAIL \033[0m&quot;</span><br><span class="line">       exit 1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>b、安装部署</p>
+<p>因为logstash也是基于java开发的，所以安装之前先要解决运行环境问题，需要安装jdk.</p>
+<ol>
+<li><p>安装jdk</p>
+</li>
+<li><p>安装logstash</p>
+</li>
+</ol>
+<p><strong>安装jdk-13.0.2</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">参考5.2.1</span><br><span class="line">本文通过自定义脚本elk_install.sh安装</span><br><span class="line">[root@node3 es_install]# sh elk_install.sh jdk</span><br><span class="line">警告：jdk-13.0.2_linux-x64_bin.rpm: 头V3 RSA/SHA256 Signature, 密钥 ID ec551f03: NOKEY</span><br><span class="line">jdk-13.0.2 install success</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装logstash</strong></p>
+<p>安装方法：</p>
+<ol>
+<li>yum</li>
+<li>rpm</li>
+<li>源码</li>
+</ol>
+<p>我依然采用rpm安装，如果安装ES的时候设置过yum源，可以直接使用命令：</p>
+<p> yum -y install logstash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 ~]# rpm -i logstash-7.6.0.rpm </span><br><span class="line">警告：logstash-7.6.0.rpm: 头V4 RSA/SHA512 Signature, 密钥 ID d88e42b4: NOKEY</span><br><span class="line">Using provided startup.options file: /etc/logstash/startup.options</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.</span><br><span class="line">WARNING: An illegal reflective access operation has occurred</span><br><span class="line">WARNING: Illegal reflective access by com.headius.backport9.modules.Modules to method sun.nio.ch.NativeThread.signal(long)</span><br><span class="line">WARNING: Please consider reporting this to the maintainers of com.headius.backport9.modules.Modules</span><br><span class="line">WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations</span><br><span class="line">WARNING: All illegal access operations will be denied in a future release</span><br><span class="line">/usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/pleaserun-0.0.30/lib/pleaserun/platform/base.rb:112: warning: constant ::Fixnum is deprecated</span><br><span class="line">Successfully created system startup script for Logstash</span><br></pre></td></tr></table></figure>
+
+<p>c、目录及文件</p>
+<p>安装目录:&#x2F;usr&#x2F;share&#x2F;logstash</p>
+<p>配置文件目录: &#x2F;etc&#x2F;logstash&#x2F;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# tree </span><br><span class="line">.</span><br><span class="line">├── conf.d					#业务配置文件，空目录 *.conf 从哪里采集日志，送到哪里去</span><br><span class="line">├── jvm.options</span><br><span class="line">├── log4j2.properties</span><br><span class="line">├── logstash-sample.conf	#数据收集模板文件</span><br><span class="line">├── logstash.yml				#配置文件</span><br><span class="line">├── pipelines.yml</span><br><span class="line">└── startup.options			#启动参数</span><br><span class="line"></span><br><span class="line">1 directory, 6 files</span><br></pre></td></tr></table></figure>
+
+<p>d、启动管理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">开机启动</span><br><span class="line">[root@node3 logstash]# systemctl enable logstash</span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/logstash.service → /etc/systemd/system/logstash.service.</span><br><span class="line">启动服务</span><br><span class="line">[root@node3 logstash]# systemctl start logstash</span><br><span class="line"></span><br><span class="line">注意第一次安装未配置是无法启动的，应为没有业务配置文件在conf.d下面</span><br></pre></td></tr></table></figure>
+
+<p>命令行启动验证</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# /usr/share/logstash/bin/logstash -e &#x27;input &#123;stdin &#123;&#125;&#125; output &#123;stdout &#123;&#125;&#125;&#x27;</span><br><span class="line"></span><br><span class="line">#自己输给自己</span><br><span class="line">运行在前台，ctrl+C终止</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976891197.png" alt="24_logstash命令行启动.png"/></div><div class="image-meta"><span class="image-caption center">24_logstash命令行启动.png</span></div></div>
+
+<p>如图，看到启动成功就可以了</p>
+<p>e、查看启动</p>
+<p>启动成功后可以查看一下logstash启动情况，使用netstat命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# netstat -ntpl</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976909179.png" alt="25_logstash启动查看.png"/></div><div class="image-meta"><span class="image-caption center">25_logstash启动查看.png</span></div></div>
+
+<h2 id="三、配置logstash服务监听地址为本机网卡IP"><a href="#三、配置logstash服务监听地址为本机网卡IP" class="headerlink" title="三、配置logstash服务监听地址为本机网卡IP"></a>三、配置logstash服务监听地址为本机网卡IP</h2><p>[root@node3 ~]# vim &#x2F;etc&#x2F;logstash&#x2F;logstash.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># ------------ Metrics Settings --------------</span><br><span class="line">#</span><br><span class="line"># Bind address for the metrics REST endpoint</span><br><span class="line">#</span><br><span class="line">http.host: &quot;0.0.0.0&quot;     #删除#号，输入本机网卡地址或0.0.0.0,顶格写</span><br><span class="line">#</span><br><span class="line"># Bind port for the metrics REST endpoint, this option also accept a range</span><br><span class="line"># (9600-9700) and logstash will pick up the first available ports.</span><br><span class="line">#</span><br><span class="line"># http.port: 9600-9700</span><br></pre></td></tr></table></figure>
+
+<p>配置业务后启动查看</p>
+<h2 id="四、收集本机messages日志给ES"><a href="#四、收集本机messages日志给ES" class="headerlink" title="四、收集本机messages日志给ES"></a>四、收集本机messages日志给ES</h2><p><strong>业务架构</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976960545.png" alt="LEK.png"/></div><div class="image-meta"><span class="image-caption center">LEK.png</span></div></div>
+
+<p>这里以&#x2F;var&#x2F;log&#x2F;messages为例,只定义input输入和output输出,不考虑过滤</p>
+<p>配置业务文件存储在conf.d下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# cat /etc/logstash/conf.d/logstash_to_es_messages.conf</span><br><span class="line">#采集日志位置</span><br><span class="line">input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path =&gt; &quot;/var/log/messages&quot;				#日志文件路径</span><br><span class="line">        start_position =&gt; &quot;beginning&quot;			#收集日志开始的位置点</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#输出给ES</span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch&#123;</span><br><span class="line">        hosts =&gt; [&quot;192.168.98.201:9200&quot;] #ES地址</span><br><span class="line">        #数据保存的索引名字    test-YYYY-MM-DD  按日期生成索引</span><br><span class="line">        index =&gt; &quot;test-%&#123;+YYYY.MM.dd&#125;&quot;   </span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">#输出到屏幕一份，dubug使用,前台启动Logstash排错有用   </span><br><span class="line">#stdout &#123;</span><br><span class="line">#	      codec =&gt; rubydebug</span><br><span class="line">#    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意问题</p>
+<p>设置&#x2F;var&#x2F;log&#x2F;messages文件权限，让logstash能读取</p>
+<p>logstash进程管理用户 logstash</p>
+<p>&#x2F;var&#x2F;log&#x2F;messages文件权限400</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# ls /var/log/messages -l</span><br><span class="line">-rw------- 1 root root 374743 2月  15 05:08 /var/log/messages</span><br><span class="line">[root@node3 logstash]# chmod 644 /var/log/messages</span><br></pre></td></tr></table></figure>
+
+<p>启动logstash生效设置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# systemctl restart logstash</span><br></pre></td></tr></table></figure>
+
+<p>查看启动日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 ~]# tail -f /var/log/logstash/logstash-plain.log </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976984569.png" alt="26_logstash启动日志.png"/></div><div class="image-meta"><span class="image-caption center">26_logstash启动日志.png</span></div></div>
+
+<p> 看到上图选择的内容就说明成功了。</p>
+<p>验证监听地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 ~]# netstat -ntpl</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601976999108.png" alt="27_logstash监听IP启动查看.png"/></div><div class="image-meta"><span class="image-caption center">27_logstash监听IP启动查看.png</span></div></div>
+
+<p>验证ES数据，通过ES-head查看数据情况</p>
+<p>通过浏览器登陆:<a target="_blank" rel="noopener" href="http://192.168.98.201:9100/">http://192.168.98.201:9100</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977015184.png" alt="28_messages日志收集ES验证.png"/></div><div class="image-meta"><span class="image-caption center">28_messages日志收集ES验证.png</span></div></div>
+
+<p>看到数据索引，成功了。</p>
+<h2 id="五、logstash多日志收集"><a href="#五、logstash多日志收集" class="headerlink" title="五、logstash多日志收集"></a>五、logstash多日志收集</h2><p>实验注意: 清除上一个收集Messages的业务配置文件</p>
+<p> 清除ES的索引，方便查看，此条不是必须</p>
+<p><strong>案例：</strong>实验日志文件收集</p>
+<p> &#x2F;var&#x2F;log&#x2F;messages 索引 message-%{+YYYY.MM.dd}</p>
+<p> &#x2F;var&#x2F;log&#x2F;dnf.rpm.log 索引 dnf-%{+YYYY.MM.dd}</p>
+<p><strong>思路</strong></p>
+<p>1、(input)收集日志同时给不同的日志打标签区别</p>
+<p>2、(output)根据不同的数据标签将不同数据输出到ES不同索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 ~]# cat /etc/logstash/conf.d/logstash_to_es_mutl_log.conf </span><br><span class="line">input &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path =&gt; &quot;/var/log/messages&quot;</span><br><span class="line">        start_position =&gt; &quot;beginning&quot;</span><br><span class="line">	      type =&gt; &quot;messages&quot;   #给每条数据打标签</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   file &#123;</span><br><span class="line">			path =&gt; &quot;/var/log/dnf.rpm.log&quot;</span><br><span class="line">			start_position =&gt; &quot;beginning&quot;</span><br><span class="line">			type =&gt; &quot;dnf&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line"></span><br><span class="line">   if [type] == &quot;messages&quot; &#123;</span><br><span class="line">	elasticsearch &#123;</span><br><span class="line">        	hosts =&gt; [&quot;192.168.98.201:9200&quot;]</span><br><span class="line">		index =&gt; &quot;message-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">	  &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   if [type] == &quot;dnf&quot; &#123;</span><br><span class="line">	elasticsearch &#123;</span><br><span class="line">        	hosts =&gt; [&quot;192.168.98.201:9200&quot;]</span><br><span class="line">		index =&gt; &quot;dnf-%&#123;+YYYY.MM.dd&#125;&quot;</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启logstash验证ES数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 logstash]# systemctl restart logstash</span><br></pre></td></tr></table></figure>
+
+<p>查看ES-head web页面概览标签，查看数据索引</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977041244.png" alt="29_多日志收集ES展示.png"/></div><div class="image-meta"><span class="image-caption center">29_多日志收集ES展示.png</span></div></div>
+
+<p>通过数据浏览标签，查看原始数据我们自定义的标签。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601977059027.png" alt="30_查看数据定义的标签.png"/></div><div class="image-meta"><span class="image-caption center">30_查看数据定义的标签.png</span></div></div>
+
+<p>完美，多日志收集成功。</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E5%88%9D%E8%AF%86/">Ansible运维自动化平台初识</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-kibana%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA/">ELK-kibana数据展示</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>linux软件包管理 - 原点独白</title>
+
+  
+    <meta name="description" content="在linux系统中我们经常涉及到软件包的删除和添加，那一起来看下在linux系统中软件包的管理方式都有哪些  rpm软件 yum软件仓库 源码软件  一、rpm软件包rpm的介绍前面的课程我们提到过源码包安装需要解决系统环境、权限等等，这些对于初学者而言都是噩梦一般的存在，所以linux厂商推出了一种类似windows系统中的安装方式，有开发者直接在已知的系统中编译好，使用者可以直接下载并进行安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux软件包管理">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="在linux系统中我们经常涉及到软件包的删除和添加，那一起来看下在linux系统中软件包的管理方式都有哪些  rpm软件 yum软件仓库 源码软件  一、rpm软件包rpm的介绍前面的课程我们提到过源码包安装需要解决系统环境、权限等等，这些对于初学者而言都是噩梦一般的存在，所以linux厂商推出了一种类似windows系统中的安装方式，有开发者直接在已知的系统中编译好，使用者可以直接下载并进行安装">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602404129693.png">
+<meta property="article:published_time" content="2023-09-27T00:03:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:03:56.511Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602404129693.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">linux软件包管理</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81rpm%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="toc-text">一、rpm软件包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#rpm%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-text">rpm的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rpm%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">rpm的使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81yum%E8%BD%AF%E4%BB%B6%E4%BB%93%E5%BA%93"><span class="toc-text">二、yum软件仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#yum%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-text">yum的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yum%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">yum的使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%BA%90%E7%A0%81%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">三、源码包的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="toc-text">获取软件包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81CentOS-8-dnf%E5%91%BD%E4%BB%A4"><span class="toc-text">四、CentOS 8 dnf命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dnf%E4%BB%8B%E7%BB%8D"><span class="toc-text">dnf介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dnf%E5%AE%89%E8%A3%85"><span class="toc-text">dnf安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9B%AE%E5%BD%95%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">相关目录和使用</span></a></li></ol></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/">Linux系统管理宝典</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>linux软件包管理</span></h1>
+<p>在linux系统中我们经常涉及到软件包的删除和添加，那一起来看下在linux系统中软件包的管理方式都有哪些</p>
+<ul>
+<li>rpm软件</li>
+<li>yum软件仓库</li>
+<li>源码软件</li>
+</ul>
+<h2 id="一、rpm软件包"><a href="#一、rpm软件包" class="headerlink" title="一、rpm软件包"></a>一、rpm软件包</h2><h3 id="rpm的介绍"><a href="#rpm的介绍" class="headerlink" title="rpm的介绍"></a>rpm的介绍</h3><p>前面的课程我们提到过源码包安装需要解决系统环境、权限等等，这些对于初学者而言都是噩梦一般的存在，所以linux厂商推出了一种类似windows系统中的安装方式，有开发者直接在已知的系统中编译好，使用者可以直接下载并进行安装，升级，卸载等操作。在linux中能够提供这些功能的软件有两种，rpm和dpkg，而在CentOS中使用的是RPM</p>
+<p>rpm最早是由redhat开发出来，由于很好用，所以很多发行版也利用rpm来进行软件包的管理。RPM全名RedHat Package Manager，最大的特点就是把需要安装的软件提前编译，打包，然后在rpm包里面存放了用以记录软件依赖关系的相关数据，当用户安装时，优先查看这些数据，如果系统满足数据要求就安装软件包，否则不能安装，安装完成后，将软件包相关信息记录到rpm自己的数据库中，便于查询和卸载等。所以说rpm的优点是方便安装，卸载，查询，缺点就是只能在指定的操作系统上使用，所以不同厂商的rpm包，甚至同一厂商不同版本操作系统的rpm包都不通用。</p>
+<p><strong>rpm包的命名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dhcp-server-	4.3.6		-30			.el8		.x86_64		.rpm</span><br><span class="line">软件名称		版本		编译次数	         适用的系统	     适用的平台	   后缀名</span><br><span class="line"></span><br><span class="line">软件名	 就是软件包的名称</span><br><span class="line">版本	 每次更新版本号都会改变，用来帮助用户判断软件包新旧的</span><br><span class="line">编译次数	 也是帮助用户判断软件包新旧的</span><br><span class="line">适用的系统 在哪个系统上可以安装，CentOS和rhel的多数软件包都是通用的</span><br><span class="line">适用的平台 指的是硬件平台，比如如果你是32位的CPU就无法安装这个软件包</span><br></pre></td></tr></table></figure>
+
+<h3 id="rpm的使用"><a href="#rpm的使用" class="headerlink" title="rpm的使用"></a>rpm的使用</h3><p>rpm包的相关文件一般都会放在对应的目录中，比如rpm包安装后，配置文件会放在&#x2F;etc下，执行文件会放在&#x2F;usr&#x2F;bin下，链接库文件会放在&#x2F;usr&#x2F;lib下，帮助与说明文档会放在&#x2F;usr&#x2F;share&#x2F;man和&#x2F;usr&#x2F;share&#x2F;doc目录下</p>
+<p><strong>安装</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue Packages]# rpm -ivh dhcp-server-4.3.6-30.el8.x86_64.rpm </span><br><span class="line">-i					安装</span><br><span class="line">-v					显示详细信息</span><br><span class="line">-h					显示安装进度</span><br><span class="line">-e					卸载</span><br><span class="line">-U					升级，如果系统中有低版本的就会升级，如果系统没有安装相应的包，则安装</span><br><span class="line">-F					有条件的升级，会检测用户指定的软件包是否已安装到linux中</span><br><span class="line">--nodeps			忽略软件包之间的依赖关系</span><br><span class="line">--replacefiles		覆盖文件</span><br><span class="line">--replacepkgs		修复</span><br><span class="line">--force				强制</span><br><span class="line">--test				测试</span><br><span class="line">-q					查询指定的软件包是否安装</span><br><span class="line">-qi					查看指定的软件包的信息，包括开发商，版本，说明</span><br><span class="line">-ql					查看指定软件包中所包含的文件列表</span><br><span class="line">-qc					查看指定软件包的配置文件</span><br><span class="line">-qa					查看本机安装的所有包</span><br><span class="line">-qf					查看一个文件归属于哪个已安装的软件包</span><br></pre></td></tr></table></figure>
+
+<p>rpm的内容我们就介绍到这里，接下来我们看下一个yum</p>
+<h2 id="二、yum软件仓库"><a href="#二、yum软件仓库" class="headerlink" title="二、yum软件仓库"></a>二、yum软件仓库</h2><h3 id="yum的介绍"><a href="#yum的介绍" class="headerlink" title="yum的介绍"></a>yum的介绍</h3><p>YUM（<em>Yellow dog Updater, Modified</em>）是一个基于rpm却更胜于rpm的管理工具，让你可以更轻松的管理Red Hat Enterprise Linux系统中的软件。你可以使用YUM来安装或卸载软件、也可以利用YUM来更新你的系统，更可以利用YUM来搜索一个尚未安装的软件。不管是安装、更新或者删除，YUM都会自动的帮你解决软件间的依赖性问题。通过YUM会比单纯使用rpm来得更加方便。</p>
+<p>YUM包含下列几项组件：</p>
+<ul>
+<li>YUM下载源：如果把所有RPM文件放在某一个目录中，这个目录就可称为“YUM下载源（<em>YUM Repository</em>）”。你也可以把YUM下载源，通过HTTP、FTP等方式分享给其他计算机使用；当然，你也可以直接使用别人建好的YUM下载源来取得需安装的软件。</li>
+<li>YUM工具：YUM提供了一个名为yum的命令，你可以使用yum来使用YUM提供的众多功能。</li>
+<li>YUM插件：YUM还允许第三方厂商（<em>3rd Party</em>）开发YUM的插件（<em>Plug-in</em>），让用户可以任意的扩充YUM的功能，比如说有的插件可以帮助选择最快的yum源</li>
+<li>YUM缓存：YUM运行时，会从YUM下载源获得软件信息与文件，并且暂存于本机的硬盘上。这个暂存的目录，称为“YUM缓存（<em>YUM cache</em>）”。缓存目录为&#x2F;var&#x2F;cache&#x2F;yum</li>
+</ul>
+<h3 id="yum的使用"><a href="#yum的使用" class="headerlink" title="yum的使用"></a>yum的使用</h3><p>yum源的配置</p>
+<p> 由于yum有下载源这个东西，所以我们在使用yum之前需要告诉它去什么地方获取这些软件包，也就是说需要先配置一个yum源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cd /etc/yum.repos.d/</span><br><span class="line">[root@zutuanxue yum.repos.d]# ls</span><br><span class="line">CentOS-AppStream.repo   CentOS-CR.repo    CentOS-fasttrack.repo   CentOS-Sources.repo</span><br><span class="line">CentOS-Base.repo    CentOS-Debuginfo.repo  CentOS-Media.repo       CentOS-Vault.repo</span><br><span class="line">CentOS-centosplus.repo  CentOS-Extras.repo     CentOS-PowerTools.repo</span><br><span class="line">在CentOS8中yum的下载源配置文件统一都放到/etc/yum.repos.d/目录下，在这个目录中有些默认的下载源</span><br><span class="line">我不使用这些自带的下载源，我想配置一个自己的下载源，让yum使用光盘镜像里的软件包,为了避免干扰，我们把这些自带的下载源都放到一个目录里</span><br><span class="line">[root@zutuanxue yum.repos.d]# mkdir repos</span><br><span class="line">[root@zutuanxue yum.repos.d]# ls</span><br><span class="line">CentOS-AppStream.repo   CentOS-CR.repo         CentOS-fasttrack.repo   CentOS-Sources.repo</span><br><span class="line">CentOS-Base.repo        CentOS-Debuginfo.repo  CentOS-Media.repo       CentOS-Vault.repo</span><br><span class="line">CentOS-centosplus.repo  CentOS-Extras.repo     CentOS-PowerTools.repo  repos</span><br><span class="line">[root@zutuanxue yum.repos.d]# mv *.repo repos</span><br><span class="line">[root@zutuanxue yum.repos.d]# clear</span><br><span class="line">[root@zutuanxue yum.repos.d]# ls</span><br><span class="line">repos</span><br><span class="line">然后使用vim命令建立自己的下载源配置文件</span><br><span class="line">[root@zutuanxue repos]# vim server.repo</span><br><span class="line">[server-BaseOS]			yum源的名称</span><br><span class="line">name=server-BaseOS		完整名称</span><br><span class="line">enabled=1				是否启用</span><br><span class="line">gpgcheck=0				是否检查rpm包的数字签名</span><br><span class="line">baseurl=file:///mnt/BaseOS	下载源地址</span><br><span class="line">[server-AppStream]</span><br><span class="line">name=server-AppStream</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///mnt/AppStream</span><br><span class="line">[root@zutuanxue ~]# mount /dev/cdrom  /mnt/		将光盘挂载到指定位置</span><br><span class="line">由于CentOS8的软件包存放在光盘根目录的BaseOS和AppStream目录中，所以这里面为了保证需要的软件包能正确安装我们配置了两个yum源，这两部分内容你可以放到一个文件里，也可以分别放在两个文件中</span><br></pre></td></tr></table></figure>
+
+<p>以上就是yum源配置文件，我们接下来看下如何建立下载源目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">将下载好的rpm软件包存放到一个指定的目录中</span><br><span class="line">[root@zutuanxue ~]# cp /mnt/AppStream/Packages/* myrepo/</span><br><span class="line"></span><br><span class="line">从光盘镜像中安装createrepo工具</span><br><span class="line">[root@zutuanxue ~]# yum install createrepo</span><br><span class="line"></span><br><span class="line">利用createrepo工具生成软件包之间的依赖关系数据文件</span><br><span class="line">[root@zutuanxue ~]# createrepo myself/</span><br><span class="line"></span><br><span class="line">建立针对此目录的下载源配置文件</span><br><span class="line">[root@zutuanxue ~]# vim /etc/yum.repos.d/myrepo.repo</span><br><span class="line">[myself]</span><br><span class="line">name=packages</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">baseurl=file:///root/myself</span><br><span class="line"></span><br><span class="line">从新的下载源安装软件包</span><br><span class="line">[root@zutuanxue ~]# yum install httpd</span><br></pre></td></tr></table></figure>
+
+<p>yum插件安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# yum install 插件名称</span><br><span class="line">插件配置文件存放位置/etc/yum/pluginconf.d/xxx.conf</span><br><span class="line"></span><br><span class="line">插件的启用和停用</span><br><span class="line">修改/etc/yum/pluginconf.d/xxx.conf文件中的enabled字段 1=启用 0=停用</span><br><span class="line">[root@zutuanxue ~]# yum [OPTIONS...] COMMAND [ARGVS...]</span><br><span class="line">-y							如果遇到问题，代替回答yes</span><br><span class="line">--installroot=/path			指定软件包安装的根目录</span><br></pre></td></tr></table></figure>
+
+<p>清除yum缓存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# yum clean all</span><br><span class="line">如果有些时候你发现yum运行不太正常，这可能是yum缓存数据错误导致的，所以你需要将yum的缓存清除</span><br><span class="line">查看软件包</span><br><span class="line">[root@zutuanxue ~]# yum list</span><br><span class="line"></span><br><span class="line">查看有哪些可用组</span><br><span class="line">[root@zutuanxue ~]# yum grouplist</span><br><span class="line">     </span><br><span class="line">查看dhcp-server这个包的信息   </span><br><span class="line">[root@zutuanxue ~]# yum info dhcp-server			</span><br><span class="line"></span><br><span class="line">搜索dhcp-server这个软件包</span><br><span class="line">[root@zutuanxue ~]# yum search dhcp-server		</span><br></pre></td></tr></table></figure>
+
+<p>yum安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">安装dhcp-server软件包</span><br><span class="line">[root@zutuanxue ~]# yum install dhcp-server -y		</span><br><span class="line"></span><br><span class="line">安装一组软件包</span><br><span class="line">[root@zutuanxue ~]# yum groupinstall &#x27;系统工具&#x27; -y	              </span><br></pre></td></tr></table></figure>
+
+<p>卸载软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">删除一个软件包</span><br><span class="line">[root@zutuanxue ~]# yum remove dhcp-server -y			</span><br><span class="line"></span><br><span class="line">删除一组软件包</span><br><span class="line">[root@zutuanxue ~]# yum groupremove &#x27;系统工具&#x27; -y		</span><br></pre></td></tr></table></figure>
+
+<p>使用epel源</p>
+<p>EPEL是一个自由开源的附加软件包仓库，可用于 CentOS 和 RHEL 服务器。顾名思义，EPEL 仓库提供了额外的软件包，这些软件在 CentOS 8 和 RHEL 8 的默认软件包仓库中不可用。</p>
+<p>安装epel源</p>
+<p>epel地址：<a target="_blank" rel="noopener" href="https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm">https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、源码包的安装"><a href="#三、源码包的安装" class="headerlink" title="三、源码包的安装"></a>三、源码包的安装</h2><p>在linux系统中，很多新版本的软件包的更新都会优先提供tar包版本的，然后各linux厂商拿到这个tar包之后再给自己的操作系统提供官方的rpm或者dpkg类型的软件包，而这种tar工具打包的软件包我们一般称之为源码包，在这些源码包中一般包含有，程序源代码文件，配置文件（configure），安装使用说明（INSTALL,HOWTO,README）</p>
+<p>那这种tar包源码包如何安装呢？简单的流程就是</p>
+<ul>
+<li>获取软件包</li>
+<li>解压文件</li>
+<li>检查当前系统是否满足软件包安装需求</li>
+<li>使用gcc进行编译，生成主要的二进制文件</li>
+<li>将二进制文件安装到主机</li>
+</ul>
+<p>这些步骤看起来很简单，但是在使用过程中有很多问题需要解决，比如说需要解决系统环境，权限问题等等，不同类型的软件在安装方法上会有差异，但是整体步骤就是我们上面所提到的。接下来我们通过一个案例来学习源码安装软件。</p>
+<p><strong>案例：源码安装一个nginx软件</strong></p>
+<h3 id="获取软件包"><a href="#获取软件包" class="headerlink" title="获取软件包"></a>获取软件包</h3><p>软件包获取的方式有很多，最常见的就是拷贝或者下载这两种方式，拷贝咱们就不说了，因为用的太多了；接下来我给大家说一下如何从网络下载软件包。</p>
+<ul>
+<li>wget命令：文本界面的下载命令</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# wget http://nginx.org/download/nginx-1.19.3.tar.gz</span><br><span class="line">--2020-10-11 15:59:45--  http://nginx.org/download/nginx-1.19.3.tar.gz</span><br><span class="line">正在解析主机 nginx.org (nginx.org)... 3.125.197.172, 52.58.199.22, 2a05:d014:edb:5704::6, ...</span><br><span class="line">正在连接 nginx.org (nginx.org)|3.125.197.172|:80... 已连接。</span><br><span class="line">已发出 HTTP 请求，正在等待回应... 200 OK</span><br><span class="line">长度：1052581 (1.0M) [application/octet-stream]</span><br><span class="line">正在保存至: “nginx-1.19.3.tar.gz”</span><br><span class="line"></span><br><span class="line">nginx-1.19.3.tar.gz 100%[===================&gt;]   1.00M  21.4KB/s  用时 43s     </span><br><span class="line"></span><br><span class="line">2020-10-11 16:00:28 (24.1 KB/s) - 已保存 “nginx-1.19.3.tar.gz” [1052581/1052581])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解压软件包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# tar xf nginx-1.19.3.tar.gz</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# ls</span><br><span class="line">公共  视频  文档  音乐  anaconda-ks.cfg       nginx-1.19.3</span><br><span class="line">模板  图片  下载  桌面  initial-setup-ks.cfg  nginx-1.19.3.tar.gz</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>configure命令：检查当前系统是否满足软件包安装需求,这步的主要目的：<br>  – 检查环境 是否 满足安装条件 依赖解决<br>  – 指定安装方式 配置文件 命令文件 各种文件放哪里 开启模块功能【内置模块 三方模块】<br>  – 指定软件安装在那里</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">- 安装GCC编译软件 以及nginx依赖，有人问我为啥要安装pcre-devel zlib-devel这两个包，因为你不了解，如果你自己安装过一次就知道在检查当前系统的时候会报错，说没有这两个软件，这里我就直接装上了。大家学习的时候可以试试，是不是我说的这样。</span><br><span class="line">[root@zutuanxue ~]# yum -y install gcc pcre-devel zlib-devel</span><br><span class="line"></span><br><span class="line">- 检查系统是否满足安装需求</span><br><span class="line">[root@zutuanxue ~]# cd nginx-1.19.3/</span><br><span class="line">[root@zutuanxue nginx-1.19.3]# ./configure --prefix=/usr/local/nginx</span><br><span class="line">checking for OS</span><br><span class="line"> + Linux 4.18.0-193.el8.x86_64 x86_64</span><br><span class="line">checking for C compiler ... found</span><br><span class="line"> + using GNU C compiler</span><br><span class="line"> + gcc version: 8.3.1 20191121 (Red Hat 8.3.1-5) (GCC) </span><br><span class="line">checking for gcc -pipe switch ... found</span><br><span class="line">checking for -Wl,-E switch ... found</span><br><span class="line">checking for gcc builtin atomic operations ... found</span><br><span class="line">checking for C99 variadic macros ... found</span><br><span class="line">checking for gcc variadic macros ... found</span><br><span class="line"></span><br><span class="line">.........此处省略10000个字</span><br><span class="line"></span><br><span class="line">Configuration summary</span><br><span class="line">  + using system PCRE library</span><br><span class="line">  + OpenSSL library is not used</span><br><span class="line">  + using system zlib library</span><br><span class="line"></span><br><span class="line">  nginx path prefix: &quot;/usr/local/nginx&quot;</span><br><span class="line">  nginx binary file: &quot;/usr/local/nginx/sbin/nginx&quot;</span><br><span class="line">  nginx modules path: &quot;/usr/local/nginx/modules&quot;</span><br><span class="line">  nginx configuration prefix: &quot;/usr/local/nginx/conf&quot;</span><br><span class="line">  nginx configuration file: &quot;/usr/local/nginx/conf/nginx.conf&quot;</span><br><span class="line">  nginx pid file: &quot;/usr/local/nginx/logs/nginx.pid&quot;</span><br><span class="line">  nginx error log file: &quot;/usr/local/nginx/logs/error.log&quot;</span><br><span class="line">  nginx http access log file: &quot;/usr/local/nginx/logs/access.log&quot;</span><br><span class="line">  nginx http client request body temporary files: &quot;client_body_temp&quot;</span><br><span class="line">  nginx http proxy temporary files: &quot;proxy_temp&quot;</span><br><span class="line">  nginx http fastcgi temporary files: &quot;fastcgi_temp&quot;</span><br><span class="line">  nginx http uwsgi temporary files: &quot;uwsgi_temp&quot;</span><br><span class="line">  nginx http scgi temporary files: &quot;scgi_temp&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">备注：</span><br><span class="line">/configure --prefix=/usr/local/nginx</span><br><span class="line">--prefix=   指定软件安装到哪个目录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>make命令：使用gcc进行编译，生成主要的二进制文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue nginx-1.19.3]# make -j4</span><br><span class="line">make -f objs/Makefile</span><br><span class="line">make[1]: 进入目录“/root/nginx-1.19.3”</span><br><span class="line">cc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g  -I src/core -I src/event -I src/event/modules -I src/os/unix -I objs \</span><br><span class="line">	-o objs/src/core/ngx_inet.o \</span><br><span class="line">	src/core/ngx_inet.c</span><br><span class="line">           ...........省略过程</span><br><span class="line"></span><br><span class="line">-ldl -lpthread -lcrypt -lpcre -lz \</span><br><span class="line">-Wl,-E</span><br><span class="line">make[1]: 离开目录“/root/nginx-1.19.3”</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">备注： make -j4</span><br><span class="line">-j 指定几个cpu一起编译    -j4  那就是4个一起干活，默认一个干活，这样速度更快</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>make install 命令将二进制文件安装到主机</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue nginx-1.19.3]# make install</span><br><span class="line">make -f objs/Makefile install</span><br><span class="line">make[1]: 进入目录“/root/nginx-1.19.3”</span><br><span class="line">test -d &#x27;/usr/local/nginx&#x27; || mkdir -p &#x27;/usr/local/nginx&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/sbin&#x27; \</span><br><span class="line">	|| mkdir -p &#x27;/usr/local/nginx/sbin&#x27;</span><br><span class="line">test ! -f &#x27;/usr/local/nginx/sbin/nginx&#x27; \</span><br><span class="line">	|| mv &#x27;/usr/local/nginx/sbin/nginx&#x27; \</span><br><span class="line">		&#x27;/usr/local/nginx/sbin/nginx.old&#x27;</span><br><span class="line">cp objs/nginx &#x27;/usr/local/nginx/sbin/nginx&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/conf&#x27; \</span><br><span class="line">	|| mkdir -p &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/koi-win &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/koi-utf &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/win-utf &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/mime.types&#x27; \</span><br><span class="line">	|| cp conf/mime.types &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/mime.types &#x27;/usr/local/nginx/conf/mime.types.default&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/fastcgi_params&#x27; \</span><br><span class="line">	|| cp conf/fastcgi_params &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/fastcgi_params \</span><br><span class="line">	&#x27;/usr/local/nginx/conf/fastcgi_params.default&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/fastcgi.conf&#x27; \</span><br><span class="line">	|| cp conf/fastcgi.conf &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/fastcgi.conf &#x27;/usr/local/nginx/conf/fastcgi.conf.default&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/uwsgi_params&#x27; \</span><br><span class="line">	|| cp conf/uwsgi_params &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/uwsgi_params \</span><br><span class="line">	&#x27;/usr/local/nginx/conf/uwsgi_params.default&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/scgi_params&#x27; \</span><br><span class="line">	|| cp conf/scgi_params &#x27;/usr/local/nginx/conf&#x27;</span><br><span class="line">cp conf/scgi_params \</span><br><span class="line">	&#x27;/usr/local/nginx/conf/scgi_params.default&#x27;</span><br><span class="line">test -f &#x27;/usr/local/nginx/conf/nginx.conf&#x27; \</span><br><span class="line">	|| cp conf/nginx.conf &#x27;/usr/local/nginx/conf/nginx.conf&#x27;</span><br><span class="line">cp conf/nginx.conf &#x27;/usr/local/nginx/conf/nginx.conf.default&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/logs&#x27; \</span><br><span class="line">	|| mkdir -p &#x27;/usr/local/nginx/logs&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/logs&#x27; \</span><br><span class="line">	|| mkdir -p &#x27;/usr/local/nginx/logs&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/html&#x27; \</span><br><span class="line">	|| cp -R html &#x27;/usr/local/nginx&#x27;</span><br><span class="line">test -d &#x27;/usr/local/nginx/logs&#x27; \</span><br><span class="line">	|| mkdir -p &#x27;/usr/local/nginx/logs&#x27;</span><br><span class="line">make[1]: 离开目录“/root/nginx-1.19.3”</span><br></pre></td></tr></table></figure>
+
+<p>到此我们就把nginx安装到&#x2F;usr&#x2F;local目录下了,可以使用ls命令看看有没有东西</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue nginx-1.19.3]# ls /usr/local/nginx/</span><br><span class="line">conf  html  logs  sbin</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>验证安装<br>  软件已经安装了，我们看看结果吧！</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">启动软件</span><br><span class="line">[root@zutuanxue nginx-1.19.3]# /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<p>打开虚拟机浏览器输入:<a target="_blank" rel="noopener" href="http://localhost回车/">http://localhost回车</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602404129693.png" alt="nginx访问.png"/></div><div class="image-meta"><span class="image-caption center">nginx访问.png</span></div></div>
+
+<h2 id="四、CentOS-8-dnf命令"><a href="#四、CentOS-8-dnf命令" class="headerlink" title="四、CentOS 8 dnf命令"></a>四、CentOS 8 dnf命令</h2><h3 id="dnf介绍"><a href="#dnf介绍" class="headerlink" title="dnf介绍"></a>dnf介绍</h3><p>DNF是新一代的rpm软件包管理器。最早出现在 Fedora 18 这个发行版中，在Fedora 22中正式取代了yum</p>
+<p>DNF器克服了YUM的一些瓶颈，提升了包括用户体验，内存占用，依赖分析，运行速度等多方面的内容。</p>
+<h3 id="dnf安装"><a href="#dnf安装" class="headerlink" title="dnf安装"></a>dnf安装</h3><p>在CentOS7中需要单独安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install epel-release -y</span><br><span class="line">yum install dnf</span><br></pre></td></tr></table></figure>
+
+<p>在CentOS8中系统默认使用的是DNF，我们所看到的yum只是dnf的一个软连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# which yum</span><br><span class="line">/usr/bin/yum</span><br><span class="line">[root@zutuanxue ~]# ll /usr/bin/yum </span><br><span class="line">lrwxrwxrwx. 1 root root 5 5月  14 2019 /usr/bin/yum -&gt; dnf-3</span><br></pre></td></tr></table></figure>
+
+<h4 id="相关目录和使用"><a href="#相关目录和使用" class="headerlink" title="相关目录和使用"></a><strong>相关目录和使用</strong></h4><ul>
+<li><strong>目录</strong></li>
+</ul>
+<p>&#x2F;etc&#x2F;dnf&#x2F;dnf.conf 配置文件</p>
+<p>&#x2F;etc&#x2F;dnf&#x2F;aliases.d&#x2F; 为相关命令定义别名的如dnf alias add rm&#x3D;remove</p>
+<p>&#x2F;etc&#x2F;dnf&#x2F;modules.d&amp;&#x2F;etc&#x2F;dnf&#x2F;modules.defaults.d 模块的设置</p>
+<p>&#x2F;etc&#x2F;dnf&#x2F;plugins&#x2F; 插件的设置</p>
+<p>&#x2F;etc&#x2F;dnf&#x2F;protected.d&#x2F; 受保护的软件包的设置</p>
+<p>&#x2F;etc&#x2F;dnf&#x2F;vars&#x2F; 变量设置</p>
+<ul>
+<li><strong>dnf用法展示</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">查看DNF的版本</span><br><span class="line">[root@zutuanxue ~]# dnf --version			</span><br><span class="line"></span><br><span class="line">查看dnf的可用软件仓库</span><br><span class="line">[root@zutuanxue ~]# dnf repolist		</span><br><span class="line"></span><br><span class="line">查看所有软件仓库</span><br><span class="line">[root@zutuanxue ~]# dnf repolist all	</span><br><span class="line"></span><br><span class="line">查看已安装的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf list installed	  </span><br><span class="line"></span><br><span class="line">查看可安装的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf list available 	</span><br><span class="line"></span><br><span class="line">搜索dhcp-server</span><br><span class="line">[root@zutuanxue ~]# dnf search dhcp-server		</span><br><span class="line"></span><br><span class="line">查询一个文件是由哪个软件包提供的</span><br><span class="line">[root@zutuanxue ~]# dnf provides /usr/sbin/dhclient</span><br><span class="line"></span><br><span class="line">查询软件包详细信息</span><br><span class="line">[root@zutuanxue ~]# dnf info dhcp-server	</span><br><span class="line"></span><br><span class="line">安装软件包</span><br><span class="line">[root@zutuanxue ~]# dnf install dhcp-server			</span><br><span class="line"></span><br><span class="line">升级软件包</span><br><span class="line">[root@zutuanxue ~]# dnf update systemd	</span><br><span class="line"></span><br><span class="line">检查软件包的更新</span><br><span class="line">[root@zutuanxue ~]# dnf check-update	</span><br><span class="line"></span><br><span class="line">升级所有可升级的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf update		</span><br><span class="line"></span><br><span class="line">升级所有可升级的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf upgrade		</span><br><span class="line"></span><br><span class="line">卸载软件包</span><br><span class="line">[root@zutuanxue ~]# dnf remove dhcp-server	</span><br><span class="line">[root@zutuanxue ~]# dnf erase dhcp-server		</span><br><span class="line"></span><br><span class="line">删除无用孤立的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf autoremove	</span><br><span class="line"></span><br><span class="line">清除缓存中的无用数据</span><br><span class="line">[root@zutuanxue ~]# dnf clean all	</span><br><span class="line"></span><br><span class="line">获取某一个命令的帮助</span><br><span class="line">[root@zutuanxue ~]# dnf help clean	</span><br><span class="line"></span><br><span class="line">获取dnf命令的帮助</span><br><span class="line">[root@zutuanxue ~]# dnf help			</span><br><span class="line"></span><br><span class="line">查看历史命令</span><br><span class="line">[root@zutuanxue ~]# dnf history		</span><br><span class="line"></span><br><span class="line">重新执行历史命令中的第19条</span><br><span class="line">[root@zutuanxue ~]# dnf history redo 19	</span><br><span class="line"></span><br><span class="line">查看软件包组</span><br><span class="line">[root@zutuanxue ~]# dnf grouplist		</span><br><span class="line"></span><br><span class="line">安装一组软件包</span><br><span class="line">[root@zutuanxue ~]# dnf groupinstall &#x27;系统工具&#x27; </span><br><span class="line"></span><br><span class="line">升级一组软件包</span><br><span class="line">[root@zutuanxue ~]# dnf groupupdate &#x27;系统工具&#x27;	</span><br><span class="line"></span><br><span class="line">删除一组软件包</span><br><span class="line">[root@zutuanxue ~]# dnf groupremove &#x27;系统工具&#x27;	</span><br><span class="line"></span><br><span class="line">从特定的软件仓库安装软件包</span><br><span class="line">[root@zutuanxue ~]# dnf --enablerepo=epel install zabbix</span><br><span class="line"></span><br><span class="line">将软件包更新到最新的稳定版</span><br><span class="line">[root@zutuanxue ~]# dnf distro-sync</span><br><span class="line"></span><br><span class="line">重新安装指定的软件包</span><br><span class="line">[root@zutuanxue ~]# dnf reinstall dhcp-server</span><br><span class="line"></span><br><span class="line">降级软件包</span><br><span class="line">[root@zutuanxue ~]# dnf downgrade dhcp-server</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/">linux计划任务</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">linux进程管理</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

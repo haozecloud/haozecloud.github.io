@@ -80,7 +80,7 @@
 <widget class="widget-wrapper markdown"><div class="widget-header cap theme dis-select"><span class="name">欢迎你旅行者</span></div><div class="widget-body fs14"><p>我的个人博客，记录了我在学习过程中的积累 <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img1.imgtp.com/2023/09/26/QuMOgvsK.png" alt="原点独白"></p>
 </div></widget>
 
-<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2022/09/27/Docker%E5%AE%B9%E5%99%A8%E5%AE%9E%E6%88%98%E9%83%A8%E7%BD%B2/Docker%20Compose%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"><span class="title">Docker-Compose</span></a><a class="item title" href="/2022/09/27/Docker%E5%AE%B9%E5%99%A8%E5%AE%9E%E6%88%98%E9%83%A8%E7%BD%B2/Docker%20%E7%BD%91%E7%BB%9C/"><span class="title">Docker 网络</span></a><a class="item title" href="/2023/09/27/dns/DNS%E9%85%8D%E7%BD%AE/"><span class="title">DNS配置</span></a><a class="item title" href="/2023/09/25/sysctl/sysctl/"><span class="title">sysctl</span></a><a class="item title" href="/2023/09/26/dhcp/DHCP/"><span class="title">DHCP配置</span></a></div></widget>
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AC%94%E8%AE%B0/"><span class="title">网络工程师笔记</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E5%88%9D%E8%AF%86/"><span class="title">Ansible运维自动化平台初识</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E9%83%A8%E7%BD%B2/"><span class="title">Ansible自动化运维平台部署</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/"><span class="title">Ansible命令用法</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-yum%E6%A8%A1%E5%9D%97/"><span class="title">Ansible-yum模块</span></a></div></widget>
 
 
 </div>
@@ -100,50 +100,76 @@
 
   
 
-<div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/archives">归档</a></nav></div>
+<div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/archives">归档</a><a href="/friends/rss/">朋友文章</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%E8%8A%82%E7%82%B9%E4%B8%8E%20Pod%20%E4%BA%B2%E5%92%8C%E6%80%A7/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、节点亲和性策略介绍pod.spec.nodeAffinity
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">linux进程管理</h2><div class="excerpt"><p>一、进程介绍在说进程如何管理之前我们要涉及到进程的一些相关概念
+什么是进程？进程（Process）是一个程序在其自身的虚拟地址空间中的一次执行活动。之所以要创建进程，就是为了使多个程序可以并发的执行，从而提高系统的资源利用率和吞吐量。简单来说进程就是一个程序的执行活动。
+进程和程序有什么不同？
+程序：只是一个静态的指令集合；而进程是一个程序的动态执行过程，它具有生命期，是动态的产生和消亡的。...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E9%9A%90%E8%97%8F%E6%9D%83%E9%99%90/">
+<article class="md-text"><h2 class="post-title">linux隐藏权限</h2><div class="excerpt"><p>隐藏权限的介绍有时候你发现即时使用的是root用户也不能修改某个文件，大部分原因是因为使用过chattr命令锁定了该文件，这个命令的作用很大，通过chattr可以提高系统的安全性，但是这个命令并不适合所有的目录，如&#x2F;dev,&#x2F;tmp,&#x2F;var。与我们前面看到的chmod这些命令修改权限不同的是chattr修改的是更底层的属性，这里面我们所提到的隐藏权限指的就是使...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E5%88%9B%E5%BB%BA%E9%AB%98%E5%8F%AF%E7%94%A8%E9%80%BB%E8%BE%91%E5%8D%B7/">
+<article class="md-text"><h2 class="post-title">创建高可用逻辑卷</h2><div class="excerpt"><p>一、逻辑卷条带化：把保存到逻辑卷的数据分成n等分，分别写到不同的物理卷，可以提高数据的读写效率；如果任何一个涉及到的物理卷出现故障，数据都会无法恢复。
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546创建物理卷[root@manage01 ~]# pvcreate /dev/...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<article class="md-text"><h2 class="post-title">构建可视化日志管理服务器</h2><div class="excerpt"><p>我们可以通过集中式日志服务器将多台机器的日志收集在一个日志服务器，然后通过脚本或者其他方式去分析，但是真正做过运维的小伙伴明白，日子收集在硬盘上，硬盘的空间有限且大文件分析起来IO压力超级大，分析日志需要高超的技术，一般运维人员分析起来会很困难，更无法实时的去查看某个机器的日志。这样的话我们的日志收集就变成了真正意义上的收集了，收集起来如何利用就变成了一个难题，总结一下主要的问题就是以下几点...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%BD%AFraid%E9%98%B5%E5%88%97/">
+<article class="md-text"><h2 class="post-title">创建一个软raid阵列</h2><div class="excerpt"><p>环境准备添加一个20G的虚拟硬盘，分成10个2G的分区
+一、创建raid0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475系统中如果没有mdadm命令请安装相关...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3linux%E6%96%87%E4%BB%B6/">
+<article class="md-text"><h2 class="post-title">深入理解linux文件</h2><div class="excerpt"><p>一、linux的文件存储假如有一个用户在linux系统中编辑了一个文件，编辑完内容后，关闭编辑器时会问用户改如何命名这个文件，设置完名称之后会选择一个目录将该文件保存到指定目录下，在这个例子中包含了linux系统中与文件相关的三个组成部分
 
-preferredDuringSchedulingIgnoredDuringExecution：软策略
-requiredDuringSchedulingIgnoredDuringExecution：硬策略
+数据：就是文件的内容，保存在一个叫data（数据块）的结构中
+元数据：保存一个文件的特征的系统数据，用来保存除了文件内容和文件名以外的与文件相关的信息，...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E9%80%BB%E8%BE%91%E5%8D%B7%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B-swap%E5%88%86%E5%8C%BA/">
+<article class="md-text"><h2 class="post-title">逻辑卷实战案例-swap分区</h2><div class="excerpt"><p>swap分区在系统的运行内存不够用的时候，把运行内存中的一部分空间释放出来，以供当前运行的程序使用。那些被释放的空间可能来自一些很长时间没有什么操作的程序，这些被释放的空间被临时保存到swap分区中，等到那些程序要运行时，再从Swap分区中恢复保存的数据到内存中。可以缓解物理内存不足的压力，如果物理内存不足，还没有swap空间，会宕机
+扩容swap空间方法1： 增加一个设备（硬盘，分区，逻辑...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/shell%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">
+<article class="md-text"><h2 class="post-title">shell数据处理</h2><div class="excerpt"><p>一、linux中的常用符号
 
-12preferred：首选，较喜欢required：需要，必修
 
-键值运算关系：
 
-In：label 的值在某个列表...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.642Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%E6%B1%A1%E7%82%B9%E5%92%8C%E5%AE%B9%E5%BF%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、Taint 和 Toleration介绍节点亲和性，是 pod 的一种属性（偏好或硬性要求），它使 pod 被吸引到一类特定的节点。Taint 则相反，它使节点能够排斥一类特定的pod，Taint 和 toleration 相互配合，可以用来避免 pod 被分配到不合适的节点上。每个节点上都可以应用一个或多个taint ，这表示对于那些不能容忍这些 taint 的 pod，是不会被该节点...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.637Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%20%E8%AF%81%E4%B9%A6%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、证书机制说明Kubernetes 作为一个分布式集群的管理工具，保证集群的安全性是其一个重要的任务。API Server 是集群内部各个组件通信的中介，也是外部控制的入口。所以 Kubernetes 的安全机制基本就是围绕保护 API Server 来设计的，Kubernetes 使用了认证（Authentication）、鉴权（Authorization）、准入控制（Admission...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.624Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%20%E7%BD%91%E7%BB%9C%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>Service是Kubernetes的核心概念，通过创建Service，可以为一组具有相同功能的容器应用提供一个统一的入口地址，并且将请求负载分发到后端的各个容器应用上。
-Kubernetes 的网络模型假定了所有 Pod 都在一个可以直接连通的扁平的网络空间中，这在GCE （ Google Compute Engine ）里面是现成的网络模型， Kubernetes 假定这个网络已经存在。...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.620Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%20%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、Master Master指的是集群控制节点，在每个Kubernetes集群里都需要有一个Master来负责整个集群的管理和控制，基本上Kubernetes的所有控制命令都发给它，它负责具体的执行过程，我们后面执行的所有命令基本都是在Master上运行的
-Master上运行的核心组件：
-Kubernetes API Server（kube-apiserver）：
-提供了HTTP Rest...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.616Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kubernetes%20NameSpace%20%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>Kubernetes使用命名空间的概念帮助解决集群中在管理对象时的复杂性问题。命名空间允许将对象分组到一起，便于将它们作为一个单元进行筛选和控制。无论是应用自定义的访问控制策略，还是为了测试环境而分离所有组件，命名空间都是一个按照组来处理对象、强大且灵活的概念。
-一、什么是命名空间，为什么它很重要命名空间（namespace）是Kubernetes提供的组织机制，用于给集群中的任何对象组进行...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.612Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Kebetnetes%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7kubectl/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>为了方便在命令行下对集群、节点、pod进行管理，kubernetes官方提供了一个管理命令:kubectl
-kubectl作为客户端CLI工具，可以让用户通过命令行对Kubernetes集群进行操作。
-一、kubectl介绍kubectl命令行的语法：12345678910111213141516kubectl   [command]   [TYPE]   [NAME]   [flags]c...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.607Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/Job%20%E4%B8%8E%20Cronjob/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、JobJob 负责批处理任务，即仅执行一次的任务，它保证批处理任务的一个或多个 Pod 成功结束。
-特殊说明：
-1、spec.template 格式同 Pod
-2、RestartPolicy 仅支持 Never 或 OnFailure
-3、单个 Pod 时，默认 Pod 成功运行后 Job 即结束
-4、spec.completions 标志 Job 结束需要成功运行的 Pod 个数，默认...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.603Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/istio%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、Service Mesh 服务网格是什么随着服务网络的规模和复杂性不断的增长，它将会变得越来越难以理解和管理。它的需求包括服务发现、负载均衡、故障恢复、度量和监控等。服务网络通常还有更复杂的运维需求，比如 A&#x2F;B 测试、灰度发布、速率限制、访问控制和端到端认证。
-服务网格用来描述组成这些应用程序的微服务网络以及它们之间的交互。简单来说，Service Mesh 可以看做是传统代...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.599Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Kubernetes%E4%BA%91%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/istio%E6%8C%87%E6%A0%87%E6%94%B6%E9%9B%86%E4%B8%8E%E6%9F%A5%E8%AF%A2/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、istio指标收集与查询1、通过 Prometheus 查询度量指标123456789101112131415161718192021222324252627282930313233343536373839采集新的指标应用配置新指标的 YAML 文件，该指标将由 Istio 自动生成和采集kubectl apply -f metrics.yaml修改 prometheus 的 svc 模...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:39.595Z">2023-07-11</time></span></div></article>
+
+
+
+
+*
+代表任意字符串
+
+
+？
+代表任意字符
+
+
+&#x2F;
+代表根目录或作为路径间隔符使用
+
+
+\
+转义字符。
+
+
+&lt;ENTER&gt;
+续行符。可以使用续行符将一个命令行分写在多行上
+
+
+$
+变量值置换，如：$PATH表示环境变量PATH的值
+
+
+’
+在’…’中间的字符都会被当做普通字符处理
+
+
+‘’
+在’’…’’中间的字符会被当做文字处理并...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E9%80%BB%E8%BE%91%E5%8D%B7%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B-%E5%85%B6%E4%BB%96%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/">
+<article class="md-text"><h2 class="post-title">逻辑卷实战案例-其他常见操作</h2><div class="excerpt"><p>LVM中有PV出现了坏道123456789101112131415161718192021222324252627282930313233#LVM中有PV出现了坏道#数据拷贝 将/dev/sdc1拷贝到/dev/sdd1[root@zutuanxue ~]#lvchange -an /dev/baism/abc[root@zutuanxue ~]# pvmove /dev/sdc1 /dev...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/%E9%80%BB%E8%BE%91%E5%8D%B7%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B-%E9%80%BB%E8%BE%91%E5%8D%B7%E8%A3%81%E5%89%AA/">
+<article class="md-text"><h2 class="post-title">逻辑卷实战案例-逻辑卷裁剪</h2><div class="excerpt"><p>案例需求将lv1逻辑卷由原来的3G缩小为2G
+案例思路1、卸载逻辑卷2、扫描逻辑卷3、裁剪率lv1文件系统4、裁剪逻辑卷lv15、挂载使用
+案例实现ext分区逻辑卷裁剪12345678[root@zutuanxue /]# umount /lv1[root@zutuanxue /]# e2fsck -f /dev/vg1/lv1		检验文件系统[root@zutuanxue /]# resi...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

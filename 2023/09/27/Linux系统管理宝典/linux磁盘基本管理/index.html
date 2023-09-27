@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>linux磁盘基本管理 - 原点独白</title>
+
+  
+    <meta name="description" content="一、磁盘介绍磁盘：计算机中的外部存储设备，负责存储计算机数据，并且断电后也能保持数据不丢失。 磁盘分类： 按照物理结构：  机械磁盘 固态磁盘  按照接口:  IDE SCSI SATA SAS mSATA M.2 NVME PCIe  按照尺寸：  机械硬盘：1.8寸 2.5寸 3.5寸 固态硬盘：SATA: 2.5寸 M.2： 2242、2260、2280  二、熟悉磁盘的工作原理机械磁盘的读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux磁盘基本管理">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E7%A3%81%E7%9B%98%E5%9F%BA%E6%9C%AC%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、磁盘介绍磁盘：计算机中的外部存储设备，负责存储计算机数据，并且断电后也能保持数据不丢失。 磁盘分类： 按照物理结构：  机械磁盘 固态磁盘  按照接口:  IDE SCSI SATA SAS mSATA M.2 NVME PCIe  按照尺寸：  机械硬盘：1.8寸 2.5寸 3.5寸 固态硬盘：SATA: 2.5寸 M.2： 2242、2260、2280  二、熟悉磁盘的工作原理机械磁盘的读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986110096.jpeg">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986039811.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986025858.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986155314.png">
+<meta property="article:published_time" content="2023-09-27T00:03:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:03:56.416Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986110096.jpeg">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">linux磁盘基本管理</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%A3%81%E7%9B%98%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、磁盘介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%86%9F%E6%82%89%E7%A3%81%E7%9B%98%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">二、熟悉磁盘的工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E6%A2%B0%E7%A3%81%E7%9B%98%E5%89%96%E6%9E%90%E5%9B%BE"><span class="toc-text">机械磁盘剖析图</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E6%9C%AF%E8%AF%AD"><span class="toc-text">磁盘术语</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A3%81%E7%9B%98"><span class="toc-text">磁盘</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A3%81%E5%A4%B4"><span class="toc-text">磁头</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A3%81%E9%81%93"><span class="toc-text">磁道</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%87%E5%8C%BA"><span class="toc-text">扇区</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A3%81%E6%9F%B1"><span class="toc-text">磁柱</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%A3%81%E7%9B%98%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-text">三、磁盘的性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E7%A3%81%E7%9B%98%E6%80%A7%E8%83%BD%E7%9A%84%E6%8C%87%E6%A0%87"><span class="toc-text">影响磁盘性能的指标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A1%E9%87%8F%E7%A3%81%E7%9B%98%E6%80%A7%E8%83%BD%E7%9A%84%E6%8C%87%E6%A0%87"><span class="toc-text">衡量磁盘性能的指标</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81linux%E7%A3%81%E7%9B%98%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">四、linux磁盘的使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%E3%80%81%E7%A3%81%E7%9B%98%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">4.1、磁盘初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%E3%80%81%E5%88%86%E5%8C%BA"><span class="toc-text">4.2、分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3%E3%80%81%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-text">4.3、格式化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4%E3%80%81%E6%8C%82%E8%BD%BD"><span class="toc-text">4.4、挂载</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/">Linux系统管理宝典</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>linux磁盘基本管理</span></h1>
+<h2 id="一、磁盘介绍"><a href="#一、磁盘介绍" class="headerlink" title="一、磁盘介绍"></a>一、磁盘介绍</h2><p>磁盘：计算机中的外部存储设备，负责存储计算机数据，并且断电后也能保持数据不丢失。</p>
+<p><strong>磁盘分类：</strong></p>
+<p>按照物理结构：</p>
+<ul>
+<li>机械磁盘</li>
+<li>固态磁盘</li>
+</ul>
+<p>按照接口:</p>
+<ul>
+<li>IDE</li>
+<li>SCSI</li>
+<li>SATA</li>
+<li>SAS</li>
+<li>mSATA</li>
+<li>M.2</li>
+<li>NVME</li>
+<li>PCIe</li>
+</ul>
+<p>按照尺寸：</p>
+<ul>
+<li>机械硬盘：1.8寸 2.5寸 3.5寸</li>
+<li>固态硬盘：SATA: 2.5寸</li>
+<li>M.2： 2242、2260、2280</li>
+</ul>
+<h2 id="二、熟悉磁盘的工作原理"><a href="#二、熟悉磁盘的工作原理" class="headerlink" title="二、熟悉磁盘的工作原理"></a>二、熟悉磁盘的工作原理</h2><p><strong>机械磁盘的读写数据依靠电机带动盘片转动来完成数据读写的。</strong></p>
+<h4 id="机械磁盘剖析图"><a href="#机械磁盘剖析图" class="headerlink" title="机械磁盘剖析图"></a>机械磁盘剖析图</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986110096.jpeg" alt="机械硬盘结构.jpeg"/></div><div class="image-meta"><span class="image-caption center">机械硬盘结构.jpeg</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">为了使磁盘内部清洁，磁盘是在真空特殊环境中制作的，不能随意拆卸，拆开后基本报废了</span><br></pre></td></tr></table></figure>
+
+<p>机械磁盘工作是依靠马达带动盘片转动，通过磁头来读取磁盘上的数据。</p>
+<h3 id="磁盘术语"><a href="#磁盘术语" class="headerlink" title="磁盘术语"></a>磁盘术语</h3><h5 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h5><p>硬盘中一般会有多个盘片组成，每个盘片包含两个面，每个盘面都对应地有一个读&#x2F;写磁头。受到硬盘整体体积和生产成本的限制，盘片数量都受到限制，一般都在5片以内。盘片的编号自下向上从0开始，如最下边的盘片有0面和1面，再上一个盘片就编号为2面和3面。</p>
+<h5 id="磁头"><a href="#磁头" class="headerlink" title="磁头"></a>磁头</h5><p>负责读取盘面数据的设备</p>
+<h5 id="磁道"><a href="#磁道" class="headerlink" title="磁道"></a>磁道</h5><p>从盘片的最内侧向外有很多同心圆圈，我们称为磁道</p>
+<h5 id="扇区"><a href="#扇区" class="headerlink" title="扇区"></a>扇区</h5><p>从圆心向外画直线，可以将磁道划分为若干个弧段，称之为扇区，一个扇区通常为<strong>512B</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986039811.png" alt="disk2.png"/></div><div class="image-meta"><span class="image-caption center">disk2.png</span></div></div>
+
+<h5 id="磁柱"><a href="#磁柱" class="headerlink" title="磁柱"></a>磁柱</h5><p>硬盘通常由重叠的一组盘片构成，每个盘面都被划分为数目相等的磁道，并从外缘的“0”开始编号，具有相同编号的磁道形成一个圆柱，称之为磁盘的柱面。磁盘的柱面数与一个盘面上的磁道数是相等的。由于每个盘面都有自己的磁头，因此，盘面数等于总的磁头数。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986025858.png" alt="disk3.png"/></div><div class="image-meta"><span class="image-caption center">disk3.png</span></div></div>
+
+<h2 id="三、磁盘的性能指标"><a href="#三、磁盘的性能指标" class="headerlink" title="三、磁盘的性能指标"></a>三、磁盘的性能指标</h2><h4 id="影响磁盘性能的指标"><a href="#影响磁盘性能的指标" class="headerlink" title="影响磁盘性能的指标"></a>影响磁盘性能的指标</h4><p><strong>寻道时间（seek time）</strong>【和 转速 相关】：Tseek，是指将读写磁头移动至正确的磁道上所需要的时间。寻道时间越短，I&#x2F;O操作越快，目前磁盘的平均寻道时间一般在3-15ms</p>
+<p><strong>旋转延迟</strong>：Trotation，是指盘片旋转将请求数据所在的扇区移动到读写磁头下方所需要的时间。旋转延迟取决于磁盘转速，通常用磁盘旋转一周所需时间的1&#x2F;2表示。比如：7200rpm的磁盘平均旋转延迟大约为60*1000&#x2F;7200&#x2F;2 &#x3D; 4.17ms，而转速为15000rpm的磁盘其平均旋转延迟为2ms。</p>
+<p><strong>数据传输时间</strong>：Ttransfer，是指完成传输所请求的数据所需要的时间</p>
+<h4 id="衡量磁盘性能的指标"><a href="#衡量磁盘性能的指标" class="headerlink" title="衡量磁盘性能的指标"></a>衡量磁盘性能的指标</h4><p><strong>IOPS</strong>：IOPS（Input&#x2F;Output Per Second）即每秒的输入输出量（或读写次数），即指每秒内系统能处理的I&#x2F;O请求数量。随机读写频繁的应用，如小文件存储等，关注随机读写性能，IOPS是关键衡量指标。可以推算出磁盘的IOPS &#x3D; 1000ms &#x2F; (Tseek + Trotation + Transfer)，如果忽略数据传输时间，理论上可以计算出随机读写最大的IOPS。常见磁盘的随机读写最大IOPS为：</p>
+<ul>
+<li>7200rpm的磁盘 IOPS &#x3D; 76 IOPS</li>
+<li>10000rpm的磁盘IOPS &#x3D; 111 IOPS</li>
+<li>15000rpm的磁盘IOPS &#x3D; 166 IOPS</li>
+</ul>
+<p><strong>throughput ：</strong> 吞吐量指单位时间内可以成功传输的数据数量。 单位为（m&#x2F;s G&#x2F;s）</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/18/1602986155314.png" alt="3.png"/></div><div class="image-meta"><span class="image-caption center">3.png</span></div></div>
+
+<p><strong>文件系统：</strong>是告知操作系统使用何种方法和数据结构在存储设备或分区上读写数据的；是分区数据管家，负责如何将数据写入磁盘或者从磁盘读出</p>
+<p>NTFS EXT3 EXT4 XFS ISO9660</p>
+<p>具体有多少 man mount -t</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adfs,  affs,  autofs,  cifs,  coda,  coherent, cramfs,debugfs, devpts, efs, ext, ext2, ext3, ext4, hfs, hfsplus, hpfs,iso9660,  jfs, minix, msdos, ncpfs, nfs, nfs4, ntfs, proc, qnx4,ramfs, reiserfs, romfs, squashfs,  smbfs,  sysv,  tmpfs,  ubifs,udf,  ufs,  umsdos,  usbfs,  vfat, xenix, xfs, xiafs.</span><br></pre></td></tr></table></figure>
+
+<p><strong>文件系统可以根据应用场景去选择使用哪一款，如果不会选择，推荐ext4或者XFS</strong></p>
+<p><strong>page cache</strong></p>
+<p>其实就是内存上空闲的部分 用来缓存数据，比如buffer cache</p>
+<p>作用：对IO读写做优化</p>
+<p>测试缓存对读写的影响</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">写</span><br><span class="line">[root@zutuanxue ~]# echo 3 &gt; /proc/sys/vm/drop_caches</span><br><span class="line">[root@zutuanxue ~]# free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           1980          95        1807           9          77        1754</span><br><span class="line">Swap:          2047           0        2047</span><br><span class="line">[root@zutuanxue ~]# dd if=/dev/zero of=/tmp/big bs=1M count=1000</span><br><span class="line">记录了1000+0 的读入</span><br><span class="line">记录了1000+0 的写出</span><br><span class="line">1048576000字节(1.0 GB)已复制，10.2412 秒，102 MB/秒</span><br><span class="line">[root@zutuanxue ~]# free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           1980          95         779           9        1105        1698</span><br><span class="line">Swap:          2047           0        2047</span><br><span class="line">[root@zutuanxue ~]# dd if=/dev/zero of=/tmp/big1 bs=1M count=1000</span><br><span class="line">记录了1000+0 的读入</span><br><span class="line">记录了1000+0 的写出</span><br><span class="line">1048576000字节(1.0 GB)已复制，7.89978 秒，133 MB/秒</span><br><span class="line"></span><br><span class="line">读</span><br><span class="line">[root@zutuanxue ~]# echo 3 &gt; /proc/sys/vm/drop_caches </span><br><span class="line">[root@zutuanxue ~]# free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           1980          95        1805           9          79        1753</span><br><span class="line">Swap:          2047           0        2047</span><br><span class="line">[root@zutuanxue ~]# dd if=/tmp/big of=/dev/null </span><br><span class="line">记录了2048000+0 的读入</span><br><span class="line">记录了2048000+0 的写出</span><br><span class="line">1048576000字节(1.0 GB)已复制，2.23965 秒，468 MB/秒</span><br><span class="line">[root@zutuanxue ~]# free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           1980          95         800           9        1084        1710</span><br><span class="line">Swap:          2047           0        2047</span><br><span class="line">[root@zutuanxue ~]# dd if=/tmp/big of=/dev/null </span><br><span class="line">记录了2048000+0 的读入</span><br><span class="line">记录了2048000+0 的写出</span><br><span class="line">1048576000字节(1.0 GB)已复制，1.92811 秒，544 MB/秒</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、linux磁盘的使用方法"><a href="#四、linux磁盘的使用方法" class="headerlink" title="四、linux磁盘的使用方法"></a>四、linux磁盘的使用方法</h2><h3 id="4-1、磁盘初始化"><a href="#4-1、磁盘初始化" class="headerlink" title="4.1、磁盘初始化"></a><strong>4.1、磁盘初始化</strong></h3><p> <strong>一块新的磁盘使用必须初始化为MBR或者GPT分区。</strong></p>
+<ul>
+<li><strong>MBR &lt;2TB fdisk</strong> <strong>4个主分区或者3个主分区+1个扩展分区（N个逻辑分区）</strong></li>
+</ul>
+<p>MBR(Master Boot Record)的缩写，由三部分组成，即：</p>
+<ol>
+<li><p>Bootloader（主引导程序）&#x3D;</p>
+<p> 446字节</p>
+<ul>
+<li>引导操作系统的主程序</li>
+</ul>
+</li>
+<li><p>DPT分区表（Disk Partition Table）&#x3D;</p>
+<p> 64字节</p>
+<ul>
+<li>分区表保存了硬盘的分区信息，操作系统通过读取分区表内的信息，就能够获得该硬盘的分区信息</li>
+<li>每个分区需要占用16个字节大小，保存有文件系统标识、起止柱面号、磁头号、扇区号、起始扇区位置（4个字节）、分区总扇区数目（4个字节）等内容</li>
+<li>分区表中保存的分区信息都是主分区与扩展分区的分区信息，扩展分区不能直接使用，需要在扩展分区内划分一个或多个逻辑分区后才能使用</li>
+<li>逻辑分区的分区信息保存在扩展分区内而不是保存在MBR分区表内，这样，就可以突破MBR分区表只能保存4个分区的限制</li>
+</ul>
+</li>
+<li><p>硬盘有效标志（校验位）&#x3D;2个字节</p>
+</li>
+</ol>
+<ul>
+<li><strong>GPT &gt;2TB gdisk(parted) 128个主分区</strong></li>
+</ul>
+<p>注意：从MBR转到GPT，或从GPT转换到MBR会导致<strong>数据全部丢失</strong>！</p>
+<h3 id="4-2、分区"><a href="#4-2、分区" class="headerlink" title="4.2、分区"></a><strong>4.2、分区</strong></h3><p> <strong>将磁盘合理分区，能使计算机或者使用者更快的存取数据</strong></p>
+<p> MBR 主分区+扩展分区&lt;&#x3D;4</p>
+<p> GPT 主分区&lt;&#x3D;128</p>
+<h3 id="4-3、格式化"><a href="#4-3、格式化" class="headerlink" title="4.3、格式化"></a><strong>4.3、格式化</strong></h3><p> <strong>装载文件系统(相当于库管，负责数据的写入和读出)。</strong></p>
+<p> 常见的文件系统:NTFS EXT EXT2 EXT3 EXT4 XFS vfat</p>
+<h3 id="4-4、挂载"><a href="#4-4、挂载" class="headerlink" title="4.4、挂载"></a><strong>4.4、挂载</strong></h3><p> <strong>linux中设备不能直接使用，需要挂载到文件夹才可以。</strong></p>
+<p>挂载方式：</p>
+<ol>
+<li>手动挂载</li>
+<li>开机挂载</li>
+<li>自动挂载</li>
+</ol>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/">linux用户管理</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/linux%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/">linux网络故障排查</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

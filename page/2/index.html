@@ -80,7 +80,7 @@
 <widget class="widget-wrapper markdown"><div class="widget-header cap theme dis-select"><span class="name">欢迎你旅行者</span></div><div class="widget-body fs14"><p>我的个人博客，记录了我在学习过程中的积累 <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img1.imgtp.com/2023/09/26/QuMOgvsK.png" alt="原点独白"></p>
 </div></widget>
 
-<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2022/09/27/Docker%E5%AE%B9%E5%99%A8%E5%AE%9E%E6%88%98%E9%83%A8%E7%BD%B2/Docker%20Compose%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/"><span class="title">Docker-Compose</span></a><a class="item title" href="/2022/09/27/Docker%E5%AE%B9%E5%99%A8%E5%AE%9E%E6%88%98%E9%83%A8%E7%BD%B2/Docker%20%E7%BD%91%E7%BB%9C/"><span class="title">Docker 网络</span></a><a class="item title" href="/2023/09/27/dns/DNS%E9%85%8D%E7%BD%AE/"><span class="title">DNS配置</span></a><a class="item title" href="/2023/09/25/sysctl/sysctl/"><span class="title">sysctl</span></a><a class="item title" href="/2023/09/26/dhcp/DHCP/"><span class="title">DHCP配置</span></a></div></widget>
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AC%94%E8%AE%B0/"><span class="title">网络工程师笔记</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B9%B3%E5%8F%B0%E5%88%9D%E8%AF%86/"><span class="title">Ansible运维自动化平台初识</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E9%83%A8%E7%BD%B2/"><span class="title">Ansible自动化运维平台部署</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/"><span class="title">Ansible命令用法</span></a><a class="item title" href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-yum%E6%A8%A1%E5%9D%97/"><span class="title">Ansible-yum模块</span></a></div></widget>
 
 
 </div>
@@ -100,50 +100,139 @@
 
   
 
-<div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/archives">归档</a></nav></div>
+<div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/archives">归档</a><a href="/friends/rss/">朋友文章</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/07/11/%E9%83%A8%E7%BD%B2%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/keepalived%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、什么是高可用通过前面课程的学习，我们知道LVS、Nginx可以实现很多种不同类型的分发，我们还知道，集群系统存在的作用就是为了解决单点故障的问题。
-LVS、Nginx集群的单点故障问题这个单点故障主要体现在两个方面
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-stat%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-stat模块</h2><div class="excerpt"><p>一、stat模块stat模块类似linux的stat命令，用于获取文件的状态信息。
+https://docs.ansible.com/ansible/latest/modules/stat_module.html#stat-module
+获取&#x2F;etc&#x2F;fstab文件的状态信息
+123456789101112131415161718192021222324252627282...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-setup%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-setup模块</h2><div class="excerpt"><p>一、setup模块setup模块用于收集远程主机的基本信息（如操作系统类型,主机名,ip,cpu信息,内存信息等）
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-script%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-script模块</h2><div class="excerpt"><p>一、script模块如何通过ansible执行一个脚本：lamp安装脚本
+script模块：用于在远程机器上执行本地脚本。
+https://docs.ansible.com/ansible/latest/modules/script_module.html#script-module
+123456789101112131415161718192021222324252627282930313...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-yum%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-yum模块</h2><div class="excerpt"><p>一、yum模块yum模块用于使用yum命令来实现软件包的安装与卸载。
+https://docs.ansible.com/ansible/latest/modules/yum_module.html#yum-module
 
-分发器宕机怎么处理？  假如nginx服务器挂掉了，那么所有的服务也会跟着瘫痪 。  一种方法是人为监控，发现主分发器宕机后，立马登录备分发器，并给它分配虚ip。
-  另一...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:41.196Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/%E4%BD%BF%E7%94%A8nginx%E5%8F%91%E5%B8%83tomcat%E7%AB%99%E7%82%B9/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>之前我们在访问的时候使用的都是类似http://serverip/test或者http://serverip/jpress这种字样的URL，使用起来比较麻烦，所以呢，我们可以将tomcat和nginx结合在一起，可以通过nginx以下功能发布：
 
-使用nginx url重写
-使用nginx的反向代理功能
 
-一、部署tomcat网站通过部署两个tomcat站点，分别采用nginx url re...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.716Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E9%83%A8%E7%BD%B2%E5%9C%A8windows%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、软件包获得tomcat：https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-9/v9.0.31/bin/apache-tomcat-9.0.31-windows-x64.zip
-jdk：https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
-二...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.712Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E9%83%A8%E7%BD%B2%E5%9C%A8linux%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、下载软件包tomcat：https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-9/v9.0.31/bin/apache-tomcat-9.0.31.zip
-jdk：https://www.oracle.com/java/technologies/javase-downloads.html
-如何想使用tomcat9的话，官方要求...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.707Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E8%B0%83%E4%BC%98/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>tomcat的优化可以提高网站的并发能力，体现个人的价值，tomcat在java项目中的使用率非常高，所以在生产环境对tomcat的优化也就变得非常必要了，一般情况下tomcat的优化主要从两个方面入手，一个是自身配置，另一个是tomcat所运行的jvm虚拟机的优化，优化的工作可以从安装完tomcat就开始着手
-一、AJP优化在前面的课程中我们提到了一个叫AJP的协议，同时我们也知道了这个A...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.703Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E5%A4%9A%E5%AE%9E%E4%BE%8B/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>Tomcat是一个单进程多线程的软件，在很早之前，我们都认为这种模式挺好的，因为早些年的CPU都是单核的，但是现在都是多核心的CPU了,如果还是一个进程的话呢，就比较浪费CPU资源，所以本节课我们要讨论下如果多开几个tomcat，也就是我们本节课要实现的是tomcat的多实例，这样可以提高资源的利用率，在之前的课程中我们提到过tomcat有三个端口8005 8009 8080，其中8005是...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.698Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E5%8F%91%E5%B8%83%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>访问tomcat网站管理页面打开浏览器，在地址栏中输入 http://localhost:8080看到如下页面，该页面是tomcat的默认网站，同时还提供了以下功能
+参数
+说明
 
-server status 查看服务器的状态，包括linux主机的信息，tomcat的版本信息，资源使用情况等
-manager app 管理网站
-host manager 虚拟主机的管理
 
-image2020031215414...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.694Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>Apache JMeter是Apache组织开发的基于Java的压力测试工具。用于对软件做压力测试，它最初被设计用于Web应用测试，但后来扩展到其他测试领域。 它可以用于测试静态和动态资源，例如静态文件、Java 小服务程序、CGI 脚本、Java 对象、数据库、FTP 服务器， 等等。JMeter 可以用于对服务器、网络或对象模拟巨大的负载，来自不同压力类别下测试它们的强度和分析整体性能
-...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.690Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、Tomcat介绍Apache Tomcat最早是由Sun开发的，在1999年被捐献给ASF（Apache 软件基金会 Apache Software Foundation），隶属于Jakarta(雅加达)项目，现在已经独立为一个顶级项目。因为Tomcat 技术先进、性能稳定，同时也是一个免费的开放源代码的Web 应用服务器，因而深受Java 爱好者的喜爱并得到了部分软件开发商的认可，被很...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.686Z">2023-07-11</time></span></div></article>
-</a><a class="post-card post " href="/2023/07/11/Web%E6%9C%8D%E5%8A%A1%E5%99%A8-Tomcat/Tomcat%20%E7%9B%AE%E5%BD%95%E4%B8%8E%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
-<article class="md-text"><h2 class="post-title">2023-07-11</h2><div class="excerpt"><p>一、tomcat目录说明tomcat主目录
-12345678910111213bin：命令，存放不同平台上启动或关闭的脚本BUILDING.txt&amp;RUNNING.txt：使用文档，告诉用户如何搭建conf：各种全局配置文件，最主要的是server.xml和web.xml	CONTRIBUTING.md：捐赠lib：tomcat需要用到的库，主要是各种jar包LICENSE：许可lo...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-07-11T11:44:40.681Z">2023-07-11</time></span></div></article>
+
+name
+需要安装软件包的名称
+
+
+list&#x3D; installed, updates, available and repos
+列出已安装 ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-service%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-service模块</h2><div class="excerpt"><p>一、service模块service模块：用于控制服务的启动,关闭,开机自启动等。
+https://docs.ansible.com/ansible/latest/modules/service_module.html#service-module
+
+
+
+参数
+说明
+
+
+
+name
+服务名称
+
+
+state reloaded, restarted, started, stopped
+服务管理...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-user%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-user模块</h2><div class="excerpt"><p>一、user模块user模块用于管理用户账号和用户属性
+https://docs.ansible.com/ansible/latest/modules/user_module.html#user-module
+
+
+
+常用参数
+说明
+
+
+
+name&#x3D;””
+指定用户名
+
+
+password&#x3D;””
+指定密码,必须是密文
+
+
+state&#x3D; absent|present
+...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E5%91%BD%E4%BB%A4%E7%94%A8%E6%B3%95/">
+<article class="md-text"><h2 class="post-title">Ansible命令用法</h2><div class="excerpt"><p>ansible是基于模块工作的，本身没有批量部署的能力。真正具有批量部署的是ansible所运行的模块，ansible只是提供一种框架。
+ansible支持的模块非常的多，我们并不需要把每个模块都记住，而只需要熟悉一些常见的模块，其它的模块在需要用到时再查询即可。
+一、ansible命令用法12ansible 机器  -m 模块名称 -a &#x27;模块参数&#x27;基本格式为: ans...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-yum_repository%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-yum_repository模块</h2><div class="excerpt"><p>一、yum_repository模块yum_repository模块用于配置yum仓库。
+https://docs.ansible.com/ansible/latest/modules/yum_repository_module.html
+
+
+
+参数
+说明
+
+
+
+name
+仓库名 name.repo 源的名称 [name]
+
+
+description
+描述
+
+
+baseurl
+包下载路径
+
+...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0%E9%83%A8%E7%BD%B2/">
+<article class="md-text"><h2 class="post-title">Ansible自动化运维平台部署</h2><div class="excerpt"><p>一、部署前准备
+部署机器准备
+计算机名解析
+关闭防火墙、selinux
+时间同步
+软件包获得
+ssh免密登陆
+
+约定事项：
+
+所有服务器全部采用静态ip
+
+
+
+主机名称
+IP地址
+
+
+
+manage01
+192.168.98.200&#x2F;24
+
+
+node1
+192.168.98.201&#x2F;24
+
+
+node2
+192.168.98.202&#x2F;24
+
+
+node3
+19...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%AC%94%E8%AE%B0/">
+<article class="md-text"><h2 class="post-title">网络工程师笔记</h2><div class="excerpt"><p></p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

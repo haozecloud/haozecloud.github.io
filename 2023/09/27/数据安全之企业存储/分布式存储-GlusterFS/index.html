@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>分布式存储-GlusterFS - 原点独白</title>
+
+  
+    <meta name="description" content="一、分布式存储介绍我们知道NAS是远程通过网络共享目录, SAN是远程通过网络共享块设备。那么分布式存储你可以看作拥有多台存储服务器连接起来的存储输出端。把这多台存储服务器的存储合起来做成一个整体再通过网络进行远程共享,共享的方式有目录(文件存储),块设备(块存储),对象网关或者说一个程序接口(对象存储)。 常见的分布式存储开源软件有:GlusterFS,Ceph,HDFS,MooseFS,Fas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式存储-GlusterFS">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8-GlusterFS/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、分布式存储介绍我们知道NAS是远程通过网络共享目录, SAN是远程通过网络共享块设备。那么分布式存储你可以看作拥有多台存储服务器连接起来的存储输出端。把这多台存储服务器的存储合起来做成一个整体再通过网络进行远程共享,共享的方式有目录(文件存储),块设备(块存储),对象网关或者说一个程序接口(对象存储)。 常见的分布式存储开源软件有:GlusterFS,Ceph,HDFS,MooseFS,Fas">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943799737.png)">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943809143.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943824194.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943841660.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943857634.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943932241.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943950850.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943983306.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943999454.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944017603.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944030297.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944160202.png">
+<meta property="article:published_time" content="2023-09-27T00:01:42.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:01:43.480Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943799737.png)">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">分布式存储-GlusterFS</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、分布式存储介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81GlusterFS%E4%BB%8B%E7%BB%8D"><span class="toc-text">二、GlusterFS介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81raid%E7%BA%A7%E5%88%AB%E5%9B%9E%E9%A1%BE"><span class="toc-text">三、raid级别回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GlusterFS%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="toc-text">GlusterFS名词解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81GlusterFS%E5%8D%B7%E7%B1%BB%E5%9E%8B"><span class="toc-text">四、GlusterFS卷类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81glusterfs%E9%9B%86%E7%BE%A4"><span class="toc-text">五、glusterfs集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E6%A1%88%E4%BE%8B"><span class="toc-text">学习案例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%8B%93%E6%89%91%E5%9B%BE"><span class="toc-text">实验拓扑图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%AD%A5%E9%AA%A4"><span class="toc-text">实验步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link"><span class="toc-text"></span></a></li></ol></li></ol></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/942ebbf1a4b91.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/">数据安全之企业存储</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:01:42.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>分布式存储-GlusterFS</span></h1>
+<h2 id="一、分布式存储介绍"><a href="#一、分布式存储介绍" class="headerlink" title="一、分布式存储介绍"></a>一、分布式存储介绍</h2><p>我们知道NAS是远程通过网络共享目录, SAN是远程通过网络共享块设备。那么分布式存储你可以看作拥有多台存储服务器连接起来的存储输出端。把这多台存储服务器的存储合起来做成一个整体再通过网络进行远程共享,共享的方式有目录(文件存储),块设备(块存储),对象网关或者说一个程序接口(对象存储)。</p>
+<p>常见的分布式存储开源软件有:GlusterFS,Ceph,HDFS,MooseFS,FastDFS等。</p>
+<p>分布式存储一般都有以下几个优点:</p>
+<ol>
+<li>扩容方便，轻松达到PB级别或以上</li>
+<li>提升读写性能或数据高可用</li>
+<li>避免单个节点故障导致整个架构问题</li>
+<li>价格相对便宜，大量的廉价设备就可以组成，比光纤SAN这种便宜很多</li>
+</ol>
+<h2 id="二、GlusterFS介绍"><a href="#二、GlusterFS介绍" class="headerlink" title="二、GlusterFS介绍"></a>二、GlusterFS介绍</h2><p>glusterfs是一个免费,开源的分布式文件系统（它属于<strong>文件存储类型</strong>）。主要由 Z RESEARCH 公司负责开发。GlusterFS 具有强大的横向扩展能力，通过扩展能够支持数PB存储容量和处理数千客户端。GlusterFS 可以将物理分布的存储资源聚集在一起，使用单一全局命名空间来管理数据，可为各种不同的数据负载提供优异的性能。</p>
+<p>GlusterFS 主要由存储服务器（Brick Server）、客户端以及 NFS&#x2F;Samba 存储网关组成。在GlusterFS 架构中没有元数据服务器组件，这是其最大的设计这点，对于提升整个系统的性能、可靠性和稳定性都有着决定性的意义。</p>
+<p>GlusterFS 支持 TCP&#x2F;IP 和 高速网络互联。客户端可通过原生 GlusterFS 协议访问数据，其他没有运行 GlusterFS 客户端的终端可通过 NFS&#x2F;CIFS 标准协议通过存储网关访问数据。存储服务器主要提供基本的数据存储功能，客户端弥补了没有元数据服务器的问题，承担了更多的功能，包括数据卷管理、I&#x2F;O 调度、文件定位、数据缓存等功能，利用 FUSE（File system in User Space）模块将 GlusterFS 挂载到本地文件系统之上，来访问系统数据。</p>
+<h2 id="三、raid级别回顾"><a href="#三、raid级别回顾" class="headerlink" title="三、raid级别回顾"></a>三、raid级别回顾</h2><p>raid级别有很多种，下面主要介绍常用的几种:</p>
+<p><strong>raid0</strong> 读写性能佳，坏了其中一块，数据挂掉，可靠性低（stripe条带化），磁盘利用率100％</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943799737.png)" alt="**raid1** 镜像备份（mirror raid0.png"/></div><div class="image-meta"><span class="image-caption center">**raid1** 镜像备份（mirror raid0.png</span></div></div>，同一份数据完整的保存在多个磁盘上，写的性能不佳，可靠性高，读的性能还行，磁盘利用率50%
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943809143.png" alt="raid1.png"/></div><div class="image-meta"><span class="image-caption center">raid1.png</span></div></div>
+
+<p><strong>raid10</strong> 先做raid 1 再做raid 0</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943824194.png" alt="raid10.png"/></div><div class="image-meta"><span class="image-caption center">raid10.png</span></div></div>
+
+<p><strong>raid5</strong> 由多块磁盘做raid 5，磁盘利用率为n-1&#x2F;n, 其中一块放校验数据，允许坏一块盘，数据可以利用校验值来恢复</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943841660.png" alt="raid5.png"/></div><div class="image-meta"><span class="image-caption center">raid5.png</span></div></div>
+
+<p><strong>raid6</strong> 在raid5的基础上再加一块校验盘，进一步提高数据可靠性</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943857634.png" alt="raid6.png"/></div><div class="image-meta"><span class="image-caption center">raid6.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意：生产环境中最常用的为raid5和raid10</span><br></pre></td></tr></table></figure>
+
+<h2 id="GlusterFS名词解释"><a href="#GlusterFS名词解释" class="headerlink" title="GlusterFS名词解释"></a>GlusterFS名词解释</h2><ul>
+<li>Brick: 最基本的存储单元，表示为trusted storage pool中输出的目录，供客户端挂载用，一般表示方式为“主机名:目录名”</li>
+<li>Volume: 一个卷。在逻辑上由N个bricks组成.</li>
+<li>FUSE: Unix-like OS上的可动态加载的模块，允许用户不用修改内核即可创建自己的文件系统。</li>
+</ul>
+<h2 id="四、GlusterFS卷类型"><a href="#四、GlusterFS卷类型" class="headerlink" title="四、GlusterFS卷类型"></a>四、GlusterFS卷类型</h2><p><strong>基本卷</strong></p>
+<p><strong>distribute volume分布式卷 默认：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943932241.png" alt="image20200227101111403.png"/></div><div class="image-meta"><span class="image-caption center">image20200227101111403.png</span></div></div>
+
+<p>说明：根据hash算法，将文件随机存储在一个的brick上，文件不能拆分。此时volume的容量是所有brick的和；方便扩展空间，但无冗余保护；由于使用本地文件系统进行存储（brick server 的本地文件系统），存取效率不高；受限于本地文件系统对单文件容量的限制，支持超大型文件系统有问题。</p>
+<p><strong>stripe volume 条带卷：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943950850.png" alt="image20200227101206255.png"/></div><div class="image-meta"><span class="image-caption center">image20200227101206255.png</span></div></div>
+
+<p>说明：每个文件被分片数据块，然后以round robin的方式将每个chunk存储到1个brick，相当于raid0；比如，对于一个文件，奇数行存储在第一个brick上，偶数行存储在第二个brick。单一超大容量文件可被分片，不受brick server本地文件系统的限制；分布式读写性能较高，但分片随机读写可能会导致硬盘iops较高；无冗余，1个server节点故障会导致所有数据丢失。</p>
+<p><strong>replica volume 复制卷(类似Raid 1)：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943983306.png" alt="image20200227101247582.png"/></div><div class="image-meta"><span class="image-caption center">image20200227101247582.png</span></div></div>
+
+<p>说明：每个文件同步复制镜像到多个brick，相当于文件级raid1，一个是存储一个是备份；读性能提升，写性能下降；提升数据可靠性，但磁盘利用率低；如果两台存储服务器不同，就会出现木桶效应</p>
+<p><strong>复合卷</strong></p>
+<p><strong>distribute replica volume 分布式复制卷：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603943999454.png" alt="image20200227121736499.png"/></div><div class="image-meta"><span class="image-caption center">image20200227121736499.png</span></div></div>
+
+<p>说明：是分布式卷与复制卷的组合，兼具两者的功能，若干brick组成1个复制卷，另外若干brick组成其他复制卷；单个文件在复制卷内数据保持副本，不同文件在不同复制卷之间进行哈希分布</p>
+<p><strong>distribute stripe volume分布式条带卷：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944017603.png" alt="image20200227101726471.png"/></div><div class="image-meta"><span class="image-caption center">image20200227101726471.png</span></div></div>
+
+<p>说明：分布式卷与条带卷的组合，兼具两者的功能，若干brick组成1个条带卷，另外若干brick组成其他条带卷；单个文件在条带卷内数据以条带的形式存储，不同文件在不同条带卷之间进行哈希分布；</p>
+<p><strong>striped replicated volume条带镜像卷：</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944030297.png" alt="image20200227125132180.png"/></div><div class="image-meta"><span class="image-caption center">image20200227125132180.png</span></div></div>
+
+<p>说明：条带与复制卷的组合，兼具两者的功能，若干brick组成1个复制卷，另外若干brick组成其他复制卷；单个文件以条带的形式存储在2个或多个复制集（replicated sets ），复制集内文件分片以副本的形式保存；</p>
+<p><strong>distribute stripe replica volume 混合卷：</strong> 三种基本卷的复合卷，分布式卷，条带与复制卷的组合，兼具三者的功能</p>
+<p><strong>dispersed volume：</strong> 分散式（冗余式），例如，数据保存在10个brick中，每个brick有1T，10个brick中有3个是作为冗余brick，作为数据校验，不做存储。此时volume只有7T，volume中允许有3个brick损坏</p>
+<h2 id="五、glusterfs集群"><a href="#五、glusterfs集群" class="headerlink" title="五、glusterfs集群"></a>五、glusterfs集群</h2><p>目前为止stripe（条带）类型已经用的越来越少，我们以一个案例说明distribute（分布式），replica（复制），distribute replica（分布式复制），dispersed（冗余）四种常用的类型如何使用</p>
+<h3 id="学习案例"><a href="#学习案例" class="headerlink" title="学习案例"></a>学习案例</h3><p><strong>案例需求:</strong> 部署一个glusterfs存储集群</p>
+<p><strong>集群部署:</strong> 案例步骤</p>
+<ol>
+<li>部署集群</li>
+<li>创建卷并启动</li>
+<li>客户端连接挂载</li>
+</ol>
+<h4 id="实验拓扑图"><a href="#实验拓扑图" class="headerlink" title="实验拓扑图"></a>实验拓扑图</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/29/1603944160202.png" alt="GfusterFS集群.png"/></div><div class="image-meta"><span class="image-caption center">GfusterFS集群.png</span></div></div>
+
+<table>
+<thead>
+<tr>
+<th align="center">计算机名称</th>
+<th align="center">IP地址</th>
+<th align="center">角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">manage01</td>
+<td align="center">192.168.98.200</td>
+<td align="center">client</td>
+</tr>
+<tr>
+<td align="center">node1</td>
+<td align="center">192.168.98.201</td>
+<td align="center">storage_node</td>
+</tr>
+<tr>
+<td align="center">node2</td>
+<td align="center">192.168.98.202</td>
+<td align="center">storage_node</td>
+</tr>
+<tr>
+<td align="center">node3</td>
+<td align="center">192.168.98.203</td>
+<td align="center">storage_node</td>
+</tr>
+<tr>
+<td align="center">node4</td>
+<td align="center">192.168.98.204</td>
+<td align="center">storage_node</td>
+</tr>
+<tr>
+<td align="center">node5</td>
+<td align="center">192.168.98.205</td>
+<td align="center">storage_node</td>
+</tr>
+</tbody></table>
+<h4 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h4><ul>
+<li>CentOS8系统</li>
+<li>关闭防火墙</li>
+<li>关闭selinux</li>
+<li>网络连通</li>
+<li>时间同步</li>
+</ul>
+<h4 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h4><p><strong>时间同步</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# vim /etc/chrony.conf</span><br><span class="line">server 192.168.98.200 iburst</span><br><span class="line">driftfile /var/lib/chrony/drift</span><br><span class="line">makestep 1.0 3</span><br><span class="line">rtcsync</span><br><span class="line">allow 192.168.98.0/24</span><br><span class="line">local stratum 10</span><br><span class="line">leapsectz right/UTC</span><br><span class="line">logdir /var/log/chrony</span><br><span class="line">bindaddress 192.168.98.200</span><br><span class="line">[root@manage01 ~]# systemctl restart chrony</span><br><span class="line">server 192.168.98.200 iburst</span><br><span class="line">[root@node1 ~]# systemctl restart chronyd.service </span><br></pre></td></tr></table></figure>
+
+<p><strong>gluster集群部署</strong></p>
+<p>1、安装软件[ 安装软件、启动服务]</p>
+<p>2、部署集群</p>
+<p><strong>存储端设置</strong></p>
+<p>a、所有存储机器,设置Yum源，安装gluster</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#官方源地址https://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-rhel8.repo</span><br><span class="line">[root@node2 ~]#vim /etc/yum.repos.d/glusterfs.repo </span><br><span class="line"># Place this file in your /etc/yum.repos.d/ directory</span><br><span class="line">[glusterfs-rhel8]</span><br><span class="line">name=GlusterFS is a clustered file-system capable of scaling to several petabytes.</span><br><span class="line">baseurl=https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/RHEL/el-$releasever/$basearch/</span><br><span class="line">enabled=1</span><br><span class="line">skip_if_unavailable=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub</span><br><span class="line"></span><br><span class="line">[glusterfs-noarch-rhel8]</span><br><span class="line">name=GlusterFS is a clustered file-system capable of scaling to several petabytes.</span><br><span class="line">baseurl=https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/RHEL/el-$releasever/noarch</span><br><span class="line">enabled=1</span><br><span class="line">skip_if_unavailable=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub</span><br><span class="line"></span><br><span class="line">[glusterfs-source-rhel8]</span><br><span class="line">name=GlusterFS is a clustered file-system capable of scaling to several petabytes. - Source</span><br><span class="line">baseurl=https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/RHEL/el-$releasever/SRPMS</span><br><span class="line">enabled=0</span><br><span class="line">skip_if_unavailable=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub</span><br><span class="line">[root@node1 yum.repos.d]# vim /etc/yum.repos.d/CentOS-PowerTools.repo </span><br><span class="line">[PowerTools]</span><br><span class="line">name=CentOS-$releasever - PowerTools</span><br><span class="line">mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=PowerTools&amp;infra=$infra</span><br><span class="line">#baseurl=http://mirror.centos.org/$contentdir/$releasever/PowerTools/$basearch/os/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial</span><br></pre></td></tr></table></figure>
+
+<p>b、安装glusterfs软件包，并启动服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 ~]# dnf install glusterfs-server</span><br><span class="line">[root@node2 ~]# systemctl enable glusterd</span><br><span class="line">[root@node2 ~]# systemctl start glusterd</span><br></pre></td></tr></table></figure>
+
+<p><strong>glusterfs集群组成</strong></p>
+<p>brick端：manager&#x2F;node</p>
+<p>client端：挂载存储业务机器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 ~]# gluster peer help</span><br><span class="line"></span><br><span class="line">#将node节点加入集群</span><br><span class="line">[root@node2 ~]# gluster peer probe node1</span><br><span class="line">peer probe: success. </span><br><span class="line"></span><br><span class="line">#从集群中删除node</span><br><span class="line">[root@node2 ~]# gluster peer detach node4</span><br><span class="line">All clients mounted through the peer which is getting detached need to be remounted using one of the other active peers in the trusted storage pool to ensure client gets notification on any changes done on the gluster configuration and if the same has been done do you want to proceed? (y/n) y</span><br><span class="line">peer detach: success</span><br><span class="line"></span><br><span class="line">#查看集群信息</span><br><span class="line">[root@node2 ~]# gluster peer status</span><br><span class="line">[root@node2 ~]# gluster pool list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster peer status</span><br><span class="line">Number of Peers: 2</span><br><span class="line"></span><br><span class="line">Hostname: node1</span><br><span class="line">Uuid: 809111f4-8a0e-40fb-af53-d2d8a56cd41e</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: 192.168.98.203</span><br><span class="line">Uuid: 7396a19d-a2a7-4b27-86d3-12c89ac4df39</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster pool list</span><br><span class="line">UUID					Hostname      	State</span><br><span class="line">809111f4-8a0e-40fb-af53-d2d8a56cd41e	node1         	Connected </span><br><span class="line">7396a19d-a2a7-4b27-86d3-12c89ac4df39	192.168.98.203	Connected </span><br><span class="line">0ace00a1-0612-4395-ac9b-f1516207ead1	localhost     	Connected </span><br></pre></td></tr></table></figure>
+
+<h5 id=""><a href="#" class="headerlink" title=""></a></h5><p>c、所有storage服务器建立连接，成为一个集群</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">4个storage服务器建立连接不用两两连接，只需要找其中1个,连接另外3个各一次就OK了</span><br><span class="line"></span><br><span class="line">##集群管理</span><br><span class="line">#将node节点加入集群</span><br><span class="line">[root@node2 ~]# gluster peer probe node1</span><br><span class="line">peer probe: success. </span><br><span class="line">[root@node2 ~]# gluster peer probe node4</span><br><span class="line">peer probe: success. </span><br><span class="line">[root@node2 ~]# gluster peer probe node3  --这里使用ip,主机名,主机名别名都可以</span><br><span class="line"></span><br><span class="line">然后在所有存储上都可以使用下面命令来验证检查</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster peer status</span><br><span class="line">Number of Peers: 3</span><br><span class="line"></span><br><span class="line">Hostname: node1</span><br><span class="line">Uuid: 809111f4-8a0e-40fb-af53-d2d8a56cd41e</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: 192.168.98.203</span><br><span class="line">Uuid: 7396a19d-a2a7-4b27-86d3-12c89ac4df39</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: node4</span><br><span class="line">Uuid: b2ea8b19-658c-40ec-84b4-6568c627eefd</span><br><span class="line">State: Peer in Cluster (Connected)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:</p>
+<p>如果这一步建立连接有问题（一般问题会出现在网络连接,防火墙,selinux,主机名绑定等);</p>
+<p>如果想重做这一步，可以使用gluster peer detach xxxxx [force] 来断开连接，重新做</p>
+<p><strong>存储收集</strong></p>
+<p>必须是一个文件夹</p>
+<p>1）一块磁盘[分区 格式化 挂载到节点上的指定目录]</p>
+<ol>
+<li>一个磁盘文件[分区 格式化 挂载到节点上的指定目录]</li>
+</ol>
+<p>3）分区上的一个文件夹</p>
+<p>d、所有storage服务器准备存储目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 ~]# mkdir /opt/data&#123;1..5&#125;</span><br></pre></td></tr></table></figure>
+
+<p>e、创建存储卷,创建存储卷(在任意一个storage服务器上做)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">glusterfs支持多种卷</span><br><span class="line">Distribut卷  分布卷</span><br><span class="line">Replica卷    复制卷</span><br><span class="line">Disperse卷   冗余卷</span><br><span class="line"></span><br><span class="line">注意：从6.0版本开始之前和Striped卷相关的卷类型就全部废弃了。</span><br><span class="line">https://docs.gluster.org/en/latest/Administrator%20Guide/Setting%20Up%20Volumes/</span><br></pre></td></tr></table></figure>
+
+<p><strong>Replica卷</strong></p>
+<p>文件同步复制到多个brick上，文件级RAID 1，具有容错能力，写性能下降，读性能提升。缺点是磁盘利用率低。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#创建一个replica卷(raid1) 数据会在每个brick上存储一份</span><br><span class="line">#复制卷类似raid1 所有一般会选择两台来完成,文件保存两份，如果希望保存多个机器，可以用多台机器，这里用两台。</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster volume create gv1-replica replica 2 node&#123;1..2&#125;:/opt/data force</span><br><span class="line">volume create: gv1-replica: success: please start the volume to access data</span><br><span class="line">replica 代表创建的是镜像卷  2 代表2个台机器   由于使用的是根分区 所以要加上强制 force</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#查看卷创建情况</span><br><span class="line">[root@node2 ~]# gluster volume info gv1-replica</span><br><span class="line"> </span><br><span class="line">Volume Name: gv1-replica</span><br><span class="line">Type: Replicate</span><br><span class="line">Volume ID: f93a83dc-9ed6-43fe-99e4-5346d5d1d702</span><br><span class="line">Status: Created</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 1 x 2 = 2</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data</span><br><span class="line">Brick2: node2:/opt/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line">performance.client-io-threads: off</span><br></pre></td></tr></table></figure>
+
+<p><strong>Distribut卷—数据随机存储在某个brick</strong></p>
+<p>文件通过hash算法分布到所有brick server上，这种卷是glusterfs的基础和最大特点。优点是容量大，缺点是没冗余。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#如果不指定创建卷的类型，则默认是Distribute卷，可以是多个机器。</span><br><span class="line">#分布卷数据随机存储在某个brick,一般是应用在不需要冗余的环境。</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster volume create gv2-distribute node&#123;1..3&#125;:/opt/data2 force</span><br><span class="line">volume create: gv2-distribute: success: please start the volume to access data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#查看卷</span><br><span class="line">[root@node2 ~]# gluster volume info gv2-distribute</span><br><span class="line"> </span><br><span class="line">Volume Name: gv2-distribute</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: 079a2f5c-23ac-43f8-9f54-f6a454a53706</span><br><span class="line">Status: Created</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data2</span><br><span class="line">Brick2: node2:/opt/data2</span><br><span class="line">Brick3: node3:/opt/data2</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br></pre></td></tr></table></figure>
+
+<p><strong>Disperse 卷( 冗余卷)</strong></p>
+<p>disperse卷是v3.6版本后发布的一种卷模式，类似于raid5&#x2F;6,分布式分散卷 disperse必须大于2,大于4才可以有一块redundancy盘 大于5块可有redundancy盘两块</p>
+<p>文件分片存储在各个硬盘上，但有部分硬盘用于冗余用途，数量可以指定。比如一共10块硬盘，2块盘用于冗余，那么就可以承受同时损坏两块硬盘，总容量是8块盘。</p>
+<p>优点是在冗余和性能之间取得平衡</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#创建卷(raid5 raid6) </span><br><span class="line">#建议不少于4个机器</span><br><span class="line">[root@node2 ~]# gluster volume create gv3-disperse disperse 4 node&#123;1..4&#125;:/opt/data3 force</span><br><span class="line">There isn&#x27;t an optimal redundancy value for this configuration. Do you want to create the volume with redundancy 1 ? (y/n) y   指定一个磁盘为校验磁盘</span><br><span class="line">volume create: gv3-disperse: success: please start the volume to access data</span><br><span class="line"></span><br><span class="line">#查看卷信息</span><br><span class="line">[root@node2 ~]# gluster volume info gv3-disperse</span><br><span class="line"> </span><br><span class="line">Volume Name: gv3-disperse</span><br><span class="line">Type: Disperse</span><br><span class="line">Volume ID: 754523b3-7e8e-4133-bb77-60c2247711d9</span><br><span class="line">Status: Created</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 1 x (3 + 1) = 4</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data3</span><br><span class="line">Brick2: node2:/opt/data3</span><br><span class="line">Brick3: node3:/opt/data3</span><br><span class="line">Brick4: node4:/opt/data3</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br></pre></td></tr></table></figure>
+
+<p><strong>distribute replica 分布复制卷</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#创建分布复制卷，机器为偶数</span><br><span class="line">#每两个分布卷组成一个复制卷,创建两个复制卷 </span><br><span class="line">[root@node2 ~]# gluster volume create gv2-distribute-replica replica 2  node&#123;1..4&#125;:/opt/data4 force</span><br><span class="line">volume create: gv2-distribute-replica: success: please start the volume to access data</span><br><span class="line"></span><br><span class="line">#查看磁盘信息</span><br><span class="line">[root@node2 ~]# gluster volume info gv2-distribute-replica</span><br><span class="line"> </span><br><span class="line">Volume Name: gv2-distribute-replica</span><br><span class="line">Type: Distributed-Replicate</span><br><span class="line">Volume ID: 90d70fef-54a9-4555-98ad-0d1a342f6763</span><br><span class="line">Status: Created</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 2 x 2 = 4</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data4</span><br><span class="line">Brick2: node2:/opt/data4</span><br><span class="line">Brick3: node3:/opt/data4</span><br><span class="line">Brick4: node4:/opt/data4</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line">performance.client-io-threads: off</span><br></pre></td></tr></table></figure>
+
+<p>f、启动卷</p>
+<p>gluster volume star 卷名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#查看卷</span><br><span class="line">[root@node2 ~]# gluster volume list</span><br><span class="line">gv1-replica</span><br><span class="line">gv2-distribute</span><br><span class="line">gv2-distribute-replica</span><br><span class="line">gv3-disperse</span><br><span class="line"></span><br><span class="line">#启动卷</span><br><span class="line">[root@node2 ~]# gluster volume start gv1-replica</span><br><span class="line">volume start: gv1-replica: success</span><br><span class="line">[root@node2 ~]# gluster volume start gv2-distribute</span><br><span class="line">volume start: gv2-distribute: success</span><br><span class="line">[root@node2 ~]# gluster volume start gv2-distribute-replica</span><br><span class="line">volume start: gv2-distribute-replica: success</span><br><span class="line">[root@node2 ~]# gluster volume start gv3-disperse</span><br><span class="line">volume start: gv3-disperse: success</span><br></pre></td></tr></table></figure>
+
+<p><strong>存储卷管理-卷的增删改查</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line">[root@node2 ~]# gluster volume help  打印帮助信息</span><br><span class="line"></span><br><span class="line">#卷的创建 gluster volume create</span><br><span class="line">[root@node2 ~]# gluster volume create &lt;NEW-VOLNAME&gt; [stripe &lt;COUNT&gt;] [replica &lt;COUNT&gt; [arbiter &lt;COUNT&gt;]] [disperse [&lt;COUNT&gt;]] [disperse-data &lt;COUNT&gt;] [redundancy &lt;COUNT&gt;] [transport &lt;tcp|rdma|tcp,rdma&gt;] &lt;NEW-BRICK&gt;... [force]</span><br><span class="line"></span><br><span class="line">&lt;NEW-VOLNAME&gt;  卷名</span><br><span class="line">[stripe &lt;COUNT&gt;] [replica &lt;COUNT&gt; [arbiter &lt;COUNT&gt;]] [disperse [&lt;COUNT&gt;]] [disperse-data &lt;COUNT&gt;]  卷类型</span><br><span class="line">	stripe 条带</span><br><span class="line">	replica 复制</span><br><span class="line">	什么都不加  默认分布</span><br><span class="line">	disperse  冗余</span><br><span class="line">	redundancy 校验磁盘</span><br><span class="line">	transport 传输方式   tcp   rdma内存</span><br><span class="line">	force 强制，如果存储在根分区</span><br><span class="line"></span><br><span class="line">#卷删除</span><br><span class="line">[root@node2 ~]# gluster volume delete &lt;VOLNAME&gt;</span><br><span class="line"></span><br><span class="line">#卷查看</span><br><span class="line">[root@node2 ~]# gluster volume list    #卷列表</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster volume info [&lt;VOLNAME&gt; | all] #卷详细信息</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# gluster volume status [&lt;VOLNAME&gt; | all] #卷启动或关闭的状态信息</span><br><span class="line"></span><br><span class="line">#扩容卷</span><br><span class="line">[root@node2 ~]# gluster volume add-brick &lt;VOLNAME&gt; [&lt;stripe|replica&gt; &lt;COUNT&gt; [arbiter &lt;COUNT&gt;]] &lt;NEW-BRICK&gt; ... [force]</span><br><span class="line"></span><br><span class="line">#缩减卷</span><br><span class="line">[root@node2 ~]# gluster volume remove-brick </span><br><span class="line"></span><br><span class="line">#卷启动</span><br><span class="line">[root@node2 ~]# gluster volume start &lt;VOLNAME&gt;</span><br><span class="line"></span><br><span class="line">#卷关闭</span><br><span class="line">[root@node2 ~]# gluster volume stop &lt;VOLNAME&gt;</span><br><span class="line"></span><br><span class="line">#卷替换</span><br><span class="line">[root@node2 ~]# gluster volume replace-brick</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端设置挂载分布式卷</strong></p>
+<p>客户端安装软件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# dnf install glusterfs glusterfs-fuse -y</span><br><span class="line">#客户端在安装软件的时候注意版本，如果服务端与客户端使用的版本不一致，会导致挂载失败</span><br></pre></td></tr></table></figure>
+
+<p>客户端挂载，验证上述卷数据存储方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">#建立挂载点并挂载</span><br><span class="line">[root@manage01 ~]# mkdir /opt/gluster_disk&#123;1..4&#125;</span><br><span class="line">[root@manage01 ~]# mount -t glusterfs node1:/gv1-replica /opt/gluster_disk1/</span><br><span class="line">[root@manage01 ~]# mount -t glusterfs node1:/gv2-distribute /opt/gluster_disk2</span><br><span class="line">[root@manage01 ~]# mount -t glusterfs node1:/gv2-distribute-replica /opt/gluster_disk3</span><br><span class="line">[root@manage01 ~]# mount -t glusterfs node1:/gv3-disperse /opt/gluster_disk4</span><br><span class="line"></span><br><span class="line">#查看挂载</span><br><span class="line">[root@manage01 ~]# mount |grep &quot;gluster&quot;</span><br><span class="line">node1:/gv1-replica on /opt/gluster_disk1 type fuse.glusterfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other,max_read=131072)</span><br><span class="line">node1:/gv2-distribute on /opt/gluster_disk2 type fuse.glusterfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other,max_read=131072)</span><br><span class="line">node1:/gv2-distribute-replica on /opt/gluster_disk3 type fuse.glusterfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other,max_read=131072)</span><br><span class="line">node1:/gv3-disperse on /opt/gluster_disk4 type fuse.glusterfs (rw,relatime,user_id=0,group_id=0,default_permissions,allow_other,max_read=131072)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#分别存储数据</span><br><span class="line">[root@manage01 ~]# dd if=/dev/zero of=/opt/gluster_disk1/file bs=1M count=100</span><br><span class="line">记录了100+0 的读入</span><br><span class="line">记录了100+0 的写出</span><br><span class="line">104857600字节(105 MB)已复制，1.281 秒，81.9 MB/秒</span><br><span class="line">[root@manage01 ~]# dd if=/dev/zero of=/opt/gluster_disk2/file bs=1M count=100</span><br><span class="line">记录了100+0 的读入</span><br><span class="line">记录了100+0 的写出</span><br><span class="line">104857600字节(105 MB)已复制，0.974837 秒，108 MB/秒</span><br><span class="line">[root@manage01 ~]# dd if=/dev/zero of=/opt/gluster_disk3/file bs=1M count=100</span><br><span class="line">记录了100+0 的读入</span><br><span class="line">记录了100+0 的写出</span><br><span class="line">104857600字节(105 MB)已复制，1.53898 秒，68.1 MB/秒</span><br><span class="line">[root@manage01 ~]# dd if=/dev/zero of=/opt/gluster_disk4/file bs=1M count=100</span><br><span class="line">记录了100+0 的读入</span><br><span class="line">记录了100+0 的写出</span><br><span class="line">104857600字节(105 MB)已复制，1.80071 秒，58.2 MB/秒</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#验证</span><br><span class="line">#复制卷   数据每个节点都存储了一份</span><br><span class="line">[root@node1 ~]# ls /opt/data -lh</span><br><span class="line">总用量 100M</span><br><span class="line">-rw-r--r-- 2 root root 100M 7月   7 08:51 file</span><br><span class="line">[root@node2 ~]# ls /opt/data -lh</span><br><span class="line">总用量 100M</span><br><span class="line">-rw-r--r-- 2 root root 100M 7月   7 08:51 file</span><br><span class="line"></span><br><span class="line">#分布卷  数据存在了node1</span><br><span class="line">[root@node1 ~]# ls /opt/data2 -lh</span><br><span class="line">总用量 100M</span><br><span class="line">-rw-r--r-- 2 root root 100M 7月   7 08:51 file</span><br><span class="line">[root@node2 ~]# ls /opt/data2 -lh</span><br><span class="line">总用量 0</span><br><span class="line">[root@node3 ~]# ls /opt/data2 -lh</span><br><span class="line">总用量 0</span><br><span class="line"></span><br><span class="line">#冗余卷  发现数据平均分布在每个存储节点</span><br><span class="line">[root@node1 ~]# ls /opt/data3 -lh</span><br><span class="line">总用量 34M</span><br><span class="line">-rw-r--r-- 2 root root 34M 7月   7 08:52 file</span><br><span class="line"></span><br><span class="line">[root@node2 ~]# ls /opt/data3 -lh</span><br><span class="line">总用量 34M</span><br><span class="line">-rw-r--r-- 2 root root 34M 7月   7 08:52 file</span><br><span class="line"></span><br><span class="line">[root@node3 ~]# ls /opt/data3 -lh</span><br><span class="line">总用量 34M</span><br><span class="line">-rw-r--r-- 2 root root 34M 7月   7 08:52 file</span><br><span class="line"></span><br><span class="line">[root@node4 ~]# ls /opt/data3/ -lh</span><br><span class="line">总用量 34M</span><br><span class="line">-rw-r--r-- 2 root root 34M 7月   7 08:52 file</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#分布复制卷  发现数据存在了node3  node4  这对复制卷上，</span><br><span class="line">[root@node1 ~]# ls /opt/data4 -lh</span><br><span class="line">总用量 0</span><br><span class="line">[root@node2 ~]# ls /opt/data4 -lh</span><br><span class="line">总用量 0</span><br><span class="line">[root@node3 ~]# ls /opt/data4 -lh</span><br><span class="line">总用量 100M</span><br><span class="line">-rw-r--r-- 2 root root 100M 7月   7 08:51 file</span><br><span class="line">[root@node4 ~]# ls /opt/data4/ -lh</span><br><span class="line">总用量 100M</span><br><span class="line">-rw-r--r-- 2 root root 100M 7月   7 08:51 file</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除卷</strong></p>
+<ol>
+<li>删除卷中数据</li>
+<li>客户端卸载</li>
+<li>在任意一个节点执行删除</li>
+<li>验证删除</li>
+</ol>
+<p><strong>实践练习</strong></p>
+<p>删除卷中数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# rm -rf /opt/gluster_disk1/*</span><br></pre></td></tr></table></figure>
+
+<p>客户端卸载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# umount /opt/gluster_disk1/</span><br></pre></td></tr></table></figure>
+
+<p>卷删除</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#3.在任意一个节点删除</span><br><span class="line">[root@node1 ~]# gluster volume stop gv1-replica </span><br><span class="line">[root@node1 ~]# gluster volume delete gv1-replica</span><br><span class="line">Deleting volume will erase all information about the volume. Do you want to continue? (y/n) y</span><br><span class="line">volume delete: gv1-replica: failed: Volume vg0 does not exist</span><br></pre></td></tr></table></figure>
+
+<p>验证删除</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 ~]# gluster volume info gv1-replica</span><br><span class="line">Volume gv1-replica does not exist</span><br></pre></td></tr></table></figure>
+
+<p><strong>在线裁减与在线扩容</strong></p>
+<p>在线裁减要看是哪一种模式的卷，比如stripe模式就不允许在线裁减。下面我以distributed卷来做裁减与扩容</p>
+<p><strong>在线扩容</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#查看卷</span><br><span class="line">[root@node2 ~]# gluster volume info gv2-distribute</span><br><span class="line"> </span><br><span class="line">Volume Name: gv2-distribute</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: 079a2f5c-23ac-43f8-9f54-f6a454a53706</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data2</span><br><span class="line">Brick2: node2:/opt/data2</span><br><span class="line">Brick3: node3:/opt/data2</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line">#扩容</span><br><span class="line">[root@node2 ~]# gluster volume add-brick gv2-distribute node4:/opt/data2 force</span><br><span class="line">volume add-brick: success</span><br><span class="line"></span><br><span class="line">#验证</span><br><span class="line">[root@node2 ~]# gluster volume info gv2-distribute</span><br><span class="line"> </span><br><span class="line">Volume Name: gv2-distribute</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: 079a2f5c-23ac-43f8-9f54-f6a454a53706</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 4</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data2</span><br><span class="line">Brick2: node2:/opt/data2</span><br><span class="line">Brick3: node3:/opt/data2</span><br><span class="line">Brick4: node4:/opt/data2</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br></pre></td></tr></table></figure>
+
+<p><strong>在线裁减</strong>(注意要remove没有数据的brick)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#裁剪卷.</span><br><span class="line">[root@node2 ~]# gluster volume remove-brick gv2-distribute node4:/opt/data2 force</span><br><span class="line">Remove-brick force will not migrate files from the removed bricks, so they will no longer be available on the volume.</span><br><span class="line">Do you want to continue? (y/n) y</span><br><span class="line">volume remove-brick commit force: success</span><br><span class="line"></span><br><span class="line">#查看验证</span><br><span class="line">[root@node2 ~]# gluster volume info gv2-distribute</span><br><span class="line"> </span><br><span class="line">Volume Name: gv2-distribute</span><br><span class="line">Type: Distribute</span><br><span class="line">Volume ID: 079a2f5c-23ac-43f8-9f54-f6a454a53706</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 3</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data2</span><br><span class="line">Brick2: node2:/opt/data2</span><br><span class="line">Brick3: node3:/opt/data2</span><br><span class="line">Options Reconfigured:</span><br><span class="line">performance.client-io-threads: on</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">关于裁剪卷,线上几乎不会裁剪，基本上都是扩容，而且裁剪只能裁剪没有数据的，否则可能数据丢失。所以，有些卷是不支持裁剪的。</span><br></pre></td></tr></table></figure>
+
+<p><strong>在线替换卷</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 ~]# gluster volume list</span><br><span class="line">gv1-replica</span><br><span class="line">gv2-distribute</span><br><span class="line">gv2-distribute-replica</span><br><span class="line">gv3-disperse</span><br><span class="line">[root@node2 ~]# gluster volume info gv1-replica</span><br><span class="line"> </span><br><span class="line">#查看源信息 </span><br><span class="line">Volume Name: gv1-replica</span><br><span class="line">Type: Replicate</span><br><span class="line">Volume ID: f93a83dc-9ed6-43fe-99e4-5346d5d1d702</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 1 x 2 = 2</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data</span><br><span class="line">Brick2: node2:/opt/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line">performance.client-io-threads: off</span><br><span class="line"></span><br><span class="line">#卷替换</span><br><span class="line">[root@node2 ~]# gluster volume replace-brick gv1-replica node2:/opt/data node4:/opt/data commit force</span><br><span class="line">volume replace-brick: success: replace-brick commit force operation successful</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#验证替换</span><br><span class="line">[root@node2 ~]# gluster volume info gv1-replica</span><br><span class="line"> </span><br><span class="line">Volume Name: gv1-replica</span><br><span class="line">Type: Replicate</span><br><span class="line">Volume ID: f93a83dc-9ed6-43fe-99e4-5346d5d1d702</span><br><span class="line">Status: Started</span><br><span class="line">Snapshot Count: 0</span><br><span class="line">Number of Bricks: 1 x 2 = 2</span><br><span class="line">Transport-type: tcp</span><br><span class="line">Bricks:</span><br><span class="line">Brick1: node1:/opt/data</span><br><span class="line">Brick2: node4:/opt/data</span><br><span class="line">Options Reconfigured:</span><br><span class="line">transport.address-family: inet</span><br><span class="line">nfs.disable: on</span><br><span class="line">performance.client-io-threads: off</span><br></pre></td></tr></table></figure>
+
+<p>拓展:4个存储想扩容为5个存储怎么做?</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">答案: 第5个存储服务器安装服务器软件包，启动服务，然后gluster peer probe storage5加入集群</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#加入集群</span><br><span class="line">[root@node2 ~]# gluster peer probe node5</span><br><span class="line">peer probe: success. </span><br><span class="line">[root@node2 ~]# gluster peer status</span><br><span class="line">Number of Peers: 4</span><br><span class="line"></span><br><span class="line">Hostname: node1</span><br><span class="line">Uuid: 809111f4-8a0e-40fb-af53-d2d8a56cd41e</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: 192.168.98.203</span><br><span class="line">Uuid: 7396a19d-a2a7-4b27-86d3-12c89ac4df39</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: node4</span><br><span class="line">Uuid: b2ea8b19-658c-40ec-84b4-6568c627eefd</span><br><span class="line">State: Peer in Cluster (Connected)</span><br><span class="line"></span><br><span class="line">Hostname: node5</span><br><span class="line">Uuid: 82f424cb-1c7d-4057-8f40-f236015f8940</span><br><span class="line">State: Peer in Cluster (Connected)</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/Samba%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/">Samba文件服务器</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/26/dhcp/DHCP/">DHCP配置</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
