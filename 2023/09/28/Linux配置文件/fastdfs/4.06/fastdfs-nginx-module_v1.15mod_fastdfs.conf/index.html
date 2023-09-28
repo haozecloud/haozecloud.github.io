@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="connect timeout in secondsdefault value is 30sconnect_timeout&#x3D;2#���ӳ�ʱʱ�� network recv and send timeout in secondsdefault value is 30snetwork_timeout&#x3D;30#���糬ʱʱ�䣬��λΪ��.���ͻ��������ʱ������ڳ�ʱ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/fastdfs/4.06/fastdfs-nginx-module_v1.15mod_fastdfs.conf/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="connect timeout in secondsdefault value is 30sconnect_timeout&#x3D;2#���ӳ�ʱʱ�� network recv and send timeout in secondsdefault value is 30snetwork_timeout&#x3D;30#���糬ʱʱ�䣬��λΪ��.���ͻ��������ʱ������ڳ�ʱ">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-28T05:27:17.105Z">
+<meta property="article:modified_time" content="2023-09-21T10:55:00.783Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#emerg-for-emergency"><span class="toc-text">emerg for emergency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#alert"><span class="toc-text">alert</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crit-for-critical"><span class="toc-text">crit for critical</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#error"><span class="toc-text">error</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#warn-for-warning"><span class="toc-text">warn for warning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#notice"><span class="toc-text">notice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#info"><span class="toc-text">info</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#debug"><span class="toc-text">debug</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#proxy-get-the-content-from-other-storage-server-then-send-to-client"><span class="toc-text">proxy: get the content from other storage server, then send to client</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redirect-redirect-to-the-original-storage-server-HTTP-Header-is-Location"><span class="toc-text">redirect: redirect to the original storage server (HTTP Header is Location)</span></a></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-28T05:27:17.105Z">2023-09-28</time></div></div>
+
+<article class='md-text content post'>
+
+<h1 id="connect-timeout-in-seconds"><a href="#connect-timeout-in-seconds" class="headerlink" title="connect timeout in seconds"></a>connect timeout in seconds</h1><h1 id="default-value-is-30s"><a href="#default-value-is-30s" class="headerlink" title="default value is 30s"></a>default value is 30s</h1><p>connect_timeout&#x3D;2<br>#���ӳ�ʱʱ��</p>
+<h1 id="network-recv-and-send-timeout-in-seconds"><a href="#network-recv-and-send-timeout-in-seconds" class="headerlink" title="network recv and send timeout in seconds"></a>network recv and send timeout in seconds</h1><h1 id="default-value-is-30s-1"><a href="#default-value-is-30s-1" class="headerlink" title="default value is 30s"></a>default value is 30s</h1><p>network_timeout&#x3D;30<br>#���糬ʱʱ�䣬��λΪ��.���ͻ��������ʱ������ڳ�ʱʱ��󻹲��ܷ��ͻ�������ݣ��򱾴�����ͨ��ʧ��</p>
+<h1 id="the-base-path-to-store-log-files"><a href="#the-base-path-to-store-log-files" class="headerlink" title="the base path to store log files"></a>the base path to store log files</h1><p>base_path&#x3D;&#x2F;home&#x2F;fastdfs&#x2F;storage&#x2F;logs<br>#fastdfs-nginx������־���Ŀ¼</p>
+<h1 id="if-load-FastDFS-parameters-from-tracker-server"><a href="#if-load-FastDFS-parameters-from-tracker-server" class="headerlink" title="if load FastDFS parameters from tracker server"></a>if load FastDFS parameters from tracker server</h1><h1 id="since-V1-12"><a href="#since-V1-12" class="headerlink" title="since V1.12"></a>since V1.12</h1><h1 id="default-value-is-false"><a href="#default-value-is-false" class="headerlink" title="default value is false"></a>default value is false</h1><p>load_fdfs_parameters_from_tracker&#x3D;true<br>#�Ƿ��tracker server���ر���<br>#ѡ��true�����ظ�����tracker�����õĲ�������storage_id������ʵ��,<br>#�����Ļ�storage_idģʽֻ��Ҫ��tracker���þͺ���</p>
+<h1 id="storage-sync-file-max-delay-seconds"><a href="#storage-sync-file-max-delay-seconds" class="headerlink" title="storage sync file max delay seconds"></a>storage sync file max delay seconds</h1><h1 id="same-as-tracker-conf"><a href="#same-as-tracker-conf" class="headerlink" title="same as tracker.conf"></a>same as tracker.conf</h1><h1 id="valid-only-when-load-fdfs-parameters-from-tracker-is-false"><a href="#valid-only-when-load-fdfs-parameters-from-tracker-is-false" class="headerlink" title="valid only when load_fdfs_parameters_from_tracker is false"></a>valid only when load_fdfs_parameters_from_tracker is false</h1><h1 id="since-V1-12-1"><a href="#since-V1-12-1" class="headerlink" title="since V1.12"></a>since V1.12</h1><h1 id="default-value-is-86400-seconds-one-day"><a href="#default-value-is-86400-seconds-one-day" class="headerlink" title="default value is 86400 seconds (one day)"></a>default value is 86400 seconds (one day)</h1><p>storage_sync_file_max_delay &#x3D; 86400</p>
+<h1 id="if-use-storage-ID-instead-of-IP-address"><a href="#if-use-storage-ID-instead-of-IP-address" class="headerlink" title="if use storage ID instead of IP address"></a>if use storage ID instead of IP address</h1><h1 id="same-as-tracker-conf-1"><a href="#same-as-tracker-conf-1" class="headerlink" title="same as tracker.conf"></a>same as tracker.conf</h1><h1 id="valid-only-when-load-fdfs-parameters-from-tracker-is-false-1"><a href="#valid-only-when-load-fdfs-parameters-from-tracker-is-false-1" class="headerlink" title="valid only when load_fdfs_parameters_from_tracker is false"></a>valid only when load_fdfs_parameters_from_tracker is false</h1><h1 id="default-value-is-false-1"><a href="#default-value-is-false-1" class="headerlink" title="default value is false"></a>default value is false</h1><h1 id="since-V1-13"><a href="#since-V1-13" class="headerlink" title="since V1.13"></a>since V1.13</h1><p>use_storage_id &#x3D; false</p>
+<h1 id="specify-storage-ids-filename-can-use-relative-or-absolute-path"><a href="#specify-storage-ids-filename-can-use-relative-or-absolute-path" class="headerlink" title="specify storage ids filename, can use relative or absolute path"></a>specify storage ids filename, can use relative or absolute path</h1><h1 id="same-as-tracker-conf-2"><a href="#same-as-tracker-conf-2" class="headerlink" title="same as tracker.conf"></a>same as tracker.conf</h1><h1 id="valid-only-when-load-fdfs-parameters-from-tracker-is-false-2"><a href="#valid-only-when-load-fdfs-parameters-from-tracker-is-false-2" class="headerlink" title="valid only when load_fdfs_parameters_from_tracker is false"></a>valid only when load_fdfs_parameters_from_tracker is false</h1><h1 id="since-V1-13-1"><a href="#since-V1-13-1" class="headerlink" title="since V1.13"></a>since V1.13</h1><p>storage_ids_filename &#x3D; storage_ids.conf</p>
+<h1 id="FastDFS-tracker-server-can-ocur-more-than-once-and-tracker-server-format-is"><a href="#FastDFS-tracker-server-can-ocur-more-than-once-and-tracker-server-format-is" class="headerlink" title="FastDFS tracker_server can ocur more than once, and tracker_server format is"></a>FastDFS tracker_server can ocur more than once, and tracker_server format is</h1><h1 id="“host-port”-host-can-be-hostname-or-ip-address"><a href="#“host-port”-host-can-be-hostname-or-ip-address" class="headerlink" title="“host:port”, host can be hostname or ip address"></a>“host:port”, host can be hostname or ip address</h1><h1 id="valid-only-when-load-fdfs-parameters-from-tracker-is-true"><a href="#valid-only-when-load-fdfs-parameters-from-tracker-is-true" class="headerlink" title="valid only when load_fdfs_parameters_from_tracker is true"></a>valid only when load_fdfs_parameters_from_tracker is true</h1><p>tracker_server&#x3D;tracker:22122<br>#���load_fdfs_parameters_from_tracker����Ϊtrue�Ļ���nginx������tracker���ͨ�Ų��ܻ�ȡ<br>#storage_ids����������</p>
+<h1 id="the-port-of-the-local-storage-server"><a href="#the-port-of-the-local-storage-server" class="headerlink" title="the port of the local storage server"></a>the port of the local storage server</h1><h1 id="the-default-value-is-23000"><a href="#the-default-value-is-23000" class="headerlink" title="the default value is 23000"></a>the default value is 23000</h1><p>storage_server_port&#x3D;23000<br>#��fastdfs-nginx�������ͬһ��������storage server�Ķ˿�</p>
+<h1 id="the-group-name-of-the-local-storage-server"><a href="#the-group-name-of-the-local-storage-server" class="headerlink" title="the group name of the local storage server"></a>the group name of the local storage server</h1><p>group_name&#x3D;group1<br>#��fastdfs-nginx�������ͬһ��������storage server��������</p>
+<h1 id="if-the-url-uri-including-the-group-name"><a href="#if-the-url-uri-including-the-group-name" class="headerlink" title="if the url &#x2F; uri including the group name"></a>if the url &#x2F; uri including the group name</h1><h1 id="set-to-false-when-uri-like-M00-00-00-xxx"><a href="#set-to-false-when-uri-like-M00-00-00-xxx" class="headerlink" title="set to false when uri like &#x2F;M00&#x2F;00&#x2F;00&#x2F;xxx"></a>set to false when uri like &#x2F;M00&#x2F;00&#x2F;00&#x2F;xxx</h1><h1 id="set-to-true-when-uri-like-group-name-M00-00-00-xxx-such-as-group1-M00-xxx"><a href="#set-to-true-when-uri-like-group-name-M00-00-00-xxx-such-as-group1-M00-xxx" class="headerlink" title="set to true when uri like ${group_name}&#x2F;M00&#x2F;00&#x2F;00&#x2F;xxx, such as group1&#x2F;M00&#x2F;xxx"></a>set to true when uri like ${group_name}&#x2F;M00&#x2F;00&#x2F;00&#x2F;xxx, such as group1&#x2F;M00&#x2F;xxx</h1><h1 id="default-value-is-false-2"><a href="#default-value-is-false-2" class="headerlink" title="default value is false"></a>default value is false</h1><p>url_have_group_name &#x3D; false<br>#�ⲿͨ��nginx����url���Ƿ�� group name</p>
+<h1 id="path-disk-or-mount-point-count-default-value-is-1"><a href="#path-disk-or-mount-point-count-default-value-is-1" class="headerlink" title="path(disk or mount point) count, default value is 1"></a>path(disk or mount point) count, default value is 1</h1><h1 id="must-same-as-storage-conf"><a href="#must-same-as-storage-conf" class="headerlink" title="must same as storage.conf"></a>must same as storage.conf</h1><p>store_path_count&#x3D;1<br>#��fastdfs-nginx�������ͬһ��������storage server<br>#����ļ�ʱstorage server֧�ֶ��·����������̣�.store_path0��Ӧ�洢·��<br>#storage �������д˲������ɸ��ƹ�������һ��</p>
+<h1 id="store-path-based-0-if-store-path0-not-exists-it’s-value-is-base-path"><a href="#store-path-based-0-if-store-path0-not-exists-it’s-value-is-base-path" class="headerlink" title="store_path#, based 0, if store_path0 not exists, it’s value is base_path"></a>store_path#, based 0, if store_path0 not exists, it’s value is base_path</h1><h1 id="the-paths-must-be-exist"><a href="#the-paths-must-be-exist" class="headerlink" title="the paths must be exist"></a>the paths must be exist</h1><h1 id="must-same-as-storage-conf-1"><a href="#must-same-as-storage-conf-1" class="headerlink" title="must same as storage.conf"></a>must same as storage.conf</h1><p>store_path0&#x3D;&#x2F;home&#x2F;yuqing&#x2F;fastdfs<br>#store_path1&#x3D;&#x2F;home&#x2F;yuqing&#x2F;fastdfs1<br>#storage �������д˲������ɸ��ƹ�������һ��</p>
+<h1 id="standard-log-level-as-syslog-case-insensitive-value-list"><a href="#standard-log-level-as-syslog-case-insensitive-value-list" class="headerlink" title="standard log level as syslog, case insensitive, value list:"></a>standard log level as syslog, case insensitive, value list:</h1><h3 id="emerg-for-emergency"><a href="#emerg-for-emergency" class="headerlink" title="emerg for emergency"></a>emerg for emergency</h3><h3 id="alert"><a href="#alert" class="headerlink" title="alert"></a>alert</h3><h3 id="crit-for-critical"><a href="#crit-for-critical" class="headerlink" title="crit for critical"></a>crit for critical</h3><h3 id="error"><a href="#error" class="headerlink" title="error"></a>error</h3><h3 id="warn-for-warning"><a href="#warn-for-warning" class="headerlink" title="warn for warning"></a>warn for warning</h3><h3 id="notice"><a href="#notice" class="headerlink" title="notice"></a>notice</h3><h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><h3 id="debug"><a href="#debug" class="headerlink" title="debug"></a>debug</h3><p>log_level&#x3D;info</p>
+<h1 id="set-the-log-filename-such-as-usr-local-apache2-logs-mod-fastdfs-log"><a href="#set-the-log-filename-such-as-usr-local-apache2-logs-mod-fastdfs-log" class="headerlink" title="set the log filename, such as &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;logs&#x2F;mod_fastdfs.log"></a>set the log filename, such as &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;logs&#x2F;mod_fastdfs.log</h1><h1 id="empty-for-output-to-stderr-apache-and-nginx-error-log-file"><a href="#empty-for-output-to-stderr-apache-and-nginx-error-log-file" class="headerlink" title="empty for output to stderr (apache and nginx error_log file)"></a>empty for output to stderr (apache and nginx error_log file)</h1><p>log_filename&#x3D;</p>
+<h1 id="response-mode-when-the-file-not-exist-in-the-local-file-system"><a href="#response-mode-when-the-file-not-exist-in-the-local-file-system" class="headerlink" title="response mode when the file not exist in the local file system"></a>response mode when the file not exist in the local file system</h1><h2 id="proxy-get-the-content-from-other-storage-server-then-send-to-client"><a href="#proxy-get-the-content-from-other-storage-server-then-send-to-client" class="headerlink" title="proxy: get the content from other storage server, then send to client"></a>proxy: get the content from other storage server, then send to client</h2><h2 id="redirect-redirect-to-the-original-storage-server-HTTP-Header-is-Location"><a href="#redirect-redirect-to-the-original-storage-server-HTTP-Header-is-Location" class="headerlink" title="redirect: redirect to the original storage server (HTTP Header is Location)"></a>redirect: redirect to the original storage server (HTTP Header is Location)</h2><p>response_mode&#x3D;proxy</p>
+<h1 id="the-NIC-alias-prefix-such-as-eth-in-Linux-you-can-see-it-by-ifconfig-a"><a href="#the-NIC-alias-prefix-such-as-eth-in-Linux-you-can-see-it-by-ifconfig-a" class="headerlink" title="the NIC alias prefix, such as eth in Linux, you can see it by ifconfig -a"></a>the NIC alias prefix, such as eth in Linux, you can see it by ifconfig -a</h1><h1 id="multi-aliases-split-by-comma-empty-value-means-auto-set-by-OS-type"><a href="#multi-aliases-split-by-comma-empty-value-means-auto-set-by-OS-type" class="headerlink" title="multi aliases split by comma. empty value means auto set by OS type"></a>multi aliases split by comma. empty value means auto set by OS type</h1><h1 id="this-paramter-used-to-get-all-ip-address-of-the-local-host"><a href="#this-paramter-used-to-get-all-ip-address-of-the-local-host" class="headerlink" title="this paramter used to get all ip address of the local host"></a>this paramter used to get all ip address of the local host</h1><h1 id="default-values-is-empty"><a href="#default-values-is-empty" class="headerlink" title="default values is empty"></a>default values is empty</h1><p>if_alias_prefix&#x3D;</p>
+<h1 id="if-need-find-content-type-from-file-extension-name"><a href="#if-need-find-content-type-from-file-extension-name" class="headerlink" title="if need find content type from file extension name"></a>if need find content type from file extension name</h1><h1 id="should-set-to-false-in-apache-server-because-it-done-by-apache"><a href="#should-set-to-false-in-apache-server-because-it-done-by-apache" class="headerlink" title="should set to false in apache server because it done by apache"></a>should set to false in apache server because it done by apache</h1><h1 id="should-set-to-true-in-nginx-server"><a href="#should-set-to-true-in-nginx-server" class="headerlink" title="should set to true in nginx server"></a>should set to true in nginx server</h1><p>http.need_find_content_type&#x3D;false<br>#nginx����Ϊtrue��apache����Ϊfalse</p>
+<h1 id="use-“-include”-directive-to-include-HTTP-config-file"><a href="#use-“-include”-directive-to-include-HTTP-config-file" class="headerlink" title="use “#include” directive to include HTTP config file"></a>use “#include” directive to include HTTP config file</h1><h1 id="NOTE-include-is-an-include-directive-do-NOT-remove-the-before-include"><a href="#NOTE-include-is-an-include-directive-do-NOT-remove-the-before-include" class="headerlink" title="NOTE: #include is an include directive, do NOT remove the # before include"></a>NOTE: #include is an include directive, do NOT remove the # before include</h1><p>#include http.conf</p>
+<h1 id="if-support-flv"><a href="#if-support-flv" class="headerlink" title="if support flv"></a>if support flv</h1><h1 id="default-value-is-false-3"><a href="#default-value-is-false-3" class="headerlink" title="default value is false"></a>default value is false</h1><h1 id="since-v1-15"><a href="#since-v1-15" class="headerlink" title="since v1.15"></a>since v1.15</h1><p>flv_support &#x3D; false<br>#�Ƿ�֧��flv��Ƶ��</p>
+<h1 id="flv-file-extension-name"><a href="#flv-file-extension-name" class="headerlink" title="flv file extension name"></a>flv file extension name</h1><h1 id="default-value-is-flv"><a href="#default-value-is-flv" class="headerlink" title="default value is flv"></a>default value is flv</h1><h1 id="since-v1-15-1"><a href="#since-v1-15-1" class="headerlink" title="since v1.15"></a>since v1.15</h1><p>flv_extension &#x3D; flv<br>#��Ƶ�ļ���չ Ĭ��flv</p>
+<h1 id="set-the-group-count"><a href="#set-the-group-count" class="headerlink" title="set the group count"></a>set the group count</h1><h1 id="set-to-none-zero-to-support-multi-group"><a href="#set-to-none-zero-to-support-multi-group" class="headerlink" title="set to none zero to support multi-group"></a>set to none zero to support multi-group</h1><h1 id="set-to-0-for-single-group-only"><a href="#set-to-0-for-single-group-only" class="headerlink" title="set to 0  for single group only"></a>set to 0  for single group only</h1><h1 id="groups-settings-section-as-group1-group2-…-groupN"><a href="#groups-settings-section-as-group1-group2-…-groupN" class="headerlink" title="groups settings section as [group1], [group2], …, [groupN]"></a>groups settings section as [group1], [group2], …, [groupN]</h1><h1 id="default-value-is-0"><a href="#default-value-is-0" class="headerlink" title="default value is 0"></a>default value is 0</h1><h1 id="since-v1-14"><a href="#since-v1-14" class="headerlink" title="since v1.14"></a>since v1.14</h1><p>group_count &#x3D; 0</p>
+<h1 id="group-settings-for-group-1"><a href="#group-settings-for-group-1" class="headerlink" title="group settings for group #1"></a>group settings for group #1</h1><h1 id="since-v1-14-1"><a href="#since-v1-14-1" class="headerlink" title="since v1.14"></a>since v1.14</h1><h1 id="when-support-multi-group-uncomment-following-section"><a href="#when-support-multi-group-uncomment-following-section" class="headerlink" title="when support multi-group, uncomment following section"></a>when support multi-group, uncomment following section</h1><p>#[group1]<br>#group_name&#x3D;group1<br>#storage_server_port&#x3D;23000<br>#store_path_count&#x3D;2<br>#store_path0&#x3D;&#x2F;home&#x2F;yuqing&#x2F;fastdfs<br>#store_path1&#x3D;&#x2F;home&#x2F;yuqing&#x2F;fastdfs1</p>
+<h1 id="group-settings-for-group-2"><a href="#group-settings-for-group-2" class="headerlink" title="group settings for group #2"></a>group settings for group #2</h1><h1 id="since-v1-14-2"><a href="#since-v1-14-2" class="headerlink" title="since v1.14"></a>since v1.14</h1><h1 id="when-support-multi-group-uncomment-following-section-as-neccessary"><a href="#when-support-multi-group-uncomment-following-section-as-neccessary" class="headerlink" title="when support multi-group, uncomment following section as neccessary"></a>when support multi-group, uncomment following section as neccessary</h1><p>#[group2]<br>#group_name&#x3D;group2<br>#storage_server_port&#x3D;23000<br>#store_path_count&#x3D;1<br>#store_path0&#x3D;&#x2F;home&#x2F;yuqing&#x2F;fastdfs</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/fastdfs/4.06/tracker.conf/">2023-09-28</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/wireshark/cacti/template/varnish/Cacti_Plugin_for_Varnish_3.x/varnish_stats.sh/">2023-09-28</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content="This configuration file reflects default settings for Apache HTTP Server.You may change these, but chances are that you may not need to.Timeout: The number of seconds before receives and sends time ou">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lamp/http-conf/extra/httpd-default.conf/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="This configuration file reflects default settings for Apache HTTP Server.You may change these, but chances are that you may not need to.Timeout: The number of seconds before receives and sends time ou">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-28T05:27:17.203Z">
+<meta property="article:modified_time" content="2023-09-21T10:55:00.803Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-28T05:27:17.203Z">2023-09-28</time></div></div>
+
+<article class='md-text content post'>
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="This-configuration-file-reflects-default-settings-for-Apache-HTTP-Server"><a href="#This-configuration-file-reflects-default-settings-for-Apache-HTTP-Server" class="headerlink" title="This configuration file reflects default settings for Apache HTTP Server."></a>This configuration file reflects default settings for Apache HTTP Server.</h1><h1 id="-1"><a href="#-1" class="headerlink" title=""></a></h1><h1 id="You-may-change-these-but-chances-are-that-you-may-not-need-to"><a href="#You-may-change-these-but-chances-are-that-you-may-not-need-to" class="headerlink" title="You may change these, but chances are that you may not need to."></a>You may change these, but chances are that you may not need to.</h1><h1 id="-2"><a href="#-2" class="headerlink" title=""></a></h1><h1 id="-3"><a href="#-3" class="headerlink" title=""></a></h1><h1 id="Timeout-The-number-of-seconds-before-receives-and-sends-time-out"><a href="#Timeout-The-number-of-seconds-before-receives-and-sends-time-out" class="headerlink" title="Timeout: The number of seconds before receives and sends time out."></a>Timeout: The number of seconds before receives and sends time out.</h1><h1 id="-4"><a href="#-4" class="headerlink" title=""></a></h1><p>Timeout 5</p>
+<h1 id="-5"><a href="#-5" class="headerlink" title=""></a></h1><h1 id="KeepAlive-Whether-or-not-to-allow-persistent-connections-more-than"><a href="#KeepAlive-Whether-or-not-to-allow-persistent-connections-more-than" class="headerlink" title="KeepAlive: Whether or not to allow persistent connections (more than"></a>KeepAlive: Whether or not to allow persistent connections (more than</h1><h1 id="one-request-per-connection-Set-to-“Off”-to-deactivate"><a href="#one-request-per-connection-Set-to-“Off”-to-deactivate" class="headerlink" title="one request per connection). Set to “Off” to deactivate."></a>one request per connection). Set to “Off” to deactivate.</h1><h1 id="-6"><a href="#-6" class="headerlink" title=""></a></h1><p>KeepAlive On</p>
+<h1 id="-7"><a href="#-7" class="headerlink" title=""></a></h1><h1 id="MaxKeepAliveRequests-The-maximum-number-of-requests-to-allow"><a href="#MaxKeepAliveRequests-The-maximum-number-of-requests-to-allow" class="headerlink" title="MaxKeepAliveRequests: The maximum number of requests to allow"></a>MaxKeepAliveRequests: The maximum number of requests to allow</h1><h1 id="during-a-persistent-connection-Set-to-0-to-allow-an-unlimited-amount"><a href="#during-a-persistent-connection-Set-to-0-to-allow-an-unlimited-amount" class="headerlink" title="during a persistent connection. Set to 0 to allow an unlimited amount."></a>during a persistent connection. Set to 0 to allow an unlimited amount.</h1><h1 id="We-recommend-you-leave-this-number-high-for-maximum-performance"><a href="#We-recommend-you-leave-this-number-high-for-maximum-performance" class="headerlink" title="We recommend you leave this number high, for maximum performance."></a>We recommend you leave this number high, for maximum performance.</h1><h1 id="-8"><a href="#-8" class="headerlink" title=""></a></h1><p>MaxKeepAliveRequests 150</p>
+<h1 id="-9"><a href="#-9" class="headerlink" title=""></a></h1><h1 id="KeepAliveTimeout-Number-of-seconds-to-wait-for-the-next-request-from-the"><a href="#KeepAliveTimeout-Number-of-seconds-to-wait-for-the-next-request-from-the" class="headerlink" title="KeepAliveTimeout: Number of seconds to wait for the next request from the"></a>KeepAliveTimeout: Number of seconds to wait for the next request from the</h1><h1 id="same-client-on-the-same-connection"><a href="#same-client-on-the-same-connection" class="headerlink" title="same client on the same connection."></a>same client on the same connection.</h1><h1 id="-10"><a href="#-10" class="headerlink" title=""></a></h1><p>KeepAliveTimeout 5</p>
+<h1 id="-11"><a href="#-11" class="headerlink" title=""></a></h1><h1 id="UseCanonicalName-Determines-how-Apache-constructs-self-referencing"><a href="#UseCanonicalName-Determines-how-Apache-constructs-self-referencing" class="headerlink" title="UseCanonicalName: Determines how Apache constructs self-referencing"></a>UseCanonicalName: Determines how Apache constructs self-referencing</h1><h1 id="URLs-and-the-SERVER-NAME-and-SERVER-PORT-variables"><a href="#URLs-and-the-SERVER-NAME-and-SERVER-PORT-variables" class="headerlink" title="URLs and the SERVER_NAME and SERVER_PORT variables."></a>URLs and the SERVER_NAME and SERVER_PORT variables.</h1><h1 id="When-set-“Off”-Apache-will-use-the-Hostname-and-Port-supplied"><a href="#When-set-“Off”-Apache-will-use-the-Hostname-and-Port-supplied" class="headerlink" title="When set “Off”, Apache will use the Hostname and Port supplied"></a>When set “Off”, Apache will use the Hostname and Port supplied</h1><h1 id="by-the-client-When-set-“On”-Apache-will-use-the-value-of-the"><a href="#by-the-client-When-set-“On”-Apache-will-use-the-value-of-the" class="headerlink" title="by the client.  When set “On”, Apache will use the value of the"></a>by the client.  When set “On”, Apache will use the value of the</h1><h1 id="ServerName-directive"><a href="#ServerName-directive" class="headerlink" title="ServerName directive."></a>ServerName directive.</h1><h1 id="-12"><a href="#-12" class="headerlink" title=""></a></h1><p>UseCanonicalName Off</p>
+<h1 id="-13"><a href="#-13" class="headerlink" title=""></a></h1><h1 id="AccessFileName-The-name-of-the-file-to-look-for-in-each-directory"><a href="#AccessFileName-The-name-of-the-file-to-look-for-in-each-directory" class="headerlink" title="AccessFileName: The name of the file to look for in each directory"></a>AccessFileName: The name of the file to look for in each directory</h1><h1 id="for-additional-configuration-directives-See-also-the-AllowOverride"><a href="#for-additional-configuration-directives-See-also-the-AllowOverride" class="headerlink" title="for additional configuration directives.  See also the AllowOverride"></a>for additional configuration directives.  See also the AllowOverride</h1><h1 id="directive"><a href="#directive" class="headerlink" title="directive."></a>directive.</h1><h1 id="-14"><a href="#-14" class="headerlink" title=""></a></h1><p>AccessFileName .htaccess</p>
+<h1 id="-15"><a href="#-15" class="headerlink" title=""></a></h1><h1 id="ServerTokens"><a href="#ServerTokens" class="headerlink" title="ServerTokens"></a>ServerTokens</h1><h1 id="This-directive-configures-what-you-return-as-the-Server-HTTP-response"><a href="#This-directive-configures-what-you-return-as-the-Server-HTTP-response" class="headerlink" title="This directive configures what you return as the Server HTTP response"></a>This directive configures what you return as the Server HTTP response</h1><h1 id="Header-The-default-is-‘Full’-which-sends-information-about-the-OS-Type"><a href="#Header-The-default-is-‘Full’-which-sends-information-about-the-OS-Type" class="headerlink" title="Header. The default is ‘Full’ which sends information about the OS-Type"></a>Header. The default is ‘Full’ which sends information about the OS-Type</h1><h1 id="and-compiled-in-modules"><a href="#and-compiled-in-modules" class="headerlink" title="and compiled in modules."></a>and compiled in modules.</h1><h1 id="Set-to-one-of-Full-OS-Minor-Minimal-Major-Prod"><a href="#Set-to-one-of-Full-OS-Minor-Minimal-Major-Prod" class="headerlink" title="Set to one of:  Full | OS | Minor | Minimal | Major | Prod"></a>Set to one of:  Full | OS | Minor | Minimal | Major | Prod</h1><h1 id="where-Full-conveys-the-most-information-and-Prod-the-least"><a href="#where-Full-conveys-the-most-information-and-Prod-the-least" class="headerlink" title="where Full conveys the most information, and Prod the least."></a>where Full conveys the most information, and Prod the least.</h1><h1 id="-16"><a href="#-16" class="headerlink" title=""></a></h1><p>ServerTokens Prod</p>
+<h1 id="-17"><a href="#-17" class="headerlink" title=""></a></h1><h1 id="Optionally-add-a-line-containing-the-server-version-and-virtual-host"><a href="#Optionally-add-a-line-containing-the-server-version-and-virtual-host" class="headerlink" title="Optionally add a line containing the server version and virtual host"></a>Optionally add a line containing the server version and virtual host</h1><h1 id="name-to-server-generated-pages-internal-error-documents-FTP-directory"><a href="#name-to-server-generated-pages-internal-error-documents-FTP-directory" class="headerlink" title="name to server-generated pages (internal error documents, FTP directory"></a>name to server-generated pages (internal error documents, FTP directory</h1><h1 id="listings-mod-status-and-mod-info-output-etc-but-not-CGI-generated"><a href="#listings-mod-status-and-mod-info-output-etc-but-not-CGI-generated" class="headerlink" title="listings, mod_status and mod_info output etc., but not CGI generated"></a>listings, mod_status and mod_info output etc., but not CGI generated</h1><h1 id="documents-or-custom-error-documents"><a href="#documents-or-custom-error-documents" class="headerlink" title="documents or custom error documents)."></a>documents or custom error documents).</h1><h1 id="Set-to-“EMail”-to-also-include-a-mailto-link-to-the-ServerAdmin"><a href="#Set-to-“EMail”-to-also-include-a-mailto-link-to-the-ServerAdmin" class="headerlink" title="Set to “EMail” to also include a mailto: link to the ServerAdmin."></a>Set to “EMail” to also include a mailto: link to the ServerAdmin.</h1><h1 id="Set-to-one-of-On-Off-EMail"><a href="#Set-to-one-of-On-Off-EMail" class="headerlink" title="Set to one of:  On | Off | EMail"></a>Set to one of:  On | Off | EMail</h1><h1 id="-18"><a href="#-18" class="headerlink" title=""></a></h1><p>ServerSignature Off</p>
+<h1 id="-19"><a href="#-19" class="headerlink" title=""></a></h1><h1 id="HostnameLookups-Log-the-names-of-clients-or-just-their-IP-addresses"><a href="#HostnameLookups-Log-the-names-of-clients-or-just-their-IP-addresses" class="headerlink" title="HostnameLookups: Log the names of clients or just their IP addresses"></a>HostnameLookups: Log the names of clients or just their IP addresses</h1><h1 id="e-g-www-apache-org-on-or-204-62-129-132-off"><a href="#e-g-www-apache-org-on-or-204-62-129-132-off" class="headerlink" title="e.g., www.apache.org (on) or 204.62.129.132 (off)."></a>e.g., <a target="_blank" rel="noopener" href="http://www.apache.org/">www.apache.org</a> (on) or 204.62.129.132 (off).</h1><h1 id="The-default-is-off-because-it’d-be-overall-better-for-the-net-if-people"><a href="#The-default-is-off-because-it’d-be-overall-better-for-the-net-if-people" class="headerlink" title="The default is off because it’d be overall better for the net if people"></a>The default is off because it’d be overall better for the net if people</h1><h1 id="had-to-knowingly-turn-this-feature-on-since-enabling-it-means-that"><a href="#had-to-knowingly-turn-this-feature-on-since-enabling-it-means-that" class="headerlink" title="had to knowingly turn this feature on, since enabling it means that"></a>had to knowingly turn this feature on, since enabling it means that</h1><h1 id="each-client-request-will-result-in-AT-LEAST-one-lookup-request-to-the"><a href="#each-client-request-will-result-in-AT-LEAST-one-lookup-request-to-the" class="headerlink" title="each client request will result in AT LEAST one lookup request to the"></a>each client request will result in AT LEAST one lookup request to the</h1><h1 id="nameserver"><a href="#nameserver" class="headerlink" title="nameserver."></a>nameserver.</h1><h1 id="-20"><a href="#-20" class="headerlink" title=""></a></h1><p>HostnameLookups Off</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lamp/http-conf/extra/httpd-mpm.conf/">2023-09-28</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lamp/http-conf/httpd.conf/">2023-09-28</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

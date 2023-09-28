@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>原点独白</title>
+
+  
+    <meta name="description" content=";;;;;;;;;;;;;;;;;;;;;; FPM Configuration ;;;;;;;;;;;;;;;;;;;;;; ; All relative paths in this configuration file are relative to PHP’s install; prefix (&#x2F;usr&#x2F;local&#x2F;php). This prefix can b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原点独白">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lnmp/php-fpm.conf/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content=";;;;;;;;;;;;;;;;;;;;;; FPM Configuration ;;;;;;;;;;;;;;;;;;;;;; ; All relative paths in this configuration file are relative to PHP’s install; prefix (&#x2F;usr&#x2F;local&#x2F;php). This prefix can b">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-28T05:27:17.686Z">
+<meta property="article:modified_time" content="2023-09-21T10:55:00.809Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lamp/apc_tt.php/"><span class="title">apc_tt.php</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/kvm/rhel-debuginfo.repo/"><span class="title">rhel-debuginfo.repo</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/iptables/apache+tomcat_115_ipt.sav/"><span class="title">apache+tomcat_115_ipt.sav</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/coreseek/install/"><span class="title">install</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/denyhosts/install/"><span class="title">install</span></a></div></widget>
+
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-28T05:27:17.686Z">2023-09-28</time></div></div>
+
+<article class='md-text content post'>
+
+<p>;;;;;;;;;;;;;;;;;;;;;<br>; FPM Configuration ;<br>;;;;;;;;;;;;;;;;;;;;;</p>
+<p>; All relative paths in this configuration file are relative to PHP’s install<br>; prefix (&#x2F;usr&#x2F;local&#x2F;php). This prefix can be dynamicaly changed by using the<br>; ‘-p’ argument from the command line.</p>
+<p>; Include one or more files. If glob(3) exists, it is used to include a bunch of<br>; files from a glob(3) pattern. This directive can be used everywhere in the<br>; file.<br>; Relative path can also be used. They will be prefixed by:<br>;  - the global prefix if it’s been set (-p arguement)<br>;  - &#x2F;usr&#x2F;local&#x2F;php otherwise<br>;include&#x3D;etc&#x2F;fpm.d&#x2F;*.conf</p>
+<p>;;;;;;;;;;;;;;;;;;<br>; Global Options ;<br>;;;;;;;;;;;;;;;;;;</p>
+<p>[global]<br>; Pid file<br>; Note: the default prefix is &#x2F;usr&#x2F;local&#x2F;php&#x2F;var<br>; Default Value: none<br>pid &#x3D; &#x2F;tmp&#x2F;php-fpm.pid</p>
+<p>; Error log file<br>; Note: the default prefix is &#x2F;usr&#x2F;local&#x2F;php&#x2F;var<br>; Default Value: log&#x2F;php-fpm.log<br>error_log &#x3D; &#x2F;data&#x2F;logs&#x2F;php&#x2F;fpm-error.log</p>
+<p>; Log level<br>; Possible Values: alert, error, warning, notice, debug<br>; Default Value: notice<br>;log_level &#x3D; notice</p>
+<p>; If this number of child processes exit with SIGSEGV or SIGBUS within the time<br>; interval set by emergency_restart_interval then FPM will restart. A value<br>; of ‘0’ means ‘Off’.<br>; Default Value: 0<br>;emergency_restart_threshold &#x3D; 0</p>
+<p>; Interval of time used by emergency_restart_interval to determine when<br>; a graceful restart will be initiated.  This can be useful to work around<br>; accidental corruptions in an accelerator’s shared memory.<br>; Available Units: s(econds), m(inutes), h(ours), or d(ays)<br>; Default Unit: seconds<br>; Default Value: 0<br>;emergency_restart_interval &#x3D; 0</p>
+<p>; Time limit for child processes to wait for a reaction on signals from master.<br>; Available units: s(econds), m(inutes), h(ours), or d(ays)<br>; Default Unit: seconds<br>; Default Value: 0<br>;process_control_timeout &#x3D; 0</p>
+<p>; Send FPM to background. Set to ‘no’ to keep FPM in foreground for debugging.<br>; Default Value: yes<br>;daemonize &#x3D; yes</p>
+<p>; Set open file descriptor rlimit for the master process.<br>; Default Value: system defined value<br>rlimit_files &#x3D; 65535</p>
+<p>; Set max core size rlimit for the master process.<br>; Possible Values: ‘unlimited’ or an integer greater or equal to 0<br>; Default Value: system defined value<br>;rlimit_core &#x3D; 0</p>
+<p>;;;;;;;;;;;;;;;;;;;;<br>; Pool Definitions ;<br>;;;;;;;;;;;;;;;;;;;;</p>
+<p>; Multiple pools of child processes may be started with different listening<br>; ports and different management options.  The name of the pool will be<br>; used in logs and stats. There is no limitation on the number of pools which<br>; FPM can handle. Your system will tell you anyway :)</p>
+<p>; Start a new pool named ‘www’.<br>; the variable $pool can we used in any directive and will be replaced by the<br>; pool name (‘www’ here)<br>[www]</p>
+<p>; Per pool prefix<br>; It only applies on the following directives:<br>; - ‘slowlog’<br>; - ‘listen’ (unixsocket)<br>; - ‘chroot’<br>; - ‘chdir’<br>; - ‘php_values’<br>; - ‘php_admin_values’<br>; When not set, the global prefix (or &#x2F;usr&#x2F;local&#x2F;php) applies instead.<br>; Note: This directive can also be relative to the global prefix.<br>; Default Value: none<br>;prefix &#x3D; &#x2F;path&#x2F;to&#x2F;pools&#x2F;$pool</p>
+<p>; The address on which to accept FastCGI requests.<br>; Valid syntaxes are:<br>;   ‘ip.add.re.ss:port’    - to listen on a TCP socket to a specific address on<br>;                            a specific port;<br>;   ‘port’                 - to listen on a TCP socket to all addresses on a<br>;                            specific port;<br>;   ‘&#x2F;path&#x2F;to&#x2F;unix&#x2F;socket’ - to listen on a unix socket.<br>; Note: This value is mandatory.<br>listen &#x3D; &#x2F;dev&#x2F;shm&#x2F;php-cgi.sock<br>;listen &#x3D; 127.0.0.1:9000</p>
+<p>; Set listen(2) backlog. A value of ‘-1’ means unlimited.<br>; Default Value: 128 (-1 on FreeBSD and OpenBSD)<br>;listen.backlog &#x3D; -1</p>
+<p>; List of ipv4 addresses of FastCGI clients which are allowed to connect.<br>; Equivalent to the FCGI_WEB_SERVER_ADDRS environment variable in the original<br>; PHP FCGI (5.2.2+). Makes sense only with a tcp listening socket. Each address<br>; must be separated by a comma. If this value is left blank, connections will be<br>; accepted from any ip address.<br>; Default Value: any<br>listen.allowed_clients &#x3D; 127.0.0.1</p>
+<p>; Set permissions for unix socket, if one is used. In Linux, read&#x2F;write<br>; permissions must be set in order to allow connections from a web server. Many<br>; BSD-derived systems allow connections regardless of permissions.<br>; Default Values: user and group are set as the running user<br>;                 mode is set to 0666<br>;listen.owner &#x3D; nobody<br>;listen.group &#x3D; nobody<br>;listen.mode &#x3D; 0666</p>
+<p>; Unix user&#x2F;group of processes<br>; Note: The user is mandatory. If the group is not set, the default user’s group<br>;       will be used.<br>user &#x3D; www<br>group &#x3D; www</p>
+<p>; Choose how the process manager will control the number of child processes.<br>; Possible Values:<br>;   static  - a fixed number (pm.max_children) of child processes;<br>;   dynamic - the number of child processes are set dynamically based on the<br>;             following directives:<br>;             pm.max_children      - the maximum number of children that can<br>;                                    be alive at the same time.<br>;             pm.start_servers     - the number of children created on startup.<br>;             pm.min_spare_servers - the minimum number of children in ‘idle’<br>;                                    state (waiting to process). If the number<br>;                                    of ‘idle’ processes is less than this<br>;                                    number then some children will be created.<br>;             pm.max_spare_servers - the maximum number of children in ‘idle’<br>;                                    state (waiting to process). If the number<br>;                                    of ‘idle’ processes is greater than this<br>;                                    number then some children will be killed.<br>; Note: This value is mandatory.<br>pm &#x3D; dynamic</p>
+<p>; The number of child processes to be created when pm is set to ‘static’ and the<br>; maximum number of child processes to be created when pm is set to ‘dynamic’.<br>; This value sets the limit on the number of simultaneous requests that will be<br>; served. Equivalent to the ApacheMaxClients directive with mpm_prefork.<br>; Equivalent to the PHP_FCGI_CHILDREN environment variable in the original PHP<br>; CGI.<br>; Note: Used when pm is set to either ‘static’ or ‘dynamic’<br>; Note: This value is mandatory.<br>pm.max_children &#x3D; 120</p>
+<p>; The number of child processes created on startup.<br>; Note: Used only when pm is set to ‘dynamic’<br>; Default Value: min_spare_servers + (max_spare_servers - min_spare_servers) &#x2F; 2<br>pm.start_servers &#x3D; 15</p>
+<p>; The desired minimum number of idle server processes.<br>; Note: Used only when pm is set to ‘dynamic’<br>; Note: Mandatory when pm is set to ‘dynamic’<br>pm.min_spare_servers &#x3D; 5</p>
+<p>; The desired maximum number of idle server processes.<br>; Note: Used only when pm is set to ‘dynamic’<br>; Note: Mandatory when pm is set to ‘dynamic’<br>pm.max_spare_servers &#x3D; 35</p>
+<p>; The number of requests each child process should execute before respawning.<br>; This can be useful to work around memory leaks in 3rd party libraries. For<br>; endless request processing specify ‘0’. Equivalent to PHP_FCGI_MAX_REQUESTS.<br>; Default Value: 0<br>pm.max_requests &#x3D; 800</p>
+<p>; The URI to view the FPM status page. If this value is not set, no URI will be<br>; recognized as a status page. By default, the status page shows the following<br>; information:<br>;   accepted conn        - the number of request accepted by the pool;<br>;   pool                 - the name of the pool;<br>;   process manager      - static or dynamic;<br>;   idle processes       - the number of idle processes;<br>;   active processes     - the number of active processes;<br>;   total processes      - the number of idle + active processes.<br>;   max children reached - number of times, the process limit has been reached,<br>;                          when pm tries to start more children (works only for<br>;                          pm ‘dynamic’)<br>; The values of ‘idle processes’, ‘active processes’ and ‘total processes’ are<br>; updated each second. The value of ‘accepted conn’ is updated in real time.<br>; Example output:<br>;   accepted conn:        12073<br>;   pool:                 www<br>;   process manager:      static<br>;   idle processes:       35<br>;   active processes:     65<br>;   total processes:      100<br>;   max children reached: 1<br>; By default the status page output is formatted as text&#x2F;plain. Passing either<br>; ‘html’, ‘xml’ or ‘json’ as a query string will return the corresponding output<br>; syntax. Example:<br>;   <a target="_blank" rel="noopener" href="http://www.foo.bar/status">http://www.foo.bar/status</a><br>;   <a target="_blank" rel="noopener" href="http://www.foo.bar/status?json">http://www.foo.bar/status?json</a><br>;   <a target="_blank" rel="noopener" href="http://www.foo.bar/status?html">http://www.foo.bar/status?html</a><br>;   <a target="_blank" rel="noopener" href="http://www.foo.bar/status?xml">http://www.foo.bar/status?xml</a><br>; Note: The value must start with a leading slash (&#x2F;). The value can be<br>;       anything, but it may not be a good idea to use the .php extension or it<br>;       may conflict with a real PHP file.<br>; Default Value: not set<br>;pm.status_path &#x3D; &#x2F;status</p>
+<p>; The ping URI to call the monitoring page of FPM. If this value is not set, no<br>; URI will be recognized as a ping page. This could be used to test from outside<br>; that FPM is alive and responding, or to<br>; - create a graph of FPM availability (rrd or such);<br>; - remove a server from a group if it is not responding (load balancing);<br>; - trigger alerts for the operating team (24&#x2F;7).<br>; Note: The value must start with a leading slash (&#x2F;). The value can be<br>;       anything, but it may not be a good idea to use the .php extension or it<br>;       may conflict with a real PHP file.<br>; Default Value: not set<br>;ping.path &#x3D; &#x2F;ping</p>
+<p>; This directive may be used to customize the response of a ping request. The<br>; response is formatted as text&#x2F;plain with a 200 response code.<br>; Default Value: pong<br>;ping.response &#x3D; pong</p>
+<p>; The access log file<br>; Default: not set<br>;access.log &#x3D; log&#x2F;$pool.access.log</p>
+<p>; The access log format.<br>; The following syntax is allowed<br>;  %%: the ‘%’ character<br>;  %C: %CPU used by the request<br>;      it can accept the following format:<br>;      - %{user}C for user CPU only<br>;      - %{system}C for system CPU only<br>;      - %{total}C  for user + system CPU (default)<br>;  %d: time taken to serve the request<br>;      it can accept the following format:<br>;      - %{seconds}d (default)<br>;      - %{miliseconds}d<br>;      - %{mili}d<br>;      - %{microseconds}d<br>;      - %{micro}d<br>;  %e: an environment variable (same as $_ENV or $_SERVER)<br>;      it must be associated with embraces to specify the name of the env<br>;      variable. Some exemples:<br>;      - server specifics like: %{REQUEST_METHOD}e or %{SERVER_PROTOCOL}e<br>;      - HTTP headers like: %{HTTP_HOST}e or %{HTTP_USER_AGENT}e<br>;  %f: script filename<br>;  %l: content-length of the request (for POST request only)<br>;  %m: request method<br>;  %M: peak of memory allocated by PHP<br>;      it can accept the following format:<br>;      - %{bytes}M (default)<br>;      - %{kilobytes}M<br>;      - %{kilo}M<br>;      - %{megabytes}M<br>;      - %{mega}M<br>;  %n: pool name<br>;  %o: ouput header<br>;      it must be associated with embraces to specify the name of the header:<br>;      - %{Content-Type}o<br>;      - %{X-Powered-By}o<br>;      - %{Transfert-Encoding}o<br>;      - ….<br>;  %p:  of the child that serviced the request<br>;  %P: PID of the parent of the child that serviced the request<br>;  %q: the query string<br>;  %Q: the ‘?’ character if query string exists<br>;  %r: the request URI (without the query string, see %q and %Q)<br>;  %R: remote IP address<br>;  %s: status (response code)<br>;  %t: server time the request was received<br>;      it can accept a strftime(3) format:<br>;      %d&#x2F;%b&#x2F;%Y:%H:%M:%S %z (default)<br>;  %T: time the log has been written (the request has finished)<br>;      it can accept a strftime(3) format:<br>;      %d&#x2F;%b&#x2F;%Y:%H:%M:%S %z (default)<br>;  %u: remote user<br>;<br>; Default: “%R - %u %t &quot;%m %r&quot; %s”<br>;access.format &#x3D; %R - %u %t “%m %r%Q%q” %s %f %{mili}d %{kilo}M %C%%</p>
+<p>; The timeout for serving a single request after which the worker process will<br>; be killed. This option should be used when the ‘max_execution_time’ ini option<br>; does not stop script execution for some reason. A value of ‘0’ means ‘off’.<br>; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)<br>; Default Value: 0<br>;request_terminate_timeout &#x3D; 0</p>
+<p>; The timeout for serving a single request after which a PHP backtrace will be<br>; dumped to the ‘slowlog’ file. A value of ‘0s’ means ‘off’.<br>; Available units: s(econds)(default), m(inutes), h(ours), or d(ays)<br>; Default Value: 0<br>;request_slowlog_timeout &#x3D; 0</p>
+<p>; The log file for slow requests<br>; Default Value: not set<br>; Note: slowlog is mandatory if request_slowlog_timeout is set<br>;slowlog &#x3D; log&#x2F;$pool.log.slow</p>
+<p>; Set open file descriptor rlimit.<br>; Default Value: system defined value<br>rlimit_files &#x3D; 65535</p>
+<p>; Set max core size rlimit.<br>; Possible Values: ‘unlimited’ or an integer greater or equal to 0<br>; Default Value: system defined value<br>;rlimit_core &#x3D; 0</p>
+<p>; Chroot to this directory at the start. This value must be defined as an<br>; absolute path. When this value is not set, chroot is not used.<br>; Note: you can prefix with ‘$prefix’ to chroot to the pool prefix or one<br>; of its subdirectories. If the pool prefix is not set, the global prefix<br>; will be used instead.<br>; Note: chrooting is a great security feature and should be used whenever<br>;       possible. However, all PHP paths will be relative to the chroot<br>;       (error_log, sessions.save_path, …).<br>; Default Value: not set<br>;chroot &#x3D; </p>
+<p>; Chdir to this directory at the start.<br>; Note: relative path can be used.<br>; Default Value: current directory or &#x2F; when chroot<br>;chdir &#x3D; &#x2F;var&#x2F;www</p>
+<p>; Redirect worker stdout and stderr into main error log. If not set, stdout and<br>; stderr will be redirected to &#x2F;dev&#x2F;null according to FastCGI specs.<br>; Note: on highloaded environement, this can cause some delay in the page<br>; process time (several ms).<br>; Default Value: no<br>;catch_workers_output &#x3D; yes</p>
+<p>; Pass environment variables like LD_LIBRARY_PATH. All $VARIABLEs are taken from<br>; the current environment.<br>; Default Value: clean env<br>;env[HOSTNAME] &#x3D; $HOSTNAME<br>;env[PATH] &#x3D; &#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;bin:&#x2F;bin<br>;env[TMP] &#x3D; &#x2F;tmp<br>;env[TMPDIR] &#x3D; &#x2F;tmp<br>;env[TEMP] &#x3D; &#x2F;tmp</p>
+<p>; Additional php.ini defines, specific to this pool of workers. These settings<br>; overwrite the values previously defined in the php.ini. The directives are the<br>; same as the PHP SAPI:<br>;   php_value&#x2F;php_flag             - you can set classic ini defines which can<br>;                                    be overwritten from PHP call ‘ini_set’.<br>;   php_admin_value&#x2F;php_admin_flag - these directives won’t be overwritten by<br>;                                     PHP call ‘ini_set’<br>; For php_*flag, valid values are on, off, 1, 0, true, false, yes or no.</p>
+<p>; Defining ‘extension’ will load the corresponding shared extension from<br>; extension_dir. Defining ‘disable_functions’ or ‘disable_classes’ will not<br>; overwrite previously defined php.ini values, but will append the new value<br>; instead.</p>
+<p>; Note: path INI options can be relative and will be expanded with the prefix<br>; (pool, global or &#x2F;usr&#x2F;local&#x2F;php)</p>
+<p>; Default Value: nothing is defined by default except the values in php.ini and<br>;                specified at startup with the -d argument<br>;php_admin_value[sendmail_path] &#x3D; &#x2F;usr&#x2F;sbin&#x2F;sendmail -t -i -f <a href="mailto:&#x77;&#x77;&#x77;&#64;&#x6d;&#x79;&#46;&#x64;&#111;&#109;&#97;&#105;&#x6e;&#x2e;&#99;&#x6f;&#109;">&#x77;&#x77;&#x77;&#64;&#x6d;&#x79;&#46;&#x64;&#111;&#109;&#97;&#105;&#x6e;&#x2e;&#99;&#x6f;&#109;</a><br>;php_flag[display_errors] &#x3D; off<br>;php_admin_value[error_log] &#x3D; &#x2F;var&#x2F;log&#x2F;fpm-php.<a target="_blank" rel="noopener" href="http://www.log/">www.log</a><br>;php_admin_flag[log_errors] &#x3D; on<br>;php_admin_value[memory_limit] &#x3D; 32M</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lnmp/php.ini/">2023-09-28</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lnmp/nginx.conf/">2023-09-28</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

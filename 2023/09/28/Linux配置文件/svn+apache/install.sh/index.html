@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>install.sh - 原点独白</title>
+
+  
+    <meta name="description" content="#��װaprtar jxvf apr-1.5.0.tar.bz2  &amp;&amp; cd apr-1.5.0 sed -i ‘&#x2F;$RM “$cfgfile”&#x2F; s&#x2F;^&#x2F;#&#x2F;‘ configure .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr  make &amp;&amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="install.sh">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/svn+apache/install.sh/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="#��װaprtar jxvf apr-1.5.0.tar.bz2  &amp;&amp; cd apr-1.5.0 sed -i ‘&#x2F;$RM “$cfgfile”&#x2F; s&#x2F;^&#x2F;#&#x2F;‘ configure .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr  make &amp;&amp;a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T19:25:40.000Z">
+<meta property="article:modified_time" content="2023-09-28T07:25:41.052Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">install.sh</span></div><div class="widget-body fs14"><div class="doc-tree active"></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">Linux配置文件</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/svn-apache/">svn+apache</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T19:25:40.000Z">2023-09-28</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>install.sh</span></h1>
+<p>#��װapr<br>tar jxvf apr-1.5.0.tar.bz2  &amp;&amp; cd apr-1.5.0</p>
+<p>sed -i ‘&#x2F;$RM “$cfgfile”&#x2F; s&#x2F;^&#x2F;#&#x2F;‘ configure</p>
+<p>.&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr</p>
+<p> make &amp;&amp; make install</p>
+<p>#��װapr-util<br>tar jxvf apr-util-1.5.3.tar.bz2 &amp;&amp; cd  apr-util-1.5.3</p>
+<p>.&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr&#x2F;bin&#x2F;apr-1-config</p>
+<p>make &amp;&amp; make install</p>
+<p>#��װpcre<br>tar jxvf pcre-8.34.tar.bz2 &amp;&amp; cd pcre-8.34</p>
+<p> .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;pcre</p>
+<p> make &amp;&amp; make install</p>
+<p>#����openssl<br>tar zxvf openssl-1.0.1g.tar.gz<br>cd openssl-1.0.1g</p>
+<p>.&#x2F;config shared zlib<br>make &amp;&amp; make install</p>
+<p>mv &#x2F;usr&#x2F;bin&#x2F;openssl &#x2F;usr&#x2F;bin&#x2F;openssl.OFF<br>mv &#x2F;usr&#x2F;include&#x2F;openssl &#x2F;usr&#x2F;include&#x2F;openssl.OFF<br>ln -s &#x2F;usr&#x2F;local&#x2F;ssl&#x2F;bin&#x2F;openssl &#x2F;usr&#x2F;bin&#x2F;openssl<br>ln -s &#x2F;usr&#x2F;local&#x2F;ssl&#x2F;include&#x2F;openssl &#x2F;usr&#x2F;include&#x2F;openssl</p>
+<p>#��װapache</p>
+<p>tar jxvf httpd-2.4.7.tar.bz2 &amp;&amp; cd httpd-2.4.7<br> .&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apache2 –sysconfdir&#x3D;&#x2F;etc&#x2F;httpd –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr&#x2F;bin&#x2F;apr-1-config –with-apr-util&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util&#x2F;bin&#x2F;apu-1-config  –with-pcre&#x3D;&#x2F;usr&#x2F;local&#x2F;pcre&#x2F; –enable-so –enable-mods-shared&#x3D;most –enable-rewirte  –enable-ssl&#x3D;shared –with-ssl&#x3D;&#x2F;usr&#x2F;local&#x2F;ssl</p>
+<p> make &amp;&amp; make install</p>
+<p>#��װsqlite<br>tar zxvf sqlite-autoconf-3080403.tar.gz  &amp;&amp; cd   sqlite-autoconf-3080403</p>
+<p>.&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;sqlite</p>
+<p>make &amp;&amp; make install</p>
+<p>#��װsvn<br>tar  jxvf subversion-1.8.9.tar.bz2 &amp;&amp; cd  subversion-1.8.9</p>
+<p>.&#x2F;configure –prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;subversion –with-apxs&#x3D;&#x2F;usr&#x2F;local&#x2F;apache2&#x2F;bin&#x2F;apxs –with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr –with-apr-util&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util&#x2F; –with-sqlite&#x3D;&#x2F;usr&#x2F;local&#x2F;sqlite&#x2F;</p>
+<p>make &amp;&amp; make install</p>
+<p>make install-tools  #�ڰ�װĿ¼������svn-toolsĿ¼�������һЩ��չ���ߣ�����svnauthz-validate</p>
+<p>#Ϊapache����ģ��</p>
+<p>cp   libexec&#x2F;mod_authz_svn.so  &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;modules&#x2F;<br>cp   libexec&#x2F;mod_dav_svn.so  &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;modules&#x2F;</p>
+<p>#��httpd.conf���ӣ�<br>LoadModule dav_module modules&#x2F;mod_dav.so<br>LoadModule dav_svn_module modules&#x2F;mod_dav_svn.so<br>LoadModule authz_svn_module modules&#x2F;mod_authz_svn.so</p>
+<p>#ȥ��Include &#x2F;etc&#x2F;httpd&#x2F;extra&#x2F;httpd-vhosts.conf��ǰע��ʹ֮��Ч</p>
+<p>#��httpd-vhosts.conf��������������<br>&lt;VirtualHost *:80&gt;<br>    ServerName svn.happigo.com<br>    &lt;Location &#x2F;svn&gt;                         #�����&#x2F;svnҪ������AliasĿ¼����<br>        DAV svn<br>        SVNParentPath &#x2F;data&#x2F;svn      #svn�汾���Ŀ¼,��Ŀ¼���ж���汾��ʹ��SVNParentPath,�����汾���ʹ��SVNPath<br>        AuthType Basic<br>        AuthName “Subversion repository”    #��֤ҳ����ʾ��Ϣ<br>        AuthUserFile &#x2F;data&#x2F;svn&#x2F;passwd          #�û�������<br>        Require valid-user                              # ֻ����ͨ����֤���û�����<br>        AuthzSVNAccessFile &#x2F;data&#x2F;svn&#x2F;authz  #�汾��Ȩ�޿���<br>    </Location><br></VirtualHost></p>
+<h1 id="����passwd��authz�l�"><a href="#����passwd��authz�l�" class="headerlink" title="����passwd��authz�ļ�"></a>����passwd��authz�ļ�</h1><h1 id="������֤�l�"><a href="#������֤�l�" class="headerlink" title="������֤�ļ�"></a>������֤�ļ�</h1><h1 id="�u��������l���"><a href="#�u��������l���" class="headerlink" title="�û��������ļ���"></a>�û��������ļ���</h1><p>&#x2F;usr&#x2F;local&#x2F;apache2&#x2F;bin&#x2F;htpasswd -c  &#x2F;data&#x2F;svn&#x2F;passwd  user1  #�״������û����������û�ʹ��-m��������</p>
+<h1 id="�汾��E����֤�l�"><a href="#�汾��E����֤�l�" class="headerlink" title="�汾��Ȩ����֤�ļ�"></a>�汾��Ȩ����֤�ļ�</h1><p>vi  &#x2F;data&#x2F;svn&#x2F;authz  #����svn�汾���µ�authz�ļ���ʽ�༭Ȩ�޼���</p>
+<h1 id="�����汾��"><a href="#�����汾��" class="headerlink" title="�����汾��"></a>�����汾��</h1><p>&#x2F;usr&#x2F;local&#x2F;subversion&#x2F;bin&#x2F;svnadmin  create &#x2F;data&#x2F;svn&#x2F;happigo</p>
+<h1 id="����"><a href="#����" class="headerlink" title="����"></a>����</h1><p><a target="_blank" rel="noopener" href="http://svn.happigo.com/svn/happigo">http://svn.happigo.com/svn/happigo</a></p>
+<h1 id="����apache-https"><a href="#����apache-https" class="headerlink" title="����apache  https"></a>����apache  https</h1><h1 id="������Ҫ��װ��openssl-�ϱߵĲ������Ѿ���װ��"><a href="#������Ҫ��װ��openssl-�ϱߵĲ������Ѿ���װ��" class="headerlink" title="������Ҫ��װ��openssl,�ϱߵĲ������Ѿ���װ��"></a>������Ҫ��װ��openssl,�ϱߵĲ������Ѿ���װ��</h1><h1 id="apacheҪ����sslg����߰�װapache��ʱ���Ѿ�ʹ��enable-ssl��̬������ssl"><a href="#apacheҪ����sslg����߰�װapache��ʱ���Ѿ�ʹ��enable-ssl��̬������ssl" class="headerlink" title="apacheҪ����sslģ����߰�װapache��ʱ���Ѿ�ʹ��enable-ssl��̬������ssl"></a>apacheҪ����sslģ����߰�װapache��ʱ���Ѿ�ʹ��enable-ssl��̬������ssl</h1><p>#httpd.conf��ȥ�������е�ע�ͣ�ʹ֮��Ч<br>LoadModule ssl_module modules&#x2F;mod_ssl.so<br>LoadModule socache_shmcb_module modules&#x2F;mod_socache_shmcb.so<br>Include &#x2F;etc&#x2F;httpd&#x2F;extra&#x2F;httpd-ssl.conf</p>
+<p>#�༭httpd-ssl.conf�ļ�</p>
+<VirtualHost _default_:443>
+ServerName svn.happigo.com:443
+<Location /svn>
+        DAV svn
+        SVNParentPath /data/svn
+        AuthType Basic
+        AuthName "Subversion repository"
+        AuthUserFile /data/svn/passwd
+        Require valid-user
+        AuthzSVNAccessFile /data/svn/authz
+</Location>
+SSLEngine on
+SSLCertificateFile "/etc/httpd/server.crt"     
+SSLCertificateKeyFile "/etc/httpd/server.key"
+</VirtualHost >
+
+<h1 id="����ssl֤��"><a href="#����ssl֤��" class="headerlink" title="����ssl֤��"></a>����ssl֤��</h1><p>openssl genrsa  -out  server.key 1024</p>
+<p>openssl req -new   -key server.key  -out server.csr  </p>
+<p>openssl req -x509 -days 365 -key server.key -in server.csr  -out  server.crt</p>
+<p>#�����ɵ������ļ��ŵ�&#x2F;et&#x2F;httpdĿ¼�£�&#x2F;etc&#x2F;httpdĿ¼����һ��httpd-ssl.conf��ָ���ģ�</p>
+<h1 id="����apache����"><a href="#����apache����" class="headerlink" title="����apache����"></a>����apache����</h1><p>#����</p>
+<p><a target="_blank" rel="noopener" href="https://svn.happigo.com/svn/happigo">https://svn.happigo.com/svn/happigo</a></p>
+<p>#ע��������ģʽ�£�svn���񲢲�������ͨ��http��https������svn������svn�ύ���ݵ�ʱ��Ҫ��֤��������apache���û���svn�汾��Ŀ¼�ж�дȨ�ޣ���Ȼ��������db&#x2F;txn-current-lock’: Permission denied�� �Ĵ���</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/varnish/install.sh/">install.sh</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/cacti+nagios/install.sh/">install.sh</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

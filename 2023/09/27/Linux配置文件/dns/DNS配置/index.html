@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>DNS配置 - 原点独白</title>
+
+  
+    <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNS配置">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/27/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/dns/DNS%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T08:37:54.000Z">
+<meta property="article:modified_time" content="2023-09-28T07:20:46.136Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/lamp/apc_tt.php/"><span class="title">apc_tt.php</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/kvm/rhel-debuginfo.repo/"><span class="title">rhel-debuginfo.repo</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/iptables/apache+tomcat_115_ipt.sav/"><span class="title">apache+tomcat_115_ipt.sav</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/coreseek/install/"><span class="title">install</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/denyhosts/install/"><span class="title">install</span></a></div></widget>
+
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/DNS%E9%85%8D%E7%BD%AE/">DNS配置</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T08:37:54.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>DNS配置</span></h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./configure --prefix=/usr/local/bind/ --with-openssl=/usr/ --sysconfdir=/etc/ --with-libtool --enable-threads</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--prefix=/usr/local/bind                          #指定bind9的安装目录,默认是/usr/local</span><br><span class="line"></span><br><span class="line">--enable-threads                                  #开启多线程的支持；如果你的系统有多个CPU，那么可以使用这个选项</span><br><span class="line"></span><br><span class="line">--disable-openssl-version-check                   #关闭openssl的检查</span><br><span class="line"></span><br><span class="line">--with-openssl=/usr/local/openssl                 #指定openssl的安装路径</span><br><span class="line"></span><br><span class="line">--sysconfdir=/etc/                           #设置named.conf配置文件放置的目录，默认是--prefix选项指定的目录下的/etc下</span><br><span class="line"></span><br><span class="line">--localstatdir=/var                               #设置 run/named.pid 放置的目录，默认是--prefix选项指定的目录下的/var下</span><br><span class="line"></span><br><span class="line">--with-libtool                                    #BIND的库文件编译为动态共享库文件，这个选项默认是未选择的。 如果不选这个选项，那么编译后的named命令会比较大，lib目录                                                     中的库文件都是.a后缀的 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--disable-chroot                                  #禁用chroot，不建议使用，默认开启此功能</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加系统变量</span></span><br><span class="line"></span><br><span class="line">vi  ~/.bash_profile</span><br><span class="line"></span><br><span class="line">PATH=$PATH:$HOME/bin:/usr/local/bind/bin:/usr/local/bind/bin:/usr/local/bind/sbin  #修改本行</span><br><span class="line"></span><br><span class="line">source ~/.bash_profile  #使修改生效</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加运行用户</span></span><br><span class="line"></span><br><span class="line">useradd -r named  # -r 添加系统用户</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启用<span class="built_in">chroot</span></span></span><br><span class="line"></span><br><span class="line">mkdir  -p /var/named/chroot/&#123;var,etc,dev&#125;</span><br><span class="line">mkdir /var/named/chroot/var/run</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建虚拟设备</span></span><br><span class="line"></span><br><span class="line">cd /var/named/chroot/dev</span><br><span class="line"></span><br><span class="line">mknod random c 1 8 </span><br><span class="line">mknod zero c 1 5 </span><br><span class="line">mknod null c 1 3</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">修改run目录属主</span></span><br><span class="line">chown -R named:named  /var/named/chroot/var/run   #named 要向run目录写入pid文件</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成rndc.conf ，以便使用rndc命令管理<span class="built_in">bind</span></span></span><br><span class="line">rndc-confgen</span><br><span class="line"></span><br><span class="line">将生成的内容分别写入/etc/named.conf和/etc/rndc.conf #这里在测试中，named.conf是写入chroot之后的etc而rndc.conf写如chroot之后的etc却提示找不到，写入真实的/etc下则正常</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建配置文件</span></span><br><span class="line"></span><br><span class="line">vi /var/named/chroot/etc/named.conf</span><br><span class="line"></span><br><span class="line">key &quot;rndc-key&quot; &#123;</span><br><span class="line">       algorithm hmac-md5;</span><br><span class="line">       secret &quot;BM+rI8Ra3mpKKtIlYpGEAQ==&quot;;</span><br><span class="line"> &#125;;</span><br><span class="line"></span><br><span class="line">controls &#123;</span><br><span class="line">       inet 127.0.0.1 port 953</span><br><span class="line">       allow &#123; 127.0.0.1; &#125; keys &#123; &quot;rndc-key&quot;; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">options &#123;</span><br><span class="line">    directory &quot;/var&quot;;</span><br><span class="line">    pid-file  &quot;/var/run/named.pid&quot;;</span><br><span class="line">    version   &quot;bind 9.9.3&quot;;</span><br><span class="line">    allow-query &#123;any;&#125;;</span><br><span class="line">    forwarders &#123;                 #如果想让dns同时可以解析外网，可使用forward功能；</span><br><span class="line">    	192.168.1.253;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">    type hint;</span><br><span class="line">    file &quot;named.root&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;lxy.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;named.lxy.com&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vi /etc/rndc.conf</span><br><span class="line"></span><br><span class="line">key &quot;rndc-key&quot; &#123;</span><br><span class="line">       algorithm hmac-md5;</span><br><span class="line">       secret &quot;BM+rI8Ra3mpKKtIlYpGEAQ==&quot;;</span><br><span class="line">&#125;;</span><br><span class="line">options &#123;</span><br><span class="line">        default-key &quot;rndc-key&quot;;</span><br><span class="line">        default-server 127.0.0.1;</span><br><span class="line">        default-port 953;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ZONE文件内容：</span></span><br><span class="line"></span><br><span class="line">vi /var/named/chroot/var/named.lxy.kk     #正解析的zone，如果想让dns可以解析外网，就不要包含.com等合法域，不然在试图解析合法域名的时候服务器会在本地寻找记录，当然是找					   不到的，它会告诉你找不到，而不会去向forward请求。</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">TTL    86400</span></span><br><span class="line">@    IN    SOA    lxy.kk. root.lxy.kk. (</span><br><span class="line">                    2008080804    ;</span><br><span class="line">                    28800        ;</span><br><span class="line">                    14400        ;</span><br><span class="line">                    3600000        ;</span><br><span class="line">                    86400    )    ;</span><br><span class="line">@        IN    NS   dns.lxy.kk.</span><br><span class="line">@        IN    MX    10    mail.lxy.kk.</span><br><span class="line">dns      IN    A    192.168.127.129</span><br><span class="line">mail     IN    A    192.168.127.130</span><br><span class="line">www            IN    A     192.168.127.129</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vi /var/named/chroot/named.127.0.0    #反向解析的zone</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">TTL    86400</span></span><br><span class="line">@    IN    SOA    dns.lxy.kk. root.lxy.kk. (</span><br><span class="line">                    2008080804    ;</span><br><span class="line">                    28800        ;</span><br><span class="line">                    14400        ;</span><br><span class="line">                    3600000        ;</span><br><span class="line">                    86400    )    ;</span><br><span class="line">@        IN    NS   dns.lxy.kk.</span><br><span class="line">1    IN     PTR     localhost.</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">启动服务</span></span><br><span class="line"></span><br><span class="line">named  -c /etc/named.conf -t /var/named/chroot -u named  #注意这里的/etc/实际指的是chroot下的etc,因为已经使用-t指定了chroot到的目录，named将视chroot为根目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">rndc</span></span><br><span class="line"></span><br><span class="line">rndc reload | status等</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/apache+tomcat+jk/apache+tomcat+jk/">apache+tomcat+jk</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-command%E6%A8%A1%E5%9D%97%E5%92%8Cshell%E6%A8%A1%E5%9D%97/">Ansible-command模块和shell模块</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

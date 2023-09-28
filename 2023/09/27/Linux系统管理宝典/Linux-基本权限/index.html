@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>linux基本权限 - 原点独白</title>
+
+  
+    <meta name="description" content="Linux系统是一个典型的多用户操作系统，不同的用户处于不同的地位，为了保护系统的安全性，linux系统对于不同用户访问同一个文件或目录做了不同的访问控制。而这种控制就是通过权限实现的，本节课我们介绍linux权限的使用 一、基本权限的介绍Linux中每个文件或目录都有3个基本权限位，控制三种访问级别用户的读、写、执行，所以linux的基本权限位一共有9个。基本权限位和另外3个可以影响可执行程序运">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux基本权限">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="Linux系统是一个典型的多用户操作系统，不同的用户处于不同的地位，为了保护系统的安全性，linux系统对于不同用户访问同一个文件或目录做了不同的访问控制。而这种控制就是通过权限实现的，本节课我们介绍linux权限的使用 一、基本权限的介绍Linux中每个文件或目录都有3个基本权限位，控制三种访问级别用户的读、写、执行，所以linux的基本权限位一共有9个。基本权限位和另外3个可以影响可执行程序运">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399589987.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399812604.png">
+<meta property="article:published_time" content="2023-09-27T00:03:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:03:56.312Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399589987.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">linux基本权限</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、基本权限的介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90%E7%9A%84%E8%AE%BE%E7%BD%AE%E5%92%8C%E6%9F%A5%E7%9C%8B"><span class="toc-text">二、基本权限的设置和查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95%E7%9A%84%E9%BB%98%E8%AE%A4%E6%9D%83%E9%99%90"><span class="toc-text">三、文件或目录的默认权限</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/">Linux系统管理宝典</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>linux基本权限</span></h1>
+<p>Linux系统是一个典型的多用户操作系统，不同的用户处于不同的地位，为了保护系统的安全性，linux系统对于不同用户访问同一个文件或目录做了不同的访问控制。而这种控制就是通过权限实现的，本节课我们介绍linux权限的使用</p>
+<h2 id="一、基本权限的介绍"><a href="#一、基本权限的介绍" class="headerlink" title="一、基本权限的介绍"></a>一、基本权限的介绍</h2><p>Linux中每个文件或目录都有3个基本权限位，控制三种访问级别用户的读、写、执行，所以linux的基本权限位一共有9个。基本权限位和另外3个可以影响可执行程序运行的3个特殊权限位一起构成了文件访问模式。三个属性规定了对应三种级别的用户能够如何使用这个文件，这三个基本权限位对于文件和目录的含义有所差别的，我们一起来看一下</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>权限</th>
+<th>对文件的含义</th>
+<th>对目录的含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>读</td>
+<td>意味着我们可以查看阅读</td>
+<td>可以列出目录中的文件列表</td>
+</tr>
+<tr>
+<td>w</td>
+<td>写</td>
+<td>意味着，对文件可以修改或删除</td>
+<td>可以在该目录中创建、删除文件</td>
+</tr>
+<tr>
+<td>x</td>
+<td>执行</td>
+<td>如果是文件就可以运行，比如二进制文件或脚本。</td>
+<td>可以使用cd命令进入该目录</td>
+</tr>
+</tbody></table>
+<p>那三种访问级别都有哪些呢？每个文件都有三组不同的读、写和执行权限，分别适用于三种访问级别，其中每组中的三个栏位分别使用读取权限（r）、写入权限（w）、执行权限（x）或没有相应的权限（-）来表示，共9位来表示。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399589987.png" alt="1571370358704.png"/></div><div class="image-meta"><span class="image-caption center">1571370358704.png</span></div></div>
+
+<ul>
+<li>第一组：适用于文件的属主，图中属主的权限是rwx。</li>
+<li>第二组：适用于文件的属组，图中属组的权限是r-x。</li>
+<li>第三组：使用于其它用户权限位，图中其它用户权限位是r-x。</li>
+</ul>
+<p>当有人试图访问一个文件的时候，linux系统会按顺序执行如下步骤：</p>
+<p>（1）使用者拥有这个文件吗？如果是，启用用户权限。</p>
+<p>（2）用户是组所有者成员吗？如果是，启用组权限</p>
+<p>（3）如果以上两个都不是，启用其它人权限</p>
+<p>上面我们提到的是第一种表示方法，在linux中还有另外一种表示方法，八进制表示法，我们来看下字母和八进制表示方法的对应关系</p>
+<table>
+<thead>
+<tr>
+<th>字符表示法</th>
+<th>八进制表示法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>4</td>
+<td>读</td>
+</tr>
+<tr>
+<td>w</td>
+<td>2</td>
+<td>写</td>
+</tr>
+<tr>
+<td>x</td>
+<td>1</td>
+<td>执行</td>
+</tr>
+</tbody></table>
+<p>所以上面给出的权限rwxr-xr-x换成数字的表示方式就是755，那权限如何设置呢？</p>
+<h2 id="二、基本权限的设置和查看"><a href="#二、基本权限的设置和查看" class="headerlink" title="二、基本权限的设置和查看"></a>二、基本权限的设置和查看</h2><p>通过前面的学习我们知道，用户分为所有者，所有者组，其他人这三类，而每一类有包含三种基本权限，他们的对应关系是</p>
+<table>
+<thead>
+<tr>
+<th>权限位</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>属主权限位</td>
+<td>用于限制文件或目录的创建者</td>
+</tr>
+<tr>
+<td>属组权限位</td>
+<td>用于限制文件或目录所属组的成员</td>
+</tr>
+<tr>
+<td>其它用户的权限</td>
+<td>用于限制既不是属主又不是所属组的能访问该文件或目录的其他人员</td>
+</tr>
+</tbody></table>
+<p>当我们使用命令来查看文件或目录时，会看如下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# ls -l</span><br><span class="line">总用量 13804</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 公共</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 模板</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 视频</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 图片</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 文档</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 下载</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 音乐</span><br><span class="line">drwxr-xr-x.  2 root root        6 10月 11 06:36 桌面</span><br><span class="line">-rw-------.  1 root root     1214 10月 11 06:12 anaconda-ks.cfg</span><br><span class="line">-rw-r--r--.  1 root root     1369 10月 11 06:17 initial-setup-ks.cfg</span><br></pre></td></tr></table></figure>
+
+<p>每一行显示一个文件或目录的信息，这些信息包括文件的类型（1位）、文件的权限(9位)、文件的连接数、文件的属主（第3列）、文件的所属组（第4列），大小以及相关时间和文件名。其中Linux 文件的权限标志位九个，分为3 组，分别代表文件拥有者的权限，文件所属用户组的权限和其它用户的权限，现在我们知道文件有三种权限（（r）读取、（w）写入和（x）执行）和三种访问级别（（u）用户、（g）主要组和（o）其它人）决定文件可以被如何使用。那如何修改？</p>
+<ul>
+<li><strong>chmod命令:修改文件权限</strong></li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399812604.png" alt="1571375694210.png"/></div><div class="image-meta"><span class="image-caption center">1571375694210.png</span></div></div>
+
+<table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u</td>
+<td>User(用户)</td>
+</tr>
+<tr>
+<td>g</td>
+<td>Group (组)</td>
+</tr>
+<tr>
+<td>o</td>
+<td>Other(其它)</td>
+</tr>
+<tr>
+<td>a</td>
+<td>All(所有)</td>
+</tr>
+<tr>
+<td>+</td>
+<td>Add(加)</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Remove(减去)</td>
+</tr>
+<tr>
+<td>&#x3D;</td>
+<td>Set (设置)</td>
+</tr>
+<tr>
+<td>r</td>
+<td>Read (可读)</td>
+</tr>
+<tr>
+<td>w</td>
+<td>Write (可写)</td>
+</tr>
+<tr>
+<td>x</td>
+<td>Execute (执行)</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>结果权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>chmod o-r a.file</td>
+<td>取消其他人的可读权限</td>
+<td>rw-rw—</td>
+</tr>
+<tr>
+<td>chmod g-w a.file</td>
+<td>取消组的写入权限</td>
+<td>rw-r–r–</td>
+</tr>
+<tr>
+<td>chmod ug+w a.file</td>
+<td>赋予用户和组写入权限</td>
+<td>rwxrwxr–</td>
+</tr>
+<tr>
+<td>chmod o+w a.file</td>
+<td>赋予其他人写入权限</td>
+<td>rw-rw-rw-</td>
+</tr>
+<tr>
+<td>chmod go-rwx a.file</td>
+<td>取消组和其他人的阅读、写入和执行权限</td>
+<td>rw——-</td>
+</tr>
+<tr>
+<td>chmod a-w a.file</td>
+<td>取消所有人的写入权限</td>
+<td>r– r– r–</td>
+</tr>
+<tr>
+<td>chmod uo-r a.file</td>
+<td>取消用户和其它人的阅读权限</td>
+<td>-w-rw–w-</td>
+</tr>
+<tr>
+<td>chmod go&#x3D;rw a.file</td>
+<td>将组和其他人的权限设置为阅读和写入</td>
+<td>rw-rw-rw-</td>
+</tr>
+</tbody></table>
+<p>使用数字的表示方式类似chmod 755 a,执行完成后a这个文件的权限对应就是 -rwxr-xr-x,这是文件权限的两种修改方式，如果你想修改文件的所有者和所有者组需要使用的命令就是chown,chgrp</p>
+<ul>
+<li><strong>chown命令:改变文件或文件夹的所有者</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue test]# ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-r--r-- 1 root root 0 10月 18 01:26 file1</span><br><span class="line">[root@zutuanxue test]# chown oracle file1</span><br><span class="line">[root@zutuanxue test]# ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-r--r-- 1 oracle root 0 10月 18 01:26 file1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>chgrp命令: 改变文件或文件夹属组</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue test]# chgrp oracle file1</span><br><span class="line">[root@zutuanxue test]# ll</span><br><span class="line">总用量 0</span><br><span class="line">-rw-r--r-- 1 oracle oracle 0 10月 18 01:26 file1</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们涉及到了三条与权限修改相关的命令</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>可以执行的用户</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>chmod</td>
+<td>Root用户和文件的所有者</td>
+</tr>
+<tr>
+<td>chgrp</td>
+<td>Root用户和文件的所有者（必须是组成员）</td>
+</tr>
+<tr>
+<td>chown</td>
+<td>只有root用户</td>
+</tr>
+</tbody></table>
+<p>以上是三种基本权限 -R</p>
+<h2 id="三、文件或目录的默认权限"><a href="#三、文件或目录的默认权限" class="headerlink" title="三、文件或目录的默认权限"></a>三、文件或目录的默认权限</h2><p>每一个新产生的文件都会有一个默认的权限，这个权限是通过系统中的umask来控制的</p>
+<p>文件的最大权限是666</p>
+<p>目录的权限是777</p>
+<p>使用umask查看</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%B8%B8%E7%94%A8%E7%AC%A6%E5%8F%B7/">Linux基本命令与常用符号</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86/">linux密码管理</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

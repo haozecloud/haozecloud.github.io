@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Linux 磁盘挂载 - 原点独白</title>
+
+  
+    <meta name="description" content="人生自是有情痴，此恨不关风与月。  @[TOC](Linux 磁盘挂载) 一、Linux 磁盘自动挂载首先为虚拟机添加几块磁盘作为实验备用 在这里插入图片描述   添加磁盘后使用lsblk命令进行查看 [root@disk ~]# lsblk NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT sda               8:0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 磁盘挂载">
+<meta property="og:url" content="https://www.haozecloud.tech/2023/09/25/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="人生自是有情痴，此恨不关风与月。  @[TOC](Linux 磁盘挂载) 一、Linux 磁盘自动挂载首先为虚拟机添加几块磁盘作为实验备用 在这里插入图片描述   添加磁盘后使用lsblk命令进行查看 [root@disk ~]# lsblk NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT sda               8:0">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/1fff1b8675ed4d35887c3ddd27fa0e81.png">
+<meta property="article:published_time" content="2023-09-25T08:37:54.000Z">
+<meta property="article:modified_time" content="2023-09-25T13:11:30.741Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/1fff1b8675ed4d35887c3ddd27fa0e81.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">Linux 磁盘挂载</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Linux-%E7%A3%81%E7%9B%98%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD"><span class="toc-text">一、Linux 磁盘自动挂载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B9%E7%9B%AE%E5%BD%95%E6%89%A9%E5%AE%B9"><span class="toc-text">二、根目录扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B7%BB%E5%8A%A0%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-text">三、添加交换分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3845874.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/placeholder/social/3616429.svg"/></a><a class="social" href="https://" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://images.cnblogs.com/cnblogs_com/mant/1674402/o_230928074314_%E9%92%89%E9%92%89.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">基础操作</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-25T08:37:54.000Z">2023-09-25</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>Linux 磁盘挂载</span></h1>
+<blockquote>
+<p>人生自是有情痴，此恨不关风与月。</p>
+</blockquote>
+<p>@[TOC](Linux 磁盘挂载)</p>
+<h2 id="一、Linux-磁盘自动挂载"><a href="#一、Linux-磁盘自动挂载" class="headerlink" title="一、Linux 磁盘自动挂载"></a>一、Linux 磁盘自动挂载</h2><p>首先为虚拟机添加几块磁盘作为实验备用</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://img-blog.csdnimg.cn/1fff1b8675ed4d35887c3ddd27fa0e81.png" alt="在这里插入图片描述"/></div><div class="image-meta"><span class="image-caption center">在这里插入图片描述</span></div></div>
+
+
+<p>添加磁盘后使用lsblk命令进行查看</p>
+<pre><code>[root@disk ~]# lsblk
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               8:0    0   60G  0 disk
+├─sda1            8:1    0  500M  0 part /boot
+└─sda2            8:2    0 59.5G  0 part
+  ├─centos-root 253:0    0 38.6G  0 lvm  /
+  ├─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+  └─centos-home 253:2    0 18.9G  0 lvm  /home
+sr0              11:0    1    4G  0 rom
+[root@disk ~]#
+</code></pre>
+<p>可以看到磁盘未加载，使用万能的重启大法<code>reboot</code>,<code>init 6</code>,<code>shutdown -r now</code>等，重启虚拟机即可,重启完毕后可以看到新添加的硬盘已经加载好了</p>
+<pre><code>[root@disk ~]# lsblk
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               8:0    0   60G  0 disk
+├─sda1            8:1    0  500M  0 part /boot
+└─sda2            8:2    0 59.5G  0 part
+  ├─centos-root 253:0    0 38.6G  0 lvm  /
+  ├─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+  └─centos-home 253:2    0 18.9G  0 lvm  /home
+sdb               8:16   0   60G  0 disk
+sdc               8:32   0   60G  0 disk
+sdd               8:48   0   60G  0 disk
+sr0              11:0    1 1024M  0 rom
+</code></pre>
+<p>使用 fdisk进行分区</p>
+<pre><code>[root@disk ~]# fdisk /dev/sdb
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0x1d66e12e.
+
+Command (m for help): p
+
+Disk /dev/sdb: 64.4 GB, 64424509440 bytes, 125829120 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x1d66e12e
+
+   Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1):
+First sector (2048-125829119, default 2048):
+Using default value 2048
+Last sector, +sectors or +size&#123;K,M,G&#125; (2048-125829119, default 125829119):
+Using default value 125829119
+Partition 1 of type Linux and of size 60 GiB is set
+
+Command (m for help): p
+
+Disk /dev/sdb: 64.4 GB, 64424509440 bytes, 125829120 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x1d66e12e
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048   125829119    62913536   83  Linux
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+</code></pre>
+<p>根目录下创建了一个名为&#x2F;mnt&#x2F;sdb的目录，并对&#x2F;dev&#x2F;sdb1进行了ext4文件系统格式化。</p>
+<p>文件系统类型：ext4</p>
+<pre><code>[root@disk ~]# mkdir /mnt/sdb
+[root@disk ~]# mkfs.ext4 /dev/sdb1
+mke2fs 1.42.9 (28-Dec-2013)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+3932160 inodes, 15728384 blocks
+786419 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=2164260864
+480 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+        4096000, 7962624, 11239424
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done
+</code></pre>
+<p>配置&#x2F;etc&#x2F;fstab文件实现开机自动挂载 在配置文件<code>/etc/fstab</code>后追加<code>/dev/sdb1 /mnt/sdb ext4 defaults 0 0</code></p>
+<pre><code>[root@disk ~]# vim /etc/fstab
+#
+# /etc/fstab
+# Created by anaconda on Sun Jul  2 14:40:36 2023
+#
+# Accessible filesystems, by reference, are maintained under &#39;/dev/disk&#39;
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/centos-root /                       xfs     defaults        0 0
+UUID=8f90bf6f-fc6f-47e6-938e-d53602078619 /boot                   xfs     defaults        0 0
+/dev/mapper/centos-home /home                   xfs     defaults        0 0
+/dev/mapper/centos-swap swap                    swap    defaults        0 0
+/dev/sdb1 /mnt/sdb ext4 defaults 0 0
+参数解释：
+第1列:挂载设备
+(1)/dev/sda5  
+(2)UUID=设备的uuid   rhel6/7的默认写法   同一台机器内唯一的一个设备标识
+第2列:挂载点
+第3列:文件系统类型
+第4列:文件系统属性	
+第5列:是否对文件系统进行磁带备份：0 不备份
+第6列:是否检查文件系统：0 不检查
+</code></pre>
+<p>使用 mount 命令挂载</p>
+<pre><code>[root@disk ~]# mount /dev/sdb1 /mnt/sdb/
+[root@disk ~]# mount -a #开机自动挂载
+</code></pre>
+<h2 id="二、根目录扩容"><a href="#二、根目录扩容" class="headerlink" title="二、根目录扩容"></a>二、根目录扩容</h2><p>首先，使用lsblk命令查看当前系统的磁盘和分区情况。</p>
+<pre><code>[root@server /]# lsblk
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               8:0    0   20G  0 disk 
+├─sda1            8:1    0    1G  0 part /boot
+└─sda2            8:2    0   19G  0 part 
+  ├─centos-root 253:0    0   17G  0 lvm  /
+  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]
+sdb               8:16   0   20G  0 disk 
+├─sdb1            8:17   0    5G  0 part /mnt/sdb1
+├─sdb2            8:18   0    5G  0 part /mnt/sdb2
+├─sdb3            8:19   0    5G  0 part /mnt/sdb3
+├─sdb4            8:20   0    1K  0 part 
+└─sdb5            8:21   0    5G  0 part /mnt/sdb5
+sdc               8:32   0   20G  0 disk 
+└─sdc1            8:33   0    2G  0 part [SWAP]
+sdd               8:48   0   20G  0 disk 
+sde               8:64   0   20G  0 disk 
+└─vg2-lv2       253:2    0   26G  0 lvm  /mnt/lv2
+sdf               8:80   0   20G  0 disk 
+└─vg1-lv1       253:3    0    1G  0 lvm  
+sdg               8:96   0   20G  0 disk 
+└─vg2-lv2       253:2    0   26G  0 lvm  /mnt/lv2
+sdh               8:112  0   20G  0 disk 
+sr0              11:0    1  4.4G  0 rom  
+</code></pre>
+<p>确认需要扩容的根分区所在的逻辑卷名称和卷组名称。根据示例中的输出，根分区的逻辑卷名称是<code>centos-root</code>，卷组名称是<code>centos</code>。</p>
+<pre><code>[root@server /]# lvs
+  LV   VG     Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root centos -wi-ao---- &lt;17.00g                                                    
+  swap centos -wi-ao----   2.00g                                                    
+  lv1  vg1    -wi-a-----   1.00g                                                    
+  lv2  vg2    -wi-ao----  26.00g            
+[root@server /]# pvcreate /dev/sdd
+  Physical volume &quot;/dev/sdd&quot; successfully created.  
+[root@server /]# vgextend centos /dev/sdd
+  Volume group &quot;centos&quot; successfully extended
+</code></pre>
+<p>使用lvextend命令对逻辑卷进行扩容。例如，要将根分区扩容15GB，可以执行以下命令：<code>lvextend -L +15G /dev/centos/root</code></p>
+<pre><code>[root@server /]# vgs
+  VG     #PV #LV #SN Attr   VSize   VFree  
+  centos   2   2   0 wz--n-  38.99g &lt;20.00g
+  vg1      1   1   0 wz--n- &lt;20.00g &lt;19.00g
+  vg2      2   1   0 wz--n-  39.99g  13.99g
+[root@server /]# lvextend -L +15G /dev/centos/root 
+  Size of logical volume centos/root changed from &lt;17.00 GiB (4351 extents) to &lt;32.00 GiB (8191 extents).
+  Logical volume centos/root successfully resized.
+</code></pre>
+<p>扩容完成后，使用df -Th命令检查根分区的大小是否已经扩容。</p>
+<pre><code>[root@server /]# df -Th
+Filesystem              Type      Size  Used Avail Use% Mounted on
+devtmpfs                devtmpfs  974M     0  974M   0% /dev
+tmpfs                   tmpfs     991M     0  991M   0% /dev/shm
+tmpfs                   tmpfs     991M   11M  980M   2% /run
+tmpfs                   tmpfs     991M     0  991M   0% /sys/fs/cgroup
+/dev/mapper/centos-root xfs        17G  5.7G   12G  34% /
+/dev/sdb3               ext4      4.8G   20M  4.6G   1% /mnt/sdb3
+/dev/sdb1               ext4      4.8G   20M  4.6G   1% /mnt/sdb1
+/dev/sdb2               ext4      4.8G   20M  4.6G   1% /mnt/sdb2
+/dev/sdb5               ext4      4.8G   20M  4.6G   1% /mnt/sdb5
+/dev/sda1               xfs      1014M  213M  802M  21% /boot
+tmpfs                   tmpfs     199M   12K  199M   1% /run/user/42
+tmpfs                   tmpfs     199M     0  199M   0% /run/user/0
+/dev/mapper/vg2-lv2     ext4       26G   45M   25G   1% /mnt/lv2
+</code></pre>
+<p>如果根分区是XFS文件系统，还需要执行xfs_growfs命令来调整文件系统大小。例如，执行以下命令：<code>xfs_growfs /dev/centos/root</code></p>
+<pre><code>[root@server /]# xfs_growfs /dev/centos/root 
+meta-data=/dev/mapper/centos-root isize=512    agcount=4, agsize=1113856 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=4455424, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 4455424 to 8387584
+</code></pre>
+<p>使用<code>df -Th</code>命令再次检查根分区的大小，确保扩容操作已成功完成。</p>
+<pre><code>[root@server /]# df -Th
+Filesystem              Type      Size  Used Avail Use% Mounted on
+devtmpfs                devtmpfs  974M     0  974M   0% /dev
+tmpfs                   tmpfs     991M     0  991M   0% /dev/shm
+tmpfs                   tmpfs     991M   11M  980M   2% /run
+tmpfs                   tmpfs     991M     0  991M   0% /sys/fs/cgroup
+/dev/mapper/centos-root xfs        32G  5.7G   27G  18% /
+/dev/sdb3               ext4      4.8G   20M  4.6G   1% /mnt/sdb3
+/dev/sdb1               ext4      4.8G   20M  4.6G   1% /mnt/sdb1
+/dev/sdb2               ext4      4.8G   20M  4.6G   1% /mnt/sdb2
+/dev/sdb5               ext4      4.8G   20M  4.6G   1% /mnt/sdb5
+/dev/sda1               xfs      1014M  213M  802M  21% /boot
+tmpfs                   tmpfs     199M   12K  199M   1% /run/user/42
+tmpfs                   tmpfs     199M     0  199M   0% /run/user/0
+/dev/mapper/vg2-lv2     ext4       26G   45M   25G   1% /mnt/lv2
+</code></pre>
+<h2 id="三、添加交换分区"><a href="#三、添加交换分区" class="headerlink" title="三、添加交换分区"></a>三、添加交换分区</h2><p>使用<code>dd</code>工具将<code>/dev/zero</code>设备中的内容写入到<code>/mnt/swap.iso</code>文件中，写入的块大小为1GB，总共写入1个块。</p>
+<p>这个命令的目的是创建一个1GB大小的名为<code>swap.iso</code>的文件，并将其写入到<code>/mnt</code>目录下。<code>/dev/zero</code>是一个特殊的文件，读取它会返回无限的空字节。通过将其内容写入到文件中，相当于创建了一个全是0的文件。</p>
+<pre><code>[root@disk ~]# dd if=/dev/zero of=/mnt/swap.iso bs=1G count=1
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB) copied, 12.4315 s, 86.4 MB/s
+</code></pre>
+<p>通常情况下，这样的操作是为了创建一个临时的交换文件（swap file），用于作为交换分区（swap partition）的替代品，用于虚拟内存的扩展。</p>
+<pre><code>[root@disk ~]# mkswap /mnt/swap.iso
+Setting up swapspace version 1, size = 1048572 KiB
+no label, UUID=084d2529-f7ac-49c1-9d07-2ad6da7410df
+[root@disk ~]# vim /etc/fstab
+/mnt/swap.iso swap                    swap    defaults        0 0
+[root@disk ~]# swapon -a
+swapon: /mnt/swap.iso: insecure permissions 0644, 0600 suggested.
+#这个警告是由于你的交换文件（swap file）的权限设置被认为不安全导致的。默认情况下，建议将交换文件设置为 0600 权限。
+要更改交换文件的权限，你可以使用以下命令：
+[root@disk ~]# chmod  0600 /mnt/swap.iso
+#这将设置交换文件的权限为 0600，只允许所有者读取和写入，而禁止其他用户的访问。这样设置后，再次运行 swapon 命令应该就不会再出现不安全权限的警告了
+[root@disk ~]# swapon -a
+[root@disk ~]# swapon -s
+Filename                                Type            Size Used     Priority
+/dev/dm-1                               partition       2097148       0       -2
+/mnt/swap.iso                           file    1048572 0    -3
+[root@disk ~]#
+</code></pre>
+<p>到此挂载完成，在实际使用中使用交换分区，最好使用专门的分区，而不是一个文件。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了<code>Linux磁盘挂载</code>的基本操作和配置方法，包括虚拟机添加磁盘、分区格式化、配置fstab文件、开机自动挂载，根目录扩容和添加交换分区等。文章详细介绍了每个步骤的具体操作和注意事项。</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/25/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E7%AD%96%E7%95%A5setfacl%E5%91%BD%E4%BB%A4/">Linux文件权限策略setfacl命令</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/25/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/sysctl/sysctl/">sysctl</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
