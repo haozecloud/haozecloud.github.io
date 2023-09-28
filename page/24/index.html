@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -102,8 +102,8 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7-glances/">
-<article class="md-text"><h2 class="post-title">Linux系统监控工具-glances</h2><div class="excerpt"><p>一、glances介绍glances是一个基于python语言开发，可以为linux或者UNIX性能提供监视和分析性能数据的功能。glances在用户的终端上显示重要的系统信息，并动态的进行更新，让管理员实时掌握系统资源的使用情况，而动态监控并不会消耗大量的系统资源，比如CPU资源，通常消耗小于2%，glances默认每两秒更新一次数据。同时glances还可以将相同的数据捕获到一个文件，便...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86-RAID%E4%BB%8B%E7%BB%8D/">
+<article class="md-text"><h2 class="post-title">linux磁盘管理-RAID介绍</h2><div class="excerpt"><p>一、RAID介绍RAID(Redundant Array of Independent Disk 独立冗余磁盘阵列)技术是加州大学伯克利分校1987年提出，最初是为了组合小的廉价磁盘来代替大的昂贵磁盘，同时希望磁盘失效时不会使对数据的访问受损失而开发出一定水平的数据保护技术。RAID就是一种由多块廉价磁盘构成的冗余阵列，在操作系统下是作为一个独立的大型存储设备出现。RAID可以充分发挥出多块...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BB%84%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux组管理</h2><div class="excerpt"><p>组账号管理本机的群组账号数据被储存在 &#x2F;etc&#x2F;group 文件中，权限也必须为0644，与 &#x2F;etc&#x2F;passwd 一样，这也是一个文本文件。
 123root:x:0:bin:x:1:daemon:x:2:
@@ -118,27 +118,24 @@
 NetworkManager服务配置文件，如果没有特殊需求不建议调整，如果需要调整的话，调整之前备份，调整完成重新启动服务
 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-xx网卡配置文件
 12345678...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">linux网络管理</h2><div class="excerpt"><p>现代人的生活越来越依赖网络，对于一个操作系统来讲，网络功能的支持和管理就更为重要了，本节课我们一起来看一下在CentOS8中如何对网络进行管理
-NetworkManager和常用工具和基本用法NetworkManager介绍在linux系统中传统的网络管理方法是用过一个叫network的服务来实现，在CentOS7中依然有这个服务的身影，但是到了CentOS8中已经不使用network这个服...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/">
 <article class="md-text"><h2 class="post-title">linux网络故障排查</h2><div class="excerpt"><p>在日常使用中，经常会出现无法连通的情况，这个时候我们就需要找到问题出在哪里，这里面给各位提供一个生产环境排查网络故障的大体思路，一般情况下如果遇到网络故障，都是通过筛选的方式一点一点的确定问题所在，首先判断是本机的问题还是网络上其它设备的问题，如果同一网络环境中的其它主机正常的，要去其它网络设备（路由器）上查看一下是否对网络有问题的主机设置了限制，如果没有的话，问题出在本机，这里面我们主要看...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/">
-<article class="md-text"><h2 class="post-title">linux计划任务</h2><div class="excerpt"><p>一、什么是计划任务每个人在生活当中或多或少都有一些工作，有的工作是按照一定周期循环的， 例如每天固定时间的闹铃、工作打卡等等； 有的工作则是临时发生的，例如刚好有亲友到访，需要你在一个特定的时间去车站迎接！ 这个时候 Linux 的计划任务就可以派上场了！ 在不考虑硬件与我们服务器的连接状态下，我们的 Linux 可以帮你提醒很多任务， 那么 Linux 的例行性工作是如何进行的？ Linu...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%81%9A%E5%90%88%E9%93%BE%E8%B7%AF/">
 <article class="md-text"><h2 class="post-title">linux聚合链路</h2><div class="excerpt"><p>聚合链路聚合链路是将多块网卡逻辑地连接到一起从而允许故障转移或者提高吞吐率的方法。提高服务器网络可用性。
 bond是将多块网卡虚拟成为一块网卡的技术，通过bond技术让多块网卡看起来是一个单独的以太网接口设备并具有相同的ip地址。在linux下配置bond，通过网卡绑定技术既能增加服务器的可靠性，又增加了可用网络宽带，为用户提供不间断的网络服务。team是另一种用来实现连路聚合和方法，类似于...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">linux网络管理</h2><div class="excerpt"><p>现代人的生活越来越依赖网络，对于一个操作系统来讲，网络功能的支持和管理就更为重要了，本节课我们一起来看一下在CentOS8中如何对网络进行管理
+NetworkManager和常用工具和基本用法NetworkManager介绍在linux系统中传统的网络管理方法是用过一个叫network的服务来实现，在CentOS7中依然有这个服务的身影，但是到了CentOS8中已经不使用network这个服...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%B7%AF%E7%94%B1%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux路由管理</h2><div class="excerpt"><p>在前面的课程中我们知道使用route命令可以添加主机的路由信息，但是一旦系统重启相关的设置信息就会丢失,那么如何设置一个重启也不会丢失的路由信息呢?
 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162[root@z...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">linux软件包管理</h2><div class="excerpt"><p>在linux系统中我们经常涉及到软件包的删除和添加，那一起来看下在linux系统中软件包的管理方式都有哪些
-
-rpm软件
-yum软件仓库
-源码软件
-
-一、rpm软件包rpm的介绍前面的课程我们提到过源码包安装需要解决系统环境、权限等等，这些对于初学者而言都是噩梦一般的存在，所以linux厂商推出了一种类似windows系统中的安装方式，有开发者直接在已知的系统中编译好，使用者可以直接下载并进...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/">
+<article class="md-text"><h2 class="post-title">linux计划任务</h2><div class="excerpt"><p>一、什么是计划任务每个人在生活当中或多或少都有一些工作，有的工作是按照一定周期循环的， 例如每天固定时间的闹铃、工作打卡等等； 有的工作则是临时发生的，例如刚好有亲友到访，需要你在一个特定的时间去车站迎接！ 这个时候 Linux 的计划任务就可以派上场了！ 在不考虑硬件与我们服务器的连接状态下，我们的 Linux 可以帮你提醒很多任务， 那么 Linux 的例行性工作是如何进行的？ Linu...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">linux进程管理</h2><div class="excerpt"><p>一、进程介绍在说进程如何管理之前我们要涉及到进程的一些相关概念
+什么是进程？进程（Process）是一个程序在其自身的虚拟地址空间中的一次执行活动。之所以要创建进程，就是为了使多个程序可以并发的执行，从而提高系统的资源利用率和吞吐量。简单来说进程就是一个程序的执行活动。
+进程和程序有什么不同？
+程序：只是一个静态的指令集合；而进程是一个程序的动态执行过程，它具有生命期，是动态的产生和消亡的。...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -101,7 +101,25 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：Linux</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E7%9B%91%E6%8E%A7%E9%A1%B9/">
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E7%9B%91%E6%8E%A7%E6%A1%88%E4%BE%8B%E7%9B%91%E6%8E%A7%E4%B8%80%E5%8F%B0%E4%B8%9A%E5%8A%A1%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<article class="md-text"><h2 class="post-title">监控案例监控一台业务服务器</h2><div class="excerpt"><p>案例： 通过监控平台监控一台远端的业务机器
+监控远端机器.png
+
+监控方法:zabbix-agent
+监控步骤：
+1、在被监控机安装zabbix-agent客户端服务
+2、修改配置文件指定监控平台
+3、启动服务
+4、zabbix server监控平台添加
+a、部署zabbix-agent监控服务12345678910111213141516171819#设置源[root@node1 ~]#...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E7%BB%99%E7%9B%91%E6%8E%A7%E9%A1%B9%E8%AE%BE%E5%AE%9A%E9%98%88%E5%80%BC/">
+<article class="md-text"><h2 class="post-title">给监控项设定阈值</h2><div class="excerpt"><p>给监控项设置触发器定义好了图形，我们的监控就完成了，但是怎么判断当前的监控值是否健康呢？那么我们就应该设置一个阈值了，也就是我们常说的警戒线，达到这个警戒线就应该报警通知管理员了。
+接下来我来带大家看看如何定义一个阈值来判定监控项的健康情况，我们来学习触发器
+选择 配置—模板— Template OS Linux 选择触发器
+触发器1.png
+
+点击 触发器后进入触发器管理界面，此页面可以管...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E7%9B%91%E6%8E%A7%E9%A1%B9/">
 <article class="md-text"><h2 class="post-title">自定义一个监控项</h2><div class="excerpt"><p>在zabbix当中默认给我们提供了很多监控项，但是，有些监控项我们用不到，而有些监控项又没有，那这个时候怎么办呢？
 
 定义一个监控脚本
@@ -112,13 +130,6 @@
 教学案例：
 自定义一个当前登陆用户数量监控脚本
 a、自定一个用户数量收集脚本12345678910111213141516#创建一个插件目录，用于以后存放插件[root@zutuanxue ~]#  mkdir...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E7%BB%99%E7%9B%91%E6%8E%A7%E9%A1%B9%E8%AE%BE%E5%AE%9A%E9%98%88%E5%80%BC/">
-<article class="md-text"><h2 class="post-title">给监控项设定阈值</h2><div class="excerpt"><p>给监控项设置触发器定义好了图形，我们的监控就完成了，但是怎么判断当前的监控值是否健康呢？那么我们就应该设置一个阈值了，也就是我们常说的警戒线，达到这个警戒线就应该报警通知管理员了。
-接下来我来带大家看看如何定义一个阈值来判定监控项的健康情况，我们来学习触发器
-选择 配置—模板— Template OS Linux 选择触发器
-触发器1.png
-
-点击 触发器后进入触发器管理界面，此页面可以管...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E9%83%A8%E7%BD%B2zabbix%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/">
 <article class="md-text"><h2 class="post-title">部署zabbix监控平台</h2><div class="excerpt"><p>通过前面的课程我们知道了zabbix的官网给我们提供了一个安装的指导流程，那我们按照这个流程来部署一下zabbix
 
@@ -128,14 +139,6 @@ a、自定一个用户数量收集脚本12345678910111213141516#创建一个插�
 
 一、部署zabbix监控平台a. 安装zabbix下载源
 12[root@zutuanxue ~]# rpm -Uvh https://repo.zabbix.com/zabbix/4.4/rhel/8/x86_64/...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/%E7%9B%91%E6%8E%A7%E8%87%AA%E5%8A%A8%E5%8C%96-%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E4%B8%9A%E5%8A%A1%E6%9C%BA%E5%99%A8/">
-<article class="md-text"><h2 class="post-title">监控自动化-自动添加业务机器</h2><div class="excerpt"><p>现在有这样一个需求，公司采购了100台主机，并且需要监控这100台主机，这个工作量有点大。如果真是一台一台的去弄的话，最近这一两天就什么都别做了，而且效率还低。我们可以把这100台连好网络，在部署系统的过程中让这些主机自动配置并启动好zabbix-agent服务。然后让zabbix server自动添加这100台主机，这样的话不仅提升效率，还能节省下大量时间，这个自动添加有两种方式：
-
-自动...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-CentOS8%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">
-<article class="md-text"><h2 class="post-title">CentOS8启动流程</h2><div class="excerpt"><p>一、BIOS与UEFIBIOS
-Basic Input Output System的缩写，翻译过来就是“基本输入输出系统”，是一种业界标准的固件接口，第一次出现在1975年，是计算机启动时加载的第一个程序，主要功能是检测和设置计算机硬件，引导系统启动。
-UEFIUnified Extensible Firmware interface的缩写，翻译过来为统一可扩展固件接口，是BIOS的替代方案...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-GPT%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">GPT磁盘管理</h2><div class="excerpt"><p>GPT分区工具：gdisk gdisk
 gdisk分区
@@ -143,20 +146,18 @@ gdisk分区
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-LVM%E9%80%BB%E8%BE%91%E5%8D%B7%E4%BB%8B%E7%BB%8D/">
 <article class="md-text"><h2 class="post-title">LVM逻辑卷介绍</h2><div class="excerpt"><p>在分区的时候，每个分区应该分多大是令人头疼的，而且随着长时间的运行，分区不管你分多大，都会被数据给占满。当遇到某个分区不够用时管理员可能甚至要备份整个系统、清除硬盘、重新对硬盘分区，然后恢复数据到新分区。
 虽然现在有很多动态调整磁盘的工具可以使用，但是它并不能完全解决问题，因为某个分区可能会再次被耗尽；另外一个方面这需要重新引导系统才能实现，对于很多关键的服务器，停机是不可接受的，而且对于添...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-CentOS8%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">
+<article class="md-text"><h2 class="post-title">CentOS8启动流程</h2><div class="excerpt"><p>一、BIOS与UEFIBIOS
+Basic Input Output System的缩写，翻译过来就是“基本输入输出系统”，是一种业界标准的固件接口，第一次出现在1975年，是计算机启动时加载的第一个程序，主要功能是检测和设置计算机硬件，引导系统启动。
+UEFIUnified Extensible Firmware interface的缩写，翻译过来为统一可扩展固件接口，是BIOS的替代方案...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-VIM%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8/">
 <article class="md-text"><h2 class="post-title">VIM文本编辑器</h2><div class="excerpt"><p>一、vim使用介绍vim介绍
 在linux系统中，大部分配置文件都是ASCII的纯文本形式存放的，所以我们在修改系统设置的时候使用简单的文本编辑软件就可以实现了，如果你使用过windows当中的word的话，那么你可能会感觉linux字符界面的文本编辑工具并不是太好用，毕竟没有图形窗口，看着不会太舒服。但是既然要学习linux，掌握并熟练使用文本编辑工具是必不可少的技能，在linux当中的文...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-acl%E6%9D%83%E9%99%90/">
 <article class="md-text"><h2 class="post-title">linuxacl权限</h2><div class="excerpt"><p>linux的权限非常重要，我们之前所说的几种权限中，但是并不能只针对一个用户或者一个组进行单独设置，而ACL权限可以帮助我们实现这个功能，比如说有一个文件的所有者和所有者组都是a，这个文件的权限是660，我可以让b这个用户可以对文件进行读写的操作，而b这个用户并不属于a组的成员。那我们来看下如何使用
 ACL权限的设置和查看如果要使用acl权限，首先要确定你的文件系统支持acl权限,如果再De...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shadow%E6%96%87%E4%BB%B6/">
-<article class="md-text"><h2 class="post-title">linuxshadow文件</h2><div class="excerpt"><p>说到用户管理，就不得不提到shadow这个文件，shadow有三个功能：
-
-隐藏密码
-扩充密码的功能
-提供账号管理工具
-
-隐藏密码： 因为&#x2F;etc&#x2F;passwd和&#x2F;etc&#x2F;group文件的权限必须是0644，这意味着所有的用户都能读取到内容，所以为了安全起见，我们通过shaodw把用户和组的密码分别隐藏在&#x2F;etc&#x2F;shadow,&#...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-nmcli%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/">
+<article class="md-text"><h2 class="post-title">linuxnmcli命令详解</h2><div class="excerpt"><p>nmcli connection及常用选项123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051[root@zutuanxue ~]# nmcli connection add		添加delete 		删除edit   		编辑help   		帮助load  ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

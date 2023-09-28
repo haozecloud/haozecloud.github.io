@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -101,17 +101,23 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：Linux</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">linux密码管理</h2><div class="excerpt"><p>账号犹如一张通行证，有了账号你才能顺利的使用Linux。不过 Linux 怎么确认使用某账号的人，是这个账号的真正拥有者呢？此时Linux 会根据用户的密码，来确认用户的身份。Linux 的用户账号与群组账号都可设置密码。用户账号的密码用来验证用户的身份；而群组账号的密码则是用来确认用户是否为该群组的成员，以及确认是否为该群组的管理者。
-在 Linux 中，使用 useradd 新建一个用户...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%B8%B8%E7%94%A8%E7%AC%A6%E5%8F%B7/">
+<article class="md-text"><h2 class="post-title">Linux基本命令与常用符号</h2><div class="excerpt"><p>一、常用命令介绍在linux系统中存在很多命令，这些命令可以帮助我们完成不同的工作，在这里面我们先介绍一些常用的基础命令，这些命令可以帮助我们完成对应的基本操作，随着以后的学习，我们还会接触到更多可以帮助我们完成不同工作的linux命令，我们来一起看一下这些基础命令都有哪些
+1、关机、重启命令
+关机命令
+
+init 0 #管理员可以使用
+halt
+shutdown -h
+poweroff
+
+...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%96%87%E4%BB%B6%E5%8E%8B%E7%BC%A9%E4%B8%8E%E8%A7%A3%E5%8E%8B/">
 <article class="md-text"><h2 class="post-title">linux文件压缩与解压</h2><div class="excerpt"><p>压缩工具的介绍说到文件管理，就不得不说到tar，因为tar可以压缩和解压缩linux文件，所以要先了解一下压缩和解压缩。
 由于以前的计算机磁盘容量比较小，业内人士绞尽脑汁，终于开发出了一个能帮助用户节省磁盘的工具，就是压缩工具，我们知道计算机在存储数据的时候都是使用bytes来计算的，但是实际上1byte&#x3D;8bits，在日常使用中并不是所有的数据都能把这个1byte用完，有的可能用...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">
 <article class="md-text"><h2 class="post-title">linux日志服务器部署</h2><div class="excerpt"><p>集中式日志服务器介绍如果你负责管理数台的 Linux，你得登录每一台Linux 后，才能阅读其中的信息！ 这样是不是很麻烦？？ 那有没有什么更好的方案呢？
 Linux 的系统日志服务，允许你把信息传递到某一台 Linux 的系统日志服务中；那你就可以把一台 Linux 作为日志服务器 （Log Server），而其他的 Linux 则当作日志客户端。此时，在作为日志服务器中就可以保存所有日志...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">linux日志管理</h2><div class="excerpt"><p>一、日志服务的介绍日志介绍程序执行的时候，可以通过标准输出（stdout, Standard Output）与标准错误输出 （stderr, Standard Error Output）来输送信息，用户就可以了解该程序执行时发生了什么状况；可是对于在后台执行的服务器程序，或者Linux 内核本身来说，就没有办法这样做了。服务与内核启动后，会切断与终端机（Terminal） 或控制台（Cons...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/">
 <article class="md-text"><h2 class="post-title">Linux服务介绍</h2><div class="excerpt"><p>什么是服务？在linux系统中，有一些特殊程序，启动后就会持续在后台执行，等待用户或者其他软件调用使用，这种程序我们称为服务。
 linux系统中服务的管理工具
@@ -120,19 +126,18 @@ systemV
 systemd
 
 一、systemV与initsystemV，systemV当中有一个叫init的程序，这个程序可以让系统中的service命令去调用&#x2F;etc&#x2F;init.d&#x2F;目录下的服务...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-<article class="md-text"><h2 class="post-title">构建可视化日志管理服务器</h2><div class="excerpt"><p>我们可以通过集中式日志服务器将多台机器的日志收集在一个日志服务器，然后通过脚本或者其他方式去分析，但是真正做过运维的小伙伴明白，日子收集在硬盘上，硬盘的空间有限且大文件分析起来IO压力超级大，分析日志需要高超的技术，一般运维人员分析起来会很困难，更无法实时的去查看某个机器的日志。这样的话我们的日志收集就变成了真正意义上的收集了，收集起来如何利用就变成了一个难题，总结一下主要的问题就是以下几点...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">linux日志管理</h2><div class="excerpt"><p>一、日志服务的介绍日志介绍程序执行的时候，可以通过标准输出（stdout, Standard Output）与标准错误输出 （stderr, Standard Error Output）来输送信息，用户就可以了解该程序执行时发生了什么状况；可是对于在后台执行的服务器程序，或者Linux 内核本身来说，就没有办法这样做了。服务与内核启动后，会切断与终端机（Terminal） 或控制台（Cons...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux服务管理</h2><div class="excerpt"><p>systemctl命令管理服务我们一起来看一下在服务管理方面systemctl这个工具如何使用
 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90/">
-<article class="md-text"><h2 class="post-title">Linux特殊权限</h2><div class="excerpt"><p>linux基本权限只是规定了所有者、属组、其他人三种用户的权限，如果希望对文件或文件夹做一些特殊的权限设置呢？比如：
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6/">
+<article class="md-text"><h2 class="post-title">深入理解linux文件</h2><div class="excerpt"><p>一、linux的文件存储假如有一个用户在linux系统中编辑了一个文件，编辑完内容后，关闭编辑器时会问用户改如何命名这个文件，设置完名称之后会选择一个目录将该文件保存到指定目录下，在这个例子中包含了linux系统中与文件相关的三个组成部分
 
-设置属组继承权限
-为执行文件设置临时超管执行权限
-公共文件夹中的文件谁建立谁删除  这些任务基本权限就解决不聊了，需要解决这个问题得靠特殊权限。
-
-一、特殊权限的介绍之前我们提到了特殊权限有三个，这三个特殊权限是在可执行程序运行时影响操作权限的，它们分别是SUID,SGID...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+数据：就是文件的内容，保存在一个叫data（数据块）的结构中
+元数据：保存一个文件的特征的系统数据，用来保存除了文件内容和文件名以外的与文件相关的信息，...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<article class="md-text"><h2 class="post-title">构建可视化日志管理服务器</h2><div class="excerpt"><p>我们可以通过集中式日志服务器将多台机器的日志收集在一个日志服务器，然后通过脚本或者其他方式去分析，但是真正做过运维的小伙伴明白，日子收集在硬盘上，硬盘的空间有限且大文件分析起来IO压力超级大，分析日志需要高超的技术，一般运维人员分析起来会很困难，更无法实时的去查看某个机器的日志。这样的话我们的日志收集就变成了真正意义上的收集了，收集起来如何利用就变成了一个难题，总结一下主要的问题就是以下几点...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux用户管理</h2><div class="excerpt"><p>一、用户和组的相关概念账号的概念和分类
 账号：是一种用来记录单个用户或是多个用户的数据。Linux中每一个合法的用户都必须要拥有账号，才能使用 。它不仅可以用来验证用户身份，还决定了一个用户在系统中可以从事什么工作
@@ -141,9 +146,14 @@ systemd
 
 用户账号 用来储存单一用户的数据，你可以使用一个用户账号，来储存某一个用户的数据。
 群组账号 用来储存多个用户的信息，每一个群组账号可以...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%92%8C%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">Linux目录结构和文件属性管理</h2><div class="excerpt"><p>一、FHS介绍Filesystem Hierarchy Standard（文件系统层次化标准）的缩写，多数Linux版本采用这种文件组织形式，类似于Windows操作系统中c盘的文件目录，FHS采用树形结构组织文件。FHS定义了系统中每个区域的用途、所需要的最小构成的文件和目录，同时还给出了例外处理与矛盾处理。
-FHS定义了两层规范，第一层是， &#x2F; 下面的各个目录应该要放什么文件数...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90/">
+<article class="md-text"><h2 class="post-title">Linux特殊权限</h2><div class="excerpt"><p>linux基本权限只是规定了所有者、属组、其他人三种用户的权限，如果希望对文件或文件夹做一些特殊的权限设置呢？比如：
+
+设置属组继承权限
+为执行文件设置临时超管执行权限
+公共文件夹中的文件谁建立谁删除  这些任务基本权限就解决不聊了，需要解决这个问题得靠特殊权限。
+
+一、特殊权限的介绍之前我们提到了特殊权限有三个，这三个特殊权限是在可执行程序运行时影响操作权限的，它们分别是SUID,SGID...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -101,11 +101,9 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：Linux</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E6%96%87%E4%BB%B6/">
-<article class="md-text"><h2 class="post-title">深入理解linux文件</h2><div class="excerpt"><p>一、linux的文件存储假如有一个用户在linux系统中编辑了一个文件，编辑完内容后，关闭编辑器时会问用户改如何命名这个文件，设置完名称之后会选择一个目录将该文件保存到指定目录下，在这个例子中包含了linux系统中与文件相关的三个组成部分
-
-数据：就是文件的内容，保存在一个叫data（数据块）的结构中
-元数据：保存一个文件的特征的系统数据，用来保存除了文件内容和文件名以外的与文件相关的信息，...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%92%8C%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">Linux目录结构和文件属性管理</h2><div class="excerpt"><p>一、FHS介绍Filesystem Hierarchy Standard（文件系统层次化标准）的缩写，多数Linux版本采用这种文件组织形式，类似于Windows操作系统中c盘的文件目录，FHS采用树形结构组织文件。FHS定义了系统中每个区域的用途、所需要的最小构成的文件和目录，同时还给出了例外处理与矛盾处理。
+FHS定义了两层规范，第一层是， &#x2F; 下面的各个目录应该要放什么文件数...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%A3%81%E7%9B%98%E4%BD%BF%E7%94%A8%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B/">
 <article class="md-text"><h2 class="post-title">linux磁盘使用实战案例</h2><div class="excerpt"><p>案例需求：
 添加一块硬盘，需要将其分区，最终需要使用2G空间。
@@ -144,6 +142,8 @@ CentOS7
 
 
 C...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7-glances/">
+<article class="md-text"><h2 class="post-title">Linux系统监控工具-glances</h2><div class="excerpt"><p>一、glances介绍glances是一个基于python语言开发，可以为linux或者UNIX性能提供监视和分析性能数据的功能。glances在用户的终端上显示重要的系统信息，并动态的进行更新，让管理员实时掌握系统资源的使用情况，而动态监控并不会消耗大量的系统资源，比如CPU资源，通常消耗小于2%，glances默认每两秒更新一次数据。同时glances还可以将相同的数据捕获到一个文件，便...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%A3%81%E7%9B%98%E5%9F%BA%E6%9C%AC%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux磁盘基本管理</h2><div class="excerpt"><p>一、磁盘介绍磁盘：计算机中的外部存储设备，负责存储计算机数据，并且断电后也能保持数据不丢失。
 磁盘分类：
@@ -172,8 +172,6 @@ M.2： 2242、2260、2280
 二、熟悉磁盘的工作原理机械磁...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86-RAID%E4%BB%8B%E7%BB%8D/">
 <article class="md-text"><h2 class="post-title">linux磁盘管理-RAID介绍</h2><div class="excerpt"><p>一、RAID介绍RAID(Redundant Array of Independent Disk 独立冗余磁盘阵列)技术是加州大学伯克利分校1987年提出，最初是为了组合小的廉价磁盘来代替大的昂贵磁盘，同时希望磁盘失效时不会使对数据的访问受损失而开发出一定水平的数据保护技术。RAID就是一种由多块廉价磁盘构成的冗余阵列，在操作系统下是作为一个独立的大型存储设备出现。RAID可以充分发挥出多块...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7%E5%B7%A5%E5%85%B7-glances/">
-<article class="md-text"><h2 class="post-title">Linux系统监控工具-glances</h2><div class="excerpt"><p>一、glances介绍glances是一个基于python语言开发，可以为linux或者UNIX性能提供监视和分析性能数据的功能。glances在用户的终端上显示重要的系统信息，并动态的进行更新，让管理员实时掌握系统资源的使用情况，而动态监控并不会消耗大量的系统资源，比如CPU资源，通常消耗小于2%，glances默认每两秒更新一次数据。同时glances还可以将相同的数据捕获到一个文件，便...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BB%84%E7%AE%A1%E7%90%86/">
 <article class="md-text"><h2 class="post-title">linux组管理</h2><div class="excerpt"><p>组账号管理本机的群组账号数据被储存在 &#x2F;etc&#x2F;group 文件中，权限也必须为0644，与 &#x2F;etc&#x2F;passwd 一样，这也是一个文本文件。
 123root:x:0:bin:x:1:daemon:x:2:
@@ -188,9 +186,8 @@ M.2： 2242、2260、2280
 NetworkManager服务配置文件，如果没有特殊需求不建议调整，如果需要调整的话，调整之前备份，调整完成重新启动服务
 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-xx网卡配置文件
 12345678...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">linux网络管理</h2><div class="excerpt"><p>现代人的生活越来越依赖网络，对于一个操作系统来讲，网络功能的支持和管理就更为重要了，本节课我们一起来看一下在CentOS8中如何对网络进行管理
-NetworkManager和常用工具和基本用法NetworkManager介绍在linux系统中传统的网络管理方法是用过一个叫network的服务来实现，在CentOS7中依然有这个服务的身影，但是到了CentOS8中已经不使用network这个服...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/">
+<article class="md-text"><h2 class="post-title">linux网络故障排查</h2><div class="excerpt"><p>在日常使用中，经常会出现无法连通的情况，这个时候我们就需要找到问题出在哪里，这里面给各位提供一个生产环境排查网络故障的大体思路，一般情况下如果遇到网络故障，都是通过筛选的方式一点一点的确定问题所在，首先判断是本机的问题还是网络上其它设备的问题，如果同一网络环境中的其它主机正常的，要去其它网络设备（路由器）上查看一下是否对网络有问题的主机设置了限制，如果没有的话，问题出在本机，这里面我们主要看...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

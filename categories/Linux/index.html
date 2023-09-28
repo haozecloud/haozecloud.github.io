@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -108,6 +108,36 @@
 两个模块都是用于执行linux命令的,这对于命令熟悉的工程师来说，用起来非常high。
 shell模块与command模块差不多（command模块不能执行一些类似$HOME,&gt;,&lt;,|等符号，但shell可以)
 https://docs.ansible.com/ansible/latest/modules/command_modu...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-fetch%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-fetch模块</h2><div class="excerpt"><p>一、fetch模块fetch模块与copy模块类似，但作用相反。用于把远程机器的文件拷贝到本地。
+https://docs.ansible.com/ansible/latest/modules/fetch_module.html#fetch-module
+将group1组机器的&#x2F;opt&#x2F;readme 拷贝到manage01的&#x2F;opt目录
+注意:不管是拷贝多个机器...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-copy%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-copy模块</h2><div class="excerpt"><p>一、copy模块(重点)copy模块用于对文件的远程拷贝操作（如把本地的文件拷贝到远程的机器上)
+https://docs.ansible.com/ansible/latest/modules/copy_module.html#copy-module
+
+
+
+参数
+说明
+
+
+
+src
+文件源路径
+
+
+dest
+目标路径
+
+
+content
+往目标文件输入内容
+
+
+force
+强制 yes or...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-cron%E6%A8%A1%E5%9D%97/">
 <article class="md-text"><h2 class="post-title">Ansible-cron模块</h2><div class="excerpt"><p>一、cron模块cron模块用于管理周期性时间任务。
 https://docs.ansible.com/ansible/latest/modules/cron_module.html#cron-module
@@ -137,57 +167,6 @@ minute
 
 hour
 执行计划任务的时...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-copy%E6%A8%A1%E5%9D%97/">
-<article class="md-text"><h2 class="post-title">Ansible-copy模块</h2><div class="excerpt"><p>一、copy模块(重点)copy模块用于对文件的远程拷贝操作（如把本地的文件拷贝到远程的机器上)
-https://docs.ansible.com/ansible/latest/modules/copy_module.html#copy-module
-
-
-
-参数
-说明
-
-
-
-src
-文件源路径
-
-
-dest
-目标路径
-
-
-content
-往目标文件输入内容
-
-
-force
-强制 yes or...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-fetch%E6%A8%A1%E5%9D%97/">
-<article class="md-text"><h2 class="post-title">Ansible-fetch模块</h2><div class="excerpt"><p>一、fetch模块fetch模块与copy模块类似，但作用相反。用于把远程机器的文件拷贝到本地。
-https://docs.ansible.com/ansible/latest/modules/fetch_module.html#fetch-module
-将group1组机器的&#x2F;opt&#x2F;readme 拷贝到manage01的&#x2F;opt目录
-注意:不管是拷贝多个机器...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-group%E6%A8%A1%E5%9D%97/">
-<article class="md-text"><h2 class="post-title">Ansible-group模块</h2><div class="excerpt"><p>一、group模块group模块用于管理用户组和用户组属性。
-https://docs.ansible.com/ansible/latest/modules/group_module.html#group-module
-
-
-
-参数
-说明
-
-
-
-name&#x3D;
-组名
-
-
-state&#x3D; persent|absent
-创建|删除
-
-
-system&#x3D; yes|no
-是否为系...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-file%E6%A8%A1%E5%9D%97/">
 <article class="md-text"><h2 class="post-title">Ansible-file模块</h2><div class="excerpt"><p>一、file模块(重点)file模块用于对文件或文件夹相关的操作，主要用来设置文件、链接、目录的属性，或者移除文件、链接、目录，很多其他的模块也会包含这种作用，例如copy，assemble和template。
 https://docs.ansible.com/ansible/latest/modules/file_module.html#file-module
@@ -212,6 +191,27 @@ https://docs.ansible.com/ansible/latest/modules/hostname_module.html#hostname-mo
 </a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-role/">
 <article class="md-text"><h2 class="post-title">Ansible-role</h2><div class="excerpt"><p>假设我们要写一个playbook来安装管理lamp环境，那么这个playbook就会写很长。所以我们希望把这个很大的文件分成多个功能拆分, 分成apache管理,php管理,mysql管理，然后在需要使用的时候直接调用就可以了，以免重复写。就类似编程里的模块化的概念，以达到代码复用的效果。
 一、roles介绍roles： ansible模块，类似于函数，完成一个任务的指令。每一个roles都...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B9%B3%E5%8F%B0/Ansible-group%E6%A8%A1%E5%9D%97/">
+<article class="md-text"><h2 class="post-title">Ansible-group模块</h2><div class="excerpt"><p>一、group模块group模块用于管理用户组和用户组属性。
+https://docs.ansible.com/ansible/latest/modules/group_module.html#group-module
+
+
+
+参数
+说明
+
+
+
+name&#x3D;
+组名
+
+
+state&#x3D; persent|absent
+创建|删除
+
+
+system&#x3D; yes|no
+是否为系...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:24:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

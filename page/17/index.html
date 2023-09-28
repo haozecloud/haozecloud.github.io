@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -102,13 +102,14 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E9%83%A8%E7%BD%B2Elasticsearch%E9%9B%86%E7%BE%A4/">
-<article class="md-text"><h2 class="post-title">ELK-部署Elasticsearch集群</h2><div class="excerpt"><p>单节点的ES需要在处理大量数据的时候需要消耗大量内存和CPU资源，数据量大到一定程度就会产生处理瓶颈，甚至会出现宕机。为了解决单节点ES的处理能力的瓶颈及单节点故障问题，我们考虑使用ES集群。
-一、ES集群的优点：优化数据处理能力：通过多台ES共同处理数据，提升处理能力，节省时间。
-容错能力增强：解决了ES单点故障问题，让架构更稳定。
-数据安全：分布式数据存储，数据更安全
-实验部署准备
-两台...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">ELK-数据管理</h2><div class="excerpt"><p>一、elasticsearch基础概念主要的基础概念有: Index,Type,Document,Field,shard和replicas.
+Index(索引): 是具有相似特性的文档集合。
+Type(类型): 在一个索引中可以定义一个或多个类型。
+Documenet(文档): 索引信息的基本单位。
+Field(字段): ES里更小的信息单位。
+shard(分片)： 数据存储的方式
+repl...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E6%94%B6%E9%9B%86mysqlslow%E6%97%A5%E5%BF%97/">
 <article class="md-text"><h2 class="post-title">ELK-收集mysqlslow日志</h2><div class="excerpt"><p>案例分析开发和DBA为了能够实时掌握mysql的运行情况，需要对mysql中执行的sql指令大于1秒的统计出来，并且通过ELK分析，统计，实时查看。通过分析可以让DBA能够优化数据库，能够提升运行速度。
 一、MySQL设置a、mysql安装
@@ -118,17 +119,29 @@ mysql默认root密码更改
 1[root@node4 mysql]# mysql_secure_installation
 
 b、mys...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">
-<article class="md-text"><h2 class="post-title">ELK-数据管理</h2><div class="excerpt"><p>一、elasticsearch基础概念主要的基础概念有: Index,Type,Document,Field,shard和replicas.
-Index(索引): 是具有相似特性的文档集合。
-Type(类型): 在一个索引中可以定义一个或多个类型。
-Documenet(文档): 索引信息的基本单位。
-Field(字段): ES里更小的信息单位。
-shard(分片)： 数据存储的方式
-repl...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E9%83%A8%E7%BD%B2Elasticsearch%E9%9B%86%E7%BE%A4/">
+<article class="md-text"><h2 class="post-title">ELK-部署Elasticsearch集群</h2><div class="excerpt"><p>单节点的ES需要在处理大量数据的时候需要消耗大量内存和CPU资源，数据量大到一定程度就会产生处理瓶颈，甚至会出现宕机。为了解决单节点ES的处理能力的瓶颈及单节点故障问题，我们考虑使用ES集群。
+一、ES集群的优点：优化数据处理能力：通过多台ES共同处理数据，提升处理能力，节省时间。
+容错能力增强：解决了ES单点故障问题，让架构更稳定。
+数据安全：分布式数据存储，数据更安全
+实验部署准备
+两台...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E4%BB%8B%E7%BB%8D/">
 <article class="md-text"><h2 class="post-title">ELK介绍</h2><div class="excerpt"><p>一、项目背景运维人员需要对系统和业务日志进行精准把控，便于分析系统和业务状态。日志分布在不同的服务器上，传统的使用传统的方法依次登录每台服务器查看日志，既繁琐又效率低下。所以我们需要集中化的日志管理工具将位于不同服务器上的日志收集到一起, 然后进行分析,展示。
 前面我们学习过rsyslog,它就可以实现集中化的日志管理，可是rsyslog集中后的日志实现统计与检索又成了一个问题。使用wc, ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7ES-Head%E5%BA%94%E7%94%A8/">
+<article class="md-text"><h2 class="post-title">ELK数据管理工具ES-Head应用</h2><div class="excerpt"><p>一、ES-head web UI界面ES-head web UI界面介绍http://ES-head_ip:9100
+10_eshead_webUI.png
+
+12345概览：显示ES集群及节点状态索引：索引管理数据浏览：查看某个索引中的数据基本查询：查询索引中的所有数据复合查询：数据管理[上传数据、查看数据、删除数据 doc]
+
+索引管理
+创建索引
+管理索引
+删除索引
+
+a、创建索引
+11...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E6%94%B6%E9%9B%86nginxaccess_log%E6%97%A5%E5%BF%97/">
 <article class="md-text"><h2 class="post-title">ELK收集nginxaccess_log日志</h2><div class="excerpt"><p>一、案例分析公司为了每天都能够随时看到公司WEB业务的实时运行情况，希望运维通过分析access.log日志信息，实时展示一下数据给公司的运营部门：
 
@@ -144,37 +157,18 @@ repl...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布�
 
 a、部署nginx服务
 123456[r...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7ES-Head%E5%BA%94%E7%94%A8/">
-<article class="md-text"><h2 class="post-title">ELK数据管理工具ES-Head应用</h2><div class="excerpt"><p>一、ES-head web UI界面ES-head web UI界面介绍http://ES-head_ip:9100
-10_eshead_webUI.png
-
-12345概览：显示ES集群及节点状态索引：索引管理数据浏览：查看某个索引中的数据基本查询：查询索引中的所有数据复合查询：数据管理[上传数据、查看数据、删除数据 doc]
-
-索引管理
-创建索引
-管理索引
-删除索引
-
-a、创建索引
-11...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7ES-Head%E9%83%A8%E7%BD%B2/">
 <article class="md-text"><h2 class="post-title">ELK数据管理工具ES-Head部署</h2><div class="excerpt"><p>一、elasticsearch-head介绍elasticsearch-head是 ES集群管理、索引数据可视化、增删改查、查询语句可视化 工具。
 ES集群管理 ES集群上的数据索引管理和查询 查看索引中的某条数据
 从ES5版本后安装方式和ES2以上的版本有很大的不同,在ES2中可以直接在bin目录下执行plugin install xxxx 来进行安装,但是在ES5中这种安装方式变了,要想...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/gitlab%E4%BD%BF%E7%94%A8/">
-<article class="md-text"><h2 class="post-title">gitlab使用</h2><div class="excerpt"><p>一、外观image20200407163624225.png
-
-设置完成后保存，返回登录页面查看
-image20200407163659051.png
-
-关于注册，有些公司是不允许打开的，，有些人数非常多的公司就需要打开注册的功能，让人员自己注册，我们来给他特定的权限就可以，毕竟人非常多的时候还由我们来给她们注册就非常不现实了，工作量会很大
-二、自动注册image20200407163952...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/gitlab%E5%A4%87%E4%BB%BD%E4%B8%8E%E8%BF%98%E5%8E%9F/">
 <article class="md-text"><h2 class="post-title">gitlab备份与还原</h2><div class="excerpt"><p>由于gitlab中存放的都是开发人员的工作成果，所以为了保证数据安全，我们会定期对数据进行备份，对gitlab进行备份将会创建一个包含所有库和附件的归档文件。对备份的恢复只能恢复到与备份时的gitlab相同的版本。将gitlab迁移到另一台服务器上的最佳方法就是通过备份和还原。gitlab提供了一个简单的命令行来备份整个gitlab ，并且能灵活的满足需求。
 一、备份备份路径：
 备份文件将保...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/gitlab%E9%83%A8%E7%BD%B2/">
 <article class="md-text"><h2 class="post-title">gitlab部署</h2><div class="excerpt"><p>一、GitLab简介GitLab 是一个用于仓库管理系统的开源项目。使用Git作为代码管理工具，并在此基础上搭建起来的web服务。可通过Web界面进行访问公开的或者私人项目。它拥有与Github类似的功能，能够浏览源代码，管理缺陷和注释。可以管理团队对仓库的访问，它非常易于浏览提交过的版本并提供一个文件历史库。团队成员可以利用内置的简单聊天程序(Wall)进行交流。它还提供一个代码片段收集功...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/git%E4%BB%8B%E7%BB%8D/">
+<article class="md-text"><h2 class="post-title">git介绍</h2><div class="excerpt"><p>git介绍简单来说git就是一个分布式的版本控制软件，直接记录快照，而非差异比较Git 和其它版本控制系统(包括 Subversion 和近似工具)的主要差别在于 Git 对待数据的方法。 从概念上来说，其它大部分系统以文件变更列表的方式存储信息（基于差异的版本控制)。Git 不按照以上方式对待或保存数据。反之，Git 更像是把数据看作是对小型文件系统的一系列快照。 在 Git 中，每当你提...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

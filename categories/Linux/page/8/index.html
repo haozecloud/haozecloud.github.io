@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -101,8 +101,14 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：Linux</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-nmcli%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/">
-<article class="md-text"><h2 class="post-title">linuxnmcli命令详解</h2><div class="excerpt"><p>nmcli connection及常用选项123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051[root@zutuanxue ~]# nmcli connection add		添加delete 		删除edit   		编辑help   		帮助load  ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shadow%E6%96%87%E4%BB%B6/">
+<article class="md-text"><h2 class="post-title">linuxshadow文件</h2><div class="excerpt"><p>说到用户管理，就不得不提到shadow这个文件，shadow有三个功能：
+
+隐藏密码
+扩充密码的功能
+提供账号管理工具
+
+隐藏密码： 因为&#x2F;etc&#x2F;passwd和&#x2F;etc&#x2F;group文件的权限必须是0644，这意味着所有的用户都能读取到内容，所以为了安全起见，我们通过shaodw把用户和组的密码分别隐藏在&#x2F;etc&#x2F;shadow,&#...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shell%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">
 <article class="md-text"><h2 class="post-title">shell数据处理</h2><div class="excerpt"><p>一、linux中的常用符号
 
@@ -157,32 +163,24 @@ $
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%BD%AFraid%E9%98%B5%E5%88%97/">
 <article class="md-text"><h2 class="post-title">创建一个软raid阵列</h2><div class="excerpt"><p>环境准备添加一个20G的虚拟硬盘，分成10个2G的分区
 一、创建raid0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475系统中如果没有mdadm命令请安装相关...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><h2 class="post-title">Linux命令行介绍</h2><div class="excerpt"><p>Linux命令行介绍 阅读 (246299) 
- 分享
-一、命令行的介绍命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面CUI。通常认为，命令行界面（CLI）没有图形用户界面GUI那么方便用户操作。因为，命令行界面的软...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%90%AF%E5%8A%A8%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/">
 <article class="md-text"><h2 class="post-title">linux启动常见问题</h2><div class="excerpt"><p>一、忘记root密码日常生活中，我们会接触到很多账号和密码，而这些账号和密码我们不能都很好的记忆，对于linux也是一样的，如果root密码忘记了怎么办？岂不是都无法登陆使用Linux了？现在我就教各位，在不知道root密码的前提下，如何给root设置一个新的密码
 step 1 重启你的linux系统，在下图这个界面中按“E”
 image20200112153327155.png
 
 step...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BB%8B%E7%BB%8D/">
+<article class="md-text"><h2 class="post-title">Linux命令行介绍</h2><div class="excerpt"><p>Linux命令行介绍 阅读 (246299) 
+ 分享
+一、命令行的介绍命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面CUI。通常认为，命令行界面（CLI）没有图形用户界面GUI那么方便用户操作。因为，命令行界面的软...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E4%BC%98%E5%8C%96/">
 <article class="md-text"><h2 class="post-title">Linux基本优化</h2><div class="excerpt"><p>一、selinux和防火墙优化1、SElinuxselinux 安全增强型 Linux（Security-Enhanced Linux）简称 SELinux，它是一个 Linux 内核模块，也是 Linux 的一个安全子系统。SELinux 主要由美国国家安全局开发。它的主要 作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）。也由于它的这个原则，导致我们很多操作无法正确的执行...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%B8%B8%E7%94%A8%E7%AC%A6%E5%8F%B7/">
-<article class="md-text"><h2 class="post-title">Linux基本命令与常用符号</h2><div class="excerpt"><p>一、常用命令介绍在linux系统中存在很多命令，这些命令可以帮助我们完成不同的工作，在这里面我们先介绍一些常用的基础命令，这些命令可以帮助我们完成对应的基本操作，随着以后的学习，我们还会接触到更多可以帮助我们完成不同工作的linux命令，我们来一起看一下这些基础命令都有哪些
-1、关机、重启命令
-关机命令
-
-init 0 #管理员可以使用
-halt
-shutdown -h
-poweroff
-
-...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90/">
 <article class="md-text"><h2 class="post-title">linux基本权限</h2><div class="excerpt"><p>Linux系统是一个典型的多用户操作系统，不同的用户处于不同的地位，为了保护系统的安全性，linux系统对于不同用户访问同一个文件或目录做了不同的访问控制。而这种控制就是通过权限实现的，本节课我们介绍linux权限的使用
 一、基本权限的介绍Linux中每个文件或目录都有3个基本权限位，控制三种访问级别用户的读、写、执行，所以linux的基本权限位一共有9个。基本权限位和另外3个可以影响可执行...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86/">
+<article class="md-text"><h2 class="post-title">linux密码管理</h2><div class="excerpt"><p>账号犹如一张通行证，有了账号你才能顺利的使用Linux。不过 Linux 怎么确认使用某账号的人，是这个账号的真正拥有者呢？此时Linux 会根据用户的密码，来确认用户的身份。Linux 的用户账号与群组账号都可设置密码。用户账号的密码用来验证用户的身份；而群组账号的密码则是用来确认用户是否为该群组的成员，以及确认是否为该群组的管理者。
+在 Linux 中，使用 useradd 新建一个用户...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
   <div class='paginator-wrap dis-select'>

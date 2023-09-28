@@ -70,7 +70,7 @@
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
 
-<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/notes/">笔记</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
 </header>
 
 
@@ -101,13 +101,13 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：Linux</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E5%B0%86%E4%BB%A3%E7%A0%81%E4%BC%A0%E5%88%B0github%E5%85%AC%E5%BA%93/">
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF/">
+<article class="md-text"><h2 class="post-title">代码合并分支</h2><div class="excerpt"><p>合并分支 ，A分支上合并另一分支B，则B的所有内容都合并到了A上，如果分支和主干相差太多，合并就会容易报错，所以通常的操作就是分支合并后就删除分支然后再重新创建分支（完全拷贝主支信息）后再进行后续的合并，依次循环
+123456789101112131415161718192021222324252627282930[root@zutuanxue git_data]# git branch  ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E5%B0%86%E4%BB%A3%E7%A0%81%E4%BC%A0%E5%88%B0github%E5%85%AC%E5%BA%93/">
 <article class="md-text"><h2 class="post-title">将代码传到github公库</h2><div class="excerpt"><p>github使用Github顾名思义是一个Git版本库的托管服务，是目前全球最大的软件仓库，拥有上百万的开发者用户，也是软件开发和寻找资源的最佳途径 ，Github不仅可以托管各种Git版本仓库，还拥有了更美观的Web界面，您的代码文件可以被任何人克隆 ，使得开发者为开源项贡献代码变得更加容易，当然也可以付费购买私有库，这样高性价比的私有库真的是帮助到了很多团队和企业
 1、注册用户
 2、配置...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/git%E6%97%A5%E5%BF%97/">
-<article class="md-text"><h2 class="post-title">git日志</h2><div class="excerpt"><p>git log查看历史的git commit快照操作
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253[root@zutuanxue git_data]# git logcommit 326e57a3f87de546c8c17774f174192e...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E6%9C%AC%E5%9C%B0git%E5%AE%89%E8%A3%85%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96/">
 <article class="md-text"><h2 class="post-title">本地git安装与初始化</h2><div class="excerpt"><p>系统环境准备系统：CentOS8
 123456789101112[root@zutuanxue ~]# sestatus -vSELinux status:                 disabled[root@zutuanxue ~]# systemctl status firewalld● firewalld.service - firewalld - dynamic firewa...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:08:31.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
@@ -127,14 +127,6 @@ In...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&
 <article class="md-text"><h2 class="post-title">Prometheus监控介绍</h2><div class="excerpt"><p>Prometheus(由go语言开发)是一套开源的监控&amp;报警&amp;时间序列（按照时间排序）数据库的组合。适合监控docker 容器。因为kubernetes(俗称k8s)的流行带动了prometheus的发展。它可以监控主机，服务，容器
 https://prometheus.io/docs/introduction/overview/
 时间序列数据(TimeSeries Data...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/%E9%83%A8%E7%BD%B2prometheus%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/">
-<article class="md-text"><h2 class="post-title">部署prometheus监控平台</h2><div class="excerpt"><p>部署prometheus监控平台
-安装部署prometheus服务监控端
-监控一个远端机器
-监控一个服务—mysql
-
-一、软件获得官方网站：https://prometheus.io/download/
-12345prometheus 主程序包：wget https://github.com/prometheus/prometheus/releases/download/v2.11.1/p...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/prometheus+Grafana%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA/">
 <article class="md-text"><h2 class="post-title">prometheus+Grafana数据展示</h2><div class="excerpt"><p>通过前面课程的学习我们知道了如何部署和设置prometheus，但是这个监控软件的展示界面实在是有些难看，所以我们换一个展示方式Grafana，是一个开源的度量分析和可视化工具（没有监控功能），可以通过将采集的数据分析，查询，然后进行可视化的展示,并能实现报警。
 一、部署grafana1.1、grafana安装软件包获得
@@ -148,6 +140,14 @@ https://prometheus.io/docs/introduction/overview/
 通过prometheus监控MariaDB业务
 案例分析要监控mysql需要两个条件，一个是系统中有mysql，另一个是要有监控插件，现在监控插件我已经下载好了，所以我们要先安装mysql，然后进行相应的授权，让插件可以获取到所需要的信息，然后再设置相关插件，修改prometheus配置文件
 案例实现a、部署mysql业务1234567891011[root@node2 node_...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/%E9%83%A8%E7%BD%B2prometheus%E7%9B%91%E6%8E%A7%E5%B9%B3%E5%8F%B0/">
+<article class="md-text"><h2 class="post-title">部署prometheus监控平台</h2><div class="excerpt"><p>部署prometheus监控平台
+安装部署prometheus服务监控端
+监控一个远端机器
+监控一个服务—mysql
+
+一、软件获得官方网站：https://prometheus.io/download/
+12345prometheus 主程序包：wget https://github.com/prometheus/prometheus/releases/download/v2.11.1/p...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/Zabbixweb%E7%9B%91%E6%B5%8B/">
 <article class="md-text"><h2 class="post-title">Zabbixweb监测</h2><div class="excerpt"><p>业务中总会让我们去监控一些URL，比如支付接口中的微信支付，支付宝支付，那么这些URL是怎么监控的呢？可以使用zabbix提供的web监测功能。
 web监控一般在生产环境中一般不会配置到模板，一般都是某个业务机由于业务需要去监控本机或者下游某个机器的URL的，所以我这里配置也是针对某个机器来配置的。本实验中我是给node1来配置
