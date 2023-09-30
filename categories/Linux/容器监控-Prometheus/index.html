@@ -101,10 +101,11 @@
 
 <div class="nav-wrap"><nav class="sub post cap"><a href="/">近期发布</a><a class="active" href="/categories">分类：容器监控-Prometheus</a><a href="/tags">标签</a><a href="/archives">归档</a><a href="/friends/rss/">朋友文章</a></nav></div>
 
-  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/Prometheus%E7%9B%91%E6%8E%A7%E4%BB%8B%E7%BB%8D/">
-<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">Prometheus监控介绍</h2><div class="excerpt"><p>Prometheus(由go语言开发)是一套开源的监控&amp;报警&amp;时间序列（按照时间排序）数据库的组合。适合监控docker 容器。因为kubernetes(俗称k8s)的流行带动了prometheus的发展。它可以监控主机，服务，容器
-https://prometheus.io/docs/introduction/overview/
-时间序列数据(TimeSeries Data...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+  <div class="post-list post"><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/prometheus+Grafana%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA/">
+<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">prometheus+Grafana数据展示</h2><div class="excerpt"><p>通过前面课程的学习我们知道了如何部署和设置prometheus，但是这个监控软件的展示界面实在是有些难看，所以我们换一个展示方式Grafana，是一个开源的度量分析和可视化工具（没有监控功能），可以通过将采集的数据分析，查询，然后进行可视化的展示,并能实现报警。
+一、部署grafana1.1、grafana安装软件包获得
+官方网站: grafana:https://grafana.com/
+...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/Grafana%E6%8A%A5%E8%AD%A6/">
 <article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">Grafana报警</h2><div class="excerpt"><p>接下来设置grafana的报警通道
 image20200225174606552.png
@@ -117,16 +118,10 @@ Name 部分：填一个名字
 Type 部分：选择 webhook 方式
 Send on all alerts：勾选后表示默认所有的报警都会通过这个通道发
 In...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/prometheus+Grafana%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA/">
-<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">prometheus+Grafana数据展示</h2><div class="excerpt"><p>通过前面课程的学习我们知道了如何部署和设置prometheus，但是这个监控软件的展示界面实在是有些难看，所以我们换一个展示方式Grafana，是一个开源的度量分析和可视化工具（没有监控功能），可以通过将采集的数据分析，查询，然后进行可视化的展示,并能实现报警。
-一、部署grafana1.1、grafana安装软件包获得
-官方网站: grafana:https://grafana.com/
-...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
-</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/%E4%BD%BF%E7%94%A8prometheus%E7%9B%91%E6%8E%A7%E4%B8%80%E4%B8%AA%E4%B8%9A%E5%8A%A1/">
-<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">使用prometheus监控一个业务</h2><div class="excerpt"><p>案例需求
-通过prometheus监控MariaDB业务
-案例分析要监控mysql需要两个条件，一个是系统中有mysql，另一个是要有监控插件，现在监控插件我已经下载好了，所以我们要先安装mysql，然后进行相应的授权，让插件可以获取到所需要的信息，然后再设置相关插件，修改prometheus配置文件
-案例实现a、部署mysql业务1234567891011[root@node2 node_...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/Prometheus%E7%9B%91%E6%8E%A7%E4%BB%8B%E7%BB%8D/">
+<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">Prometheus监控介绍</h2><div class="excerpt"><p>Prometheus(由go语言开发)是一套开源的监控&amp;报警&amp;时间序列（按照时间排序）数据库的组合。适合监控docker 容器。因为kubernetes(俗称k8s)的流行带动了prometheus的发展。它可以监控主机，服务，容器
+https://prometheus.io/docs/introduction/overview/
+时间序列数据(TimeSeries Data...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/%E4%BD%BF%E7%94%A8prometheus%E7%9B%91%E6%8E%A7%E4%B8%80%E4%B8%AA%E4%B8%9A%E5%8A%A1%E6%9C%BA/">
 <article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">使用prometheus监控一个业务机</h2><div class="excerpt"><p>案例要求：通过prometheus监控业务机器192.168.98.202(node2)
 一、案例实现a、安装监控客户端12345678910111213141516171819[root@node2 ~]# tar xf node_exporter-0.18.1.linux-amd64.tar.gz -C /usr/local/[root@node2 ~]# cd /usr/local/n...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
@@ -138,6 +133,11 @@ In...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&
 
 一、软件获得官方网站：https://prometheus.io/download/
 12345prometheus 主程序包：wget https://github.com/prometheus/prometheus/releases/download/v2.11.1/p...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
+</a><a class="post-card post " href="/2023/09/27/%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7-Prometheus/%E4%BD%BF%E7%94%A8prometheus%E7%9B%91%E6%8E%A7%E4%B8%80%E4%B8%AA%E4%B8%9A%E5%8A%A1/">
+<article class="md-text"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://source.unsplash.com/1280x640/?"/></div><h2 class="post-title">使用prometheus监控一个业务</h2><div class="excerpt"><p>案例需求
+通过prometheus监控MariaDB业务
+案例分析要监控mysql需要两个条件，一个是系统中有mysql，另一个是要有监控插件，现在监控插件我已经下载好了，所以我们要先安装mysql，然后进行相应的授权，让插件可以获取到所需要的信息，然后再设置相关插件，修改prometheus配置文件
+案例实现a、部署mysql业务1234567891011[root@node2 node_...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:06:33.000Z">2023-09-27</time></span><span class="cap breadcrumb">Linux</span></div></article>
 </a></div>
   
 
