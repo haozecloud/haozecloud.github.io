@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>shell脚本中常用命令复习 - 原点独白</title>
+
+  
+    <meta name="description" content="shell脚本可以让降低大家的工作强度，提升大家的管理能力和薪资报酬，还可以让大家有时间学习提升自己，更能让你有时间喝茶撩妹子。所以，学好shell那就是非常必要的啦，那么在学习shell之前我们得热热身，做一下准备工作了。 123学习之前首先要弄清什么是shell脚本：	shell脚本本质上就是要将完成一件事情的所有命令按照执行的先后顺序写入一个文件，并给予文件执行权限  so！想学好shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell脚本中常用命令复习">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="shell脚本可以让降低大家的工作强度，提升大家的管理能力和薪资报酬，还可以让大家有时间学习提升自己，更能让你有时间喝茶撩妹子。所以，学好shell那就是非常必要的啦，那么在学习shell之前我们得热热身，做一下准备工作了。 123学习之前首先要弄清什么是shell脚本：	shell脚本本质上就是要将完成一件事情的所有命令按照执行的先后顺序写入一个文件，并给予文件执行权限  so！想学好shell">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\MISSXP\AppData\Roaming\Typora\typora-user-images\image-20220604181148091.png">
+<meta property="article:published_time" content="2023-09-30T01:27:13.000Z">
+<meta property="article:modified_time" content="2023-09-30T13:27:13.585Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\MISSXP\AppData\Roaming\Typora\typora-user-images\image-20220604181148091.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://img1.imgtp.com/2023/09/25/3pQ59aAI.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">shell脚本中常用命令复习</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-text">一、 数据处理命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81grep-%E8%B4%9F%E8%B4%A3%E4%BB%8E%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%AD%E6%A3%80%E7%B4%A2%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%8C%E8%A1%8C%E8%BF%87%E6%BB%A4%E3%80%82"><span class="toc-text">1、grep: 负责从数据源中检索对应的字符串，行过滤。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81cut%E6%95%B0%E6%8D%AE%E6%88%AA%E5%8F%96"><span class="toc-text">2、cut数据截取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81tr-%E5%AD%97%E7%AC%A6%E8%BD%AC%E6%8D%A2%EF%BC%9A%E6%9B%BF%E6%8D%A2%EF%BC%8C%E5%88%A0%E9%99%A4"><span class="toc-text">3、tr 字符转换：替换，删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81sort%E6%8E%92%E5%BA%8F"><span class="toc-text">4、sort排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81uniq-%E5%8E%BB%E9%99%A4%E8%BF%9E%E7%BB%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E8%A1%8C"><span class="toc-text">5、uniq 去除连续的重复行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81tee-%E5%8F%8C%E5%90%91%E8%BE%93%E5%87%BA"><span class="toc-text">6、tee 双向输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%E3%80%81paste"><span class="toc-text">7、paste</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8%E3%80%81xargs-%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E8%BE%93%E5%87%BA%E4%BD%9C%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-text">8、xargs 上一个命令的输出作为下一个命令的命令行参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9%E3%80%81shell%E5%AD%97%E7%AC%A6"><span class="toc-text">9、shell字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%E3%80%81%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4%E5%AE%9E%E6%88%98"><span class="toc-text">10、组合命令实战</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">Linux配置文件</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/">shell脚本高手速成</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-30T01:27:13.000Z">2023-09-30</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>shell脚本中常用命令复习</span></h1>
+<p>shell脚本可以让降低大家的工作强度，提升大家的管理能力和薪资报酬，还可以让大家有时间学习提升自己，更能让你有时间喝茶撩妹子。所以，学好shell那就是非常必要的啦，那么在学习shell之前我们得热热身，做一下准备工作了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">学习之前首先要弄清什么是shell脚本：</span><br><span class="line"></span><br><span class="line">	shell脚本本质上就是要将完成一件事情的所有命令按照执行的先后顺序写入一个文件，并给予文件执行权限</span><br></pre></td></tr></table></figure>
+
+<p>so！想学好shell脚本首先要考核一下自己的linux命令学的是否扎实，接下来为了能让大家学习shell更加顺畅，我把常用的一些数据处理的命令给大家回顾一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">我们重点回顾以下几类命令</span><br><span class="line"></span><br><span class="line">数据检索命令</span><br><span class="line"></span><br><span class="line">         行检索：grep  egrep</span><br><span class="line"></span><br><span class="line">         字符串检索:cut  tr</span><br><span class="line"></span><br><span class="line">数据处理命令       </span><br><span class="line"></span><br><span class="line">	数据排序：sort</span><br><span class="line"></span><br><span class="line">  	数据去重: uniq</span><br><span class="line"></span><br><span class="line">  	文本数据合并: paste</span><br><span class="line"></span><br><span class="line">  	数据输出: tee</span><br><span class="line"></span><br><span class="line">  	数据处理: xargs    </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="C:\Users\MISSXP\AppData\Roaming\Typora\typora-user-images\image-20220604181148091.png" alt="image-20220604181148091"/></div><div class="image-meta"><span class="image-caption center">image-20220604181148091</span></div></div>
+
+<h2 id="一、-数据处理命令"><a href="#一、-数据处理命令" class="headerlink" title="一、 数据处理命令"></a>一、 数据处理命令</h2><h3 id="1、grep-负责从数据源中检索对应的字符串，行过滤。"><a href="#1、grep-负责从数据源中检索对应的字符串，行过滤。" class="headerlink" title="1、grep: 负责从数据源中检索对应的字符串，行过滤。"></a>1、grep: 负责从数据源中检索对应的字符串，行过滤。</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">grep用于根据关键字进行行过滤</span><br><span class="line">grep options &#x27;keys&#x27; filename</span><br><span class="line">OPTIONS:</span><br><span class="line">    -i: 不区分大小写</span><br><span class="line">    -v: 查找不包含指定内容的行,反向选择</span><br><span class="line">    -w: 按单词搜索</span><br><span class="line">    -n: 显示行号</span><br><span class="line">    -A: 显示匹配行及后面多少行 -A 5</span><br><span class="line">    -B: 显示匹配行及前面多少行</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    -o: 打印匹配关键字</span><br><span class="line">    -c: 统计匹配到的次数</span><br><span class="line">    -r: 逐层遍历目录查找</span><br><span class="line">    -C: 显示匹配行前后多少行</span><br><span class="line">    -l：只列出匹配的文件名</span><br><span class="line">    -L：列出不匹配的文件名</span><br><span class="line">    -e: 使用正则匹配</span><br><span class="line">    -E:使用扩展正则匹配</span><br><span class="line">    ^key:以关键字开头</span><br><span class="line">    key$:以关键字结尾</span><br><span class="line">    ^$:匹配空行</span><br><span class="line">    --color=auto ：可以将找到的关键词部分加上颜色的显示</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">常用命令选项必知必会  示例：</span><br><span class="line"># grep -i root passwd 忽略大小写匹配包含root的行</span><br><span class="line"># grep -w ftp passwd 精确匹配ftp单词</span><br><span class="line"># grep -wo ftp passwd 打印匹配到的关键字ftp</span><br><span class="line"># grep -n root passwd 打印匹配到root关键字的行好</span><br><span class="line"># grep -ni root passwd 忽略大小写匹配统计包含关键字root的行</span><br><span class="line"># grep -nic root passwd 忽略大小写匹配统计包含关键字root的行数</span><br><span class="line"># grep -i ^root passwd 忽略大小写匹配以root开头的行</span><br><span class="line"># grep bash$ passwd 匹配以bash结尾的行</span><br><span class="line"># grep -n ^$ passwd 匹配空行并打印行号</span><br><span class="line"># grep ^# /etc/vsftpd/vsftpd.conf 匹配以#号开头的行</span><br><span class="line"># grep -v ^# /etc/vsftpd/vsftpd.conf 匹配不以#号开头的行</span><br><span class="line"># grep -A 5 mail passwd   匹配包含mail关键字及其后5行</span><br><span class="line"># grep -B 5 mail passwd   匹配包含mail关键字及其前5行</span><br><span class="line"># grep -C 5 mail passwd 匹配包含mail关键字及其前后5行</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">centos8中已经为大家设置了，存放在/etc/profile.d/colorgrep.sh文件中，如若大家使用的系统中没有设置颜色输出，</span><br><span class="line">可以使用以下方法来自行设置</span><br><span class="line"></span><br><span class="line">临时设置：</span><br><span class="line"># alias grep=&#x27;grep --color=auto&#x27; //只针对当前终端和当前用户生效</span><br><span class="line"></span><br><span class="line">永久设置：</span><br><span class="line">1）全局（针对所有用户生效）</span><br><span class="line">vim /etc/bashrc</span><br><span class="line">alias grep=&#x27;grep --color=auto&#x27;</span><br><span class="line">source /etc/bashrc</span><br><span class="line"></span><br><span class="line">2）局部（针对具体的某个用户）</span><br><span class="line">vim ~/.bashrc</span><br><span class="line">alias grep=&#x27;grep --color=auto&#x27;</span><br><span class="line"></span><br><span class="line">注意：如果希望你对环境变量的设置立刻生效，可以使用以下命令而不需要重启计算机</span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、cut数据截取"><a href="#2、cut数据截取" class="headerlink" title="2、cut数据截取"></a>2、cut数据截取</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cut用于列截取</span><br><span class="line">-c: 以字符为单位进行分割。</span><br><span class="line">-d: 自定义分隔符，默认为制表符。\t</span><br><span class="line">-f: 与-d一起使用，指定显示哪个区域。</span><br><span class="line"></span><br><span class="line"># cut -d: -f1 1.txt 以:冒号分割，截取第1列内容</span><br><span class="line"># cut -d: -f1,6,7 1.txt 以:冒号分割，截取第1,6,7列内容</span><br><span class="line"># cut -c4 1.txt 截取文件中每行第4个字符</span><br><span class="line"># cut -c1-4 1.txt 截取文件中每行的1-4个字符</span><br><span class="line"># cut -c4-10 1.txt </span><br><span class="line"># cut -c5- 1.txt 从第5个字符开始截取后面所有字符</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、tr-字符转换：替换，删除"><a href="#3、tr-字符转换：替换，删除" class="headerlink" title="3、tr 字符转换：替换，删除"></a>3、tr 字符转换：替换，删除</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">tr用来从标准输入中通过替换或删除操作进行字符转换；主要用于删除文件中控制字符或进行字符转换。</span><br><span class="line">使用tr时要转换两个字符串：字符串1用于查询，字符串2用于处理各种转换。</span><br><span class="line"></span><br><span class="line">语法：</span><br><span class="line">commands|tr  &#x27;string1&#x27;  &#x27;string2&#x27;</span><br><span class="line">tr  &#x27;string1&#x27;  &#x27;string2&#x27; &lt; filename</span><br><span class="line"></span><br><span class="line">tr options &#x27;string1&#x27; &lt; filename</span><br><span class="line"></span><br><span class="line">-d 删除字符串1中所有输入字符。</span><br><span class="line">-s 删除所有重复出现字符序列，只保留第一个；即将重复出现字符串压缩为一个字符串。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a-z 任意小写</span><br><span class="line">A-Z 任意大写</span><br><span class="line">0-9 任意数字</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# cat 3.txt 自己创建该文件用于测试</span><br><span class="line">ROOT:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br><span class="line">shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown</span><br><span class="line">halt:x:7:0:halt:/sbin:/sbin/halt</span><br><span class="line">mail:x:8:12:mail:/var/spool/mail:/sbin/nologin</span><br><span class="line">uucp:x:10:14:uucp:/var/spool/uucp:/sbin/nologin</span><br><span class="line">boss02:x:516:511::/home/boss02:/bin/bash</span><br><span class="line">vip:x:517:517::/home/vip:/bin/bash</span><br><span class="line">stu1:x:518:518::/home/stu1:/bin/bash</span><br><span class="line">mailnull:x:47:47::/var/spool/mqueue:/sbin/nologin</span><br><span class="line">smmsp:x:51:51::/var/spool/mqueue:/sbin/nologin</span><br><span class="line">aaaaaaaaaaaaaaaaaaaa</span><br><span class="line">bbbbbb111111122222222222233333333cccccccc</span><br><span class="line">hello world 888</span><br><span class="line">666</span><br><span class="line">777</span><br><span class="line">999</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># tr -d &#x27;[:/]&#x27; &lt; 3.txt 删除文件中的:和/</span><br><span class="line"># cat 3.txt |tr -d &#x27;[:/]&#x27; 删除文件中的:和/</span><br><span class="line"># tr &#x27;[0-9]&#x27; &#x27;@&#x27; &lt; 3.txt 将文件中的数字替换为@符号</span><br><span class="line"># tr &#x27;[a-z]&#x27; &#x27;[A-Z]&#x27; &lt; 3.txt 将文件中的小写字母替换成大写字母</span><br><span class="line"># tr -s &#x27;[a-z]&#x27; &lt; 3.txt 匹配小写字母并将重复的压缩为一个</span><br><span class="line"># tr -s &#x27;[a-z0-9]&#x27; &lt; 3.txt 匹配小写字母和数字并将重复的压缩为一个</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、sort排序"><a href="#4、sort排序" class="headerlink" title="4、sort排序"></a>4、sort排序</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sort：将文件的每一行作为一个单位，从首字符向后，依次按ASCII码值进行比较，最后将他们按升序输出。</span><br><span class="line"></span><br><span class="line">语法：</span><br><span class="line">sort [options] [filename]</span><br><span class="line"></span><br><span class="line">-u ：去除重复行</span><br><span class="line">-r ：降序排列，默认是升序</span><br><span class="line">-o : 将排序结果输出到文件中  类似 重定向符号 &gt;</span><br><span class="line">-n ：以数字排序，默认是按字符排序</span><br><span class="line">-t ：分隔符</span><br><span class="line">-k ：第N列</span><br><span class="line"></span><br><span class="line">-b ：忽略前导空格。</span><br><span class="line">-R ：随机排序，每次运行的结果均不同。</span><br><span class="line"> </span><br><span class="line"> 示例：</span><br><span class="line"># sort -n -t: -k3 1.txt 按照用户的uid进行升序排列</span><br><span class="line"># sort -nr -t: -k3 1.txt 按照用户的uid进行降序排列</span><br><span class="line"># sort -n 2.txt 按照数字排序</span><br><span class="line"># sort -nu 2.txt 按照数字排序并且去重</span><br><span class="line"># sort -nr 2.txt </span><br><span class="line"># sort -nru 2.txt </span><br><span class="line"># sort -nru 2.txt </span><br><span class="line"># sort -n 2.txt -o 3.txt 按照数字排序并将结果重定向到文件</span><br><span class="line"># sort -R 2.txt </span><br><span class="line"># sort -u 2.txt </span><br></pre></td></tr></table></figure>
+
+<h3 id="5、uniq-去除连续的重复行"><a href="#5、uniq-去除连续的重复行" class="headerlink" title="5、uniq 去除连续的重复行"></a>5、uniq 去除连续的重复行</h3><p><strong>应用技巧：去重前先使用sort排序</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">uniq：去除连续重复行</span><br><span class="line"></span><br><span class="line">语法：</span><br><span class="line">uniq [options] [filename]</span><br><span class="line"></span><br><span class="line">-i: 忽略大小写</span><br><span class="line">-c: 统计重复行次数</span><br><span class="line">-d:只显示重复行</span><br><span class="line"></span><br><span class="line"># uniq 2.txt </span><br><span class="line"># uniq -d 2.txt </span><br><span class="line"># uniq -dc 2.txt </span><br></pre></td></tr></table></figure>
+
+<h3 id="6、tee-双向输出"><a href="#6、tee-双向输出" class="headerlink" title="6、tee 双向输出"></a>6、tee 双向输出</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tee工具从标准输入读取并写入标准输出和文件，即：双向覆盖重定向&lt;屏幕输出|文本输入&gt;</span><br><span class="line">somecommand |tee filename</span><br><span class="line"></span><br><span class="line">-a 双向追加重定向</span><br><span class="line"></span><br><span class="line"># echo hello world</span><br><span class="line"># echo hello world|tee file1</span><br><span class="line"># cat file1 </span><br><span class="line"># echo 999|tee -a file1</span><br><span class="line"># cat file1 </span><br></pre></td></tr></table></figure>
+
+<h3 id="7、paste"><a href="#7、paste" class="headerlink" title="7、paste"></a>7、paste</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">paste工具用于合并文件行输出到屏幕，不会改动源文件</span><br><span class="line"></span><br><span class="line">-d：自定义间隔符，默认是tab,只接受一个字符</span><br><span class="line">-s：将每个文件中的所有内容按照一行输出，文件中的行与行以TAB间隔。</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# cat a.txt </span><br><span class="line">hello</span><br><span class="line">[root@zutuanxue  shell01]# cat b.txt </span><br><span class="line">hello world</span><br><span class="line">888</span><br><span class="line">999</span><br><span class="line">[root@zutuanxue  shell01]# paste a.txt b.txt </span><br><span class="line">hello   hello world</span><br><span class="line">        888</span><br><span class="line">        999</span><br><span class="line">[root@zutuanxue  shell01]# paste b.txt a.txt   </span><br><span class="line">hello world     hello</span><br><span class="line">888</span><br><span class="line">999</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# paste -d&#x27;@&#x27; b.txt a.txt </span><br><span class="line">hello world@hello</span><br><span class="line">888@</span><br><span class="line">999@</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# paste -s b.txt a.txt </span><br><span class="line">hello world     888     999</span><br><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+<h3 id="8、xargs-上一个命令的输出作为下一个命令的命令行参数"><a href="#8、xargs-上一个命令的输出作为下一个命令的命令行参数" class="headerlink" title="8、xargs 上一个命令的输出作为下一个命令的命令行参数"></a>8、xargs 上一个命令的输出作为下一个命令的命令行参数</h3><p>管道(|):上一个命令的输出作为下一个命令的输入，做的是<strong>数据源</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# sort -n 2.txt |uniq </span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">10</span><br><span class="line">99</span><br><span class="line">9999</span><br><span class="line"></span><br><span class="line">如何将上一个命令的输出，作为下一个命令的参数呢？</span><br><span class="line"></span><br><span class="line">xargs 上一个命令的输出作为下一个命令的命令行参数</span><br><span class="line"></span><br><span class="line">回顾:</span><br><span class="line">linux 命令格式</span><br><span class="line">命令   命令选项   参数</span><br><span class="line">ls -l /</span><br><span class="line">========================</span><br><span class="line">xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。</span><br><span class="line"></span><br><span class="line">xargs 一般是和管道一起使用。</span><br><span class="line"></span><br><span class="line">命令格式：</span><br><span class="line">&#x27;&#x27;[somecommand]|[filename]&#x27;&#x27; |xargs -item  command</span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line">-a file 从文件中读入作为sdtin</span><br><span class="line">-E flag flag必须是一个以空格分隔的标志，当xargs分析到含有flag这个标志的时候就停止。</span><br><span class="line">-p 当每次执行一个argument的时候询问一次用户。</span><br><span class="line">-n num 后面加次数，表示命令在执行的时候一次用的argument的个数，默认是用所有的。</span><br><span class="line">-t 表示先打印命令，然后再执行。</span><br><span class="line">-i 或者是-I，这得看linux支持了，将xargs的每项名称，一般是一行一行赋值给 &#123;&#125;，可以用 &#123;&#125; 代替。</span><br><span class="line">-r no-run-if-empty 当xargs的输入为空的时候则停止xargs，不用再去执行了。</span><br><span class="line">-d delim 分隔符，默认的xargs分隔符是回车，argument的分隔符是空格，这里修改的是xargs的分隔符。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：linux命令格式一般为</span><br><span class="line">命令    命令选项     参数</span><br><span class="line">上一个命令的输出就是下一个命令的参数  这句话结合命令语法  应该知道输出的内容在下一个命令的位置了吧。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">案例</span><br><span class="line">[root@zutuanxue  ~]# find / -name zutuanxue |xargs gzip </span><br><span class="line">[root@zutuanxue  ~]# cat 1</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 </span><br><span class="line">1 2 3 4 5 6 7 8 9 10</span><br><span class="line"></span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -E 5 </span><br><span class="line">1 2 3 4</span><br><span class="line"></span><br><span class="line">这样就明白使用xargs -a 为什么读取文件的时候会把文件中的所有内容都输出了吧</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -p</span><br><span class="line">echo 1 2 3 4 5 6 7 8 9 10 ?...y</span><br><span class="line">1 2 3 4 5 6 7 8 9 10</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -p</span><br><span class="line">echo 1 2 3 4 5 6 7 8 9 10 ?...n</span><br><span class="line"></span><br><span class="line">同理为什么把文件中的所有行按一行输出呢，原因就是默认输出所有</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -n3</span><br><span class="line">1 2 3</span><br><span class="line">4 5 6</span><br><span class="line">7 8 9</span><br><span class="line">10</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -n3 -p</span><br><span class="line">echo 1 2 3 ?...y</span><br><span class="line">echo 4 5 6 ?...1 2 3</span><br><span class="line">y</span><br><span class="line">echo 7 8 9 ?...4 5 6</span><br><span class="line">y</span><br><span class="line">echo 10 ?...7 8 9</span><br><span class="line">y</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">和-p命令选项一样，显示他是怎么执行的，只不过这个不需要确认。</span><br><span class="line">[root@zutuanxue  ~]# cat 1 |xargs -t</span><br><span class="line">echo 1 2 3 4 5 6 7 8 9 10 </span><br><span class="line">1 2 3 4 5 6 7 8 9 10</span><br><span class="line"></span><br><span class="line">为何读入文件会把所有行都放在一行呢？这个和xargs的列分割符有关系</span><br><span class="line">默认是回车</span><br><span class="line">我们可以使用-d 改掉默认列与列的默认分割符为其他，自然就会换行了</span><br><span class="line">[root@zutuanxue  ~]# xargs -a 1 -d &quot;@&quot;</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+
+<h3 id="9、shell字符"><a href="#9、shell字符" class="headerlink" title="9、shell字符"></a>9、shell字符</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">有基础的同学不要和正则表达式中的符号含义搞混淆了。    </span><br><span class="line">    !:                执行历史命令   !! 执行上一条命令</span><br><span class="line">    $:                变量中取内容符</span><br><span class="line">    + - * / %:        对应数学运算  加 减 乘 除 取余数  </span><br><span class="line">    &amp;:                后台执行</span><br><span class="line">    ;：               分号可以在shell中一行执行多个命令，命令之间用分号分割    </span><br><span class="line">    \:                转义字符</span><br><span class="line">    ``:               反引号 命令中执行命令    echo &quot;today is `date +%F`&quot;</span><br><span class="line">    &#x27; &#x27;:              单引号，脚本中字符串要用单引号引起来，但是不同于双引号的是，单引号不解释变量</span><br><span class="line">    &quot; &quot;:              双引号，脚本中出现的字符串可以用双引号引起来</span><br><span class="line"></span><br><span class="line">通配符    </span><br><span class="line">    ~:                家目录    # cd ~ 代表进入用户家目录</span><br><span class="line">    *:                星号是shell中的通配符  匹配所有</span><br><span class="line">    ?:                问号是shell中的通配符  匹配除回车以外的一个字符</span><br><span class="line">    [list]: 匹配[list]中的任意单个字符</span><br><span class="line">[!list]: 匹配除list中的任意单个字符</span><br><span class="line">&#123;string1,string2,...&#125;： 匹配string1,string2或更多字符串</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">重定向</span><br><span class="line">&gt;      覆盖输入 </span><br><span class="line">&gt;&gt; 追加输入</span><br><span class="line">&lt; 输出</span><br><span class="line">&lt;&lt; 追加输出</span><br><span class="line"></span><br><span class="line">管道命令</span><br><span class="line">|：               管道符 上一个命令的输出作为下一个命令的输入   cat filename | grep &quot;abc&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="10、组合命令实战"><a href="#10、组合命令实战" class="headerlink" title="10、组合命令实战"></a>10、组合命令实战</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">job1: 检索本机的IP、NETMASK、MAC地址、广播地址</span><br><span class="line">IP:  172.20.10.3</span><br><span class="line">NetMask:  255.255.255.240</span><br><span class="line">Broadcast:  172.20.10.15</span><br><span class="line">MAC Address:  00:0c:29:8d:49:ea</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">job2: 将系统中所有普通用户的用户名、密码和默认shell保存到一个文件中，要求用户名密码和默认shell之间用tab键分割</span><br><span class="line">ayitula x /bin/bash</span><br><span class="line"></span><br><span class="line">组合命令实战代码</span><br><span class="line"></span><br><span class="line">job1: 检索本机的IP、NETMASK、MAC地址、广播地址</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33   检索网卡信息</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33|grep -w inet|tr -d &#x27;[a-zA-Z]&#x27;|tr -s &quot; &quot;  处理检索行</span><br><span class="line"></span><br><span class="line">IP地址</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33|grep -w inet|tr -d [a-zA-Z]|tr -s &quot; &quot;|cut -d &quot; &quot; -f2|xargs echo &quot;IP: &quot;</span><br><span class="line">IP:  172.20.10.3</span><br><span class="line"></span><br><span class="line">NetMask地址</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33|grep -w inet|tr -d [a-zA-Z]|tr -s &quot; &quot;|cut -d &quot; &quot; -f3|xargs echo &quot;NetMask: &quot;</span><br><span class="line">NetMask:  255.255.255.240</span><br><span class="line"></span><br><span class="line">广播地址</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33|grep -w inet|tr -d [a-zA-Z]|tr -s &quot; &quot;|cut -d &quot; &quot; -f4|xargs echo &quot;Broadcast: &quot;</span><br><span class="line">Broadcast:  172.20.10.15</span><br><span class="line"></span><br><span class="line">MAC地址</span><br><span class="line">[root@zutuanxue  ~]# ifconfig ens33|grep -w ether|tr -s &quot; &quot;|cut -d &quot; &quot; -f3|xargs echo &quot;MAC Address: &quot;</span><br><span class="line">MAC Address:  00:0c:29:8d:49:ea</span><br><span class="line"></span><br><span class="line">job2: 将系统中所有普通用户的用户名、密码和默认shell保存到一个文件中，要求用户名密码和默认shell之间用tab键分割</span><br><span class="line">[root@zutuanxue  ~]# cut -d &quot;:&quot; -f1,2,7 /etc/passwd|tr &quot;:&quot; &quot;\t&quot;|grep -i &quot;bash&quot;|grep -v &quot;root&quot;</span><br><span class="line">ayitula x /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E6%A1%88%E4%BE%8B-Python%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/">shell脚本案例-Python安装脚本</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA/">shell脚本格式化输出</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

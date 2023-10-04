@@ -23,15 +23,15 @@
   <title>install.sh - 原点独白</title>
 
   
-    <meta name="description" content="##CentOS- #��������װyum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-v">
+    <meta name="description" content="CentOS-��������װyum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-via-d">
 <meta property="og:type" content="article">
 <meta property="og:title" content="install.sh">
 <meta property="og:url" content="https://haozecloud.github.io/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/xen/install.sh/index.html">
 <meta property="og:site_name" content="原点独白">
-<meta property="og:description" content="##CentOS- #��������װyum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-v">
+<meta property="og:description" content="CentOS-��������װyum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-via-d">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-27T19:24:27.000Z">
-<meta property="article:modified_time" content="2023-09-28T07:24:27.710Z">
+<meta property="article:modified_time" content="2023-10-03T02:04:40.565Z">
 <meta property="article:author" content="Zhang Hao Ze">
 <meta name="twitter:card" content="summary">
   
@@ -80,7 +80,7 @@
 
 <div class="widgets">
 
-<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">install.sh</span></div><div class="widget-body fs14"><div class="doc-tree active"></div></div></widget>
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">install.sh</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS"><span class="toc-text">CentOS-</span></a></li></ol></div></div></widget>
 
 
 
@@ -102,29 +102,22 @@
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>install.sh</span></h1>
-<p>##CentOS-</p>
-<p>#��������װ<br>yum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-via-devel xorg-x11-proto-devel xorg-x11-server-sdk xorg-x11-xtrans-devel</p>
+<h2 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS-"></a>CentOS-</h2><h1 id="��������װ"><a href="#��������װ" class="headerlink" title="��������װ"></a>��������װ</h1><pre><code>yum install hmaccalc ncurses-devel zlib-devel openssl-devel python-devel bridge-utils libtool-ltdl iasl xorg-x11-drv-evdev xorg-x11-drv-fbdev xorg-x11-drv-i810-devel xorg-x11-drv-via-devel xorg-x11-proto-devel xorg-x11-server-sdk xorg-x11-xtrans-devel
+</code></pre>
 <h1 id="flex-bison-��װacpica��Ҫ"><a href="#flex-bison-��װacpica��Ҫ" class="headerlink" title="flex  bison(��װacpica��Ҫ)"></a>flex  bison(��װacpica��Ҫ)</h1><p>yum install flex bison</p>
-<p>#��װacpi ca (<a target="_blank" rel="noopener" href="https://acpica.org/downloads">https://acpica.org/downloads</a>)<br>#���������԰�װ���°棬��δ�ɹ��������������⣬��ͨ������߰汾Ϊacpica-unix-20130823.tar.gz</p>
-<p>tar zxvf acpica-unix-20130823.tar.gz &amp;&amp; cd acpica-unix-20130823<br>make<br>make install</p>
-<h1 id="��װ-Xen-hypervisor-��-tools"><a href="#��װ-Xen-hypervisor-��-tools" class="headerlink" title="��װ Xen hypervisor �� tools"></a>��װ Xen hypervisor �� tools</h1><h1 id="���O�װ����������dev86��uuid��glib��yajl��git��texinfo"><a href="#���O�װ����������dev86��uuid��glib��yajl��git��texinfo" class="headerlink" title="���Ȱ�װ����������dev86��uuid��glib��yajl��git��texinfo)"></a>���Ȱ�װ����������dev86��uuid��glib��yajl��git��texinfo)</h1><p>#wget  <a target="_blank" rel="noopener" href="http://rdebath.nfshost.com/dev86/Dev86bin-0.16.19.tar.gz">http://rdebath.nfshost.com/dev86/Dev86bin-0.16.19.tar.gz</a></p>
-<p>#tar zxvf Dev86bin-0.16.19.tar.gz  &amp;&amp; cd  usr</p>
-<p>#cp lib&#x2F;* &#x2F;usr&#x2F;lib<br>#cp bin&#x2F;* &#x2F;usr&#x2F;bin<br>yum install dev86<br>yum install libuuid libuuid-devel<br>yum install glib2 glib2-devel<br>yum install yajl yajl-devel<br>yum install git<br>yum install texinfo<br>#xen��װ�����л�ʹ��git�������ݣ������������</p>
-<p>#xen��װ</p>
-<p>tar zxvf  xen-4.3.1.tar.gz  &amp;&amp; cd xen-4.3.1</p>
+<h1 id="��װacpi-ca-https-acpica-org-downloads"><a href="#��װacpi-ca-https-acpica-org-downloads" class="headerlink" title="��װacpi ca (https://acpica.org/downloads)"></a>��װacpi ca (<a target="_blank" rel="noopener" href="https://acpica.org/downloads">https://acpica.org/downloads</a>)</h1><h1 id="���������԰�װ���°棬��δ�ɹ��������������⣬��ͨ������߰汾Ϊacpica-unix-20130823-tar-gz"><a href="#���������԰�װ���°棬��δ�ɹ��������������⣬��ͨ������߰汾Ϊacpica-unix-20130823-tar-gz" class="headerlink" title="���������԰�װ���°棬��δ�ɹ��������������⣬��ͨ������߰汾Ϊacpica-unix-20130823.tar.gz"></a>���������԰�װ���°棬��δ�ɹ��������������⣬��ͨ������߰汾Ϊacpica-unix-20130823.tar.gz</h1><p>tar zxvf acpica-unix-20130823.tar.gz &amp;&amp; cd acpica-unix-20130823<br>make<br>make install</p>
+<h1 id="��װ-Xen-hypervisor-��-tools"><a href="#��װ-Xen-hypervisor-��-tools" class="headerlink" title="��װ Xen hypervisor �� tools"></a>��װ Xen hypervisor �� tools</h1><h1 id="���O�װ����������dev86��uuid��glib��yajl��git��texinfo"><a href="#���O�װ����������dev86��uuid��glib��yajl��git��texinfo" class="headerlink" title="���Ȱ�װ����������dev86��uuid��glib��yajl��git��texinfo)"></a>���Ȱ�װ����������dev86��uuid��glib��yajl��git��texinfo)</h1><h1 id="wget-http-rdebath-nfshost-com-dev86-Dev86bin-0-16-19-tar-gz"><a href="#wget-http-rdebath-nfshost-com-dev86-Dev86bin-0-16-19-tar-gz" class="headerlink" title="wget  http://rdebath.nfshost.com/dev86/Dev86bin-0.16.19.tar.gz"></a>wget  <a target="_blank" rel="noopener" href="http://rdebath.nfshost.com/dev86/Dev86bin-0.16.19.tar.gz">http://rdebath.nfshost.com/dev86/Dev86bin-0.16.19.tar.gz</a></h1><h1 id="tar-zxvf-Dev86bin-0-16-19-tar-gz-cd-usr"><a href="#tar-zxvf-Dev86bin-0-16-19-tar-gz-cd-usr" class="headerlink" title="tar zxvf Dev86bin-0.16.19.tar.gz  &amp;&amp; cd  usr"></a>tar zxvf Dev86bin-0.16.19.tar.gz  &amp;&amp; cd  usr</h1><h1 id="cp-lib-usr-lib"><a href="#cp-lib-usr-lib" class="headerlink" title="cp lib&#x2F;*&#x2F;usr&#x2F;lib"></a>cp lib&#x2F;*&#x2F;usr&#x2F;lib</h1><h1 id="cp-bin-usr-bin"><a href="#cp-bin-usr-bin" class="headerlink" title="cp bin&#x2F;* &#x2F;usr&#x2F;bin"></a>cp bin&#x2F;* &#x2F;usr&#x2F;bin</h1><p>yum install dev86<br>yum install libuuid libuuid-devel<br>yum install glib2 glib2-devel<br>yum install yajl yajl-devel<br>yum install git<br>yum install texinfo</p>
+<h1 id="xen��װ�����л�ʹ��git�������ݣ������������"><a href="#xen��װ�����л�ʹ��git�������ݣ������������" class="headerlink" title="xen��װ�����л�ʹ��git�������ݣ������������"></a>xen��װ�����л�ʹ��git�������ݣ������������</h1><h1 id="xen��װ"><a href="#xen��װ" class="headerlink" title="xen��װ"></a>xen��װ</h1><p>tar zxvf  xen-4.3.1.tar.gz  &amp;&amp; cd xen-4.3.1</p>
 <p>make xen tools stubdom</p>
 <p>make install-xen install-tools install-stubdom</p>
 <h1 id="����linux�ںˣ�ʹ֧֮��xen"><a href="#����linux�ںˣ�ʹ֧֮��xen" class="headerlink" title="����linux�ںˣ�ʹ֧֮��xen"></a>����linux�ںˣ�ʹ֧֮��xen</h1><p>xz -d linux-3.11.8.tar.xz &amp;&amp; tar xvf linux-3.11.8.tar &amp;&amp; cd linux-3.11.8</p>
 <p>make menuconfig</p>
-<p>#ѡ��������</p>
-<p>Processor type and features–&gt; Linux guest support–&gt; Xen guest support</p>
+<h1 id="ѡ��������"><a href="#ѡ��������" class="headerlink" title="ѡ��������"></a>ѡ��������</h1><p>Processor type and features–&gt; Linux guest support–&gt; Xen guest support</p>
 <p>Device Drivers–&gt;Network device support–&gt;Xen network device frontend driver&#x2F;Xen backend network device</p>
 <p>Device Drivers–&gt;Block devices–&gt;Xen virtual block device support&#x2F;Xen block-device backend driver</p>
 <p>Device Drivers–&gt;Xen driver support</p>
 <p>make</p>
-<p>make modules</p>
-<p>make modules_install</p>
-<p>make install</p>
+<p>make modules<br>make modules_install<br>make install</p>
 <p>depmod 3.11.8</p>
 <h1 id="�޸������l���ʹ��xen����ϵͳ"><a href="#�޸������l���ʹ��xen����ϵͳ" class="headerlink" title="�޸������ļ���ʹ��xen����ϵͳ"></a>�޸������ļ���ʹ��xen����ϵͳ</h1><p>vi &#x2F;etc&#x2F;grub.conf</p>
 <p>title CentOS6.0 (linux-3.11.8-xen)<br>kernel &#x2F;xen.gz<br>module &#x2F;vmlinuz-3.11.8 ro root&#x3D;&#x2F;dev&#x2F;sda3<br>module &#x2F;initramfs-3.11.8.img</p>
@@ -137,7 +130,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/aria2/install/">install</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/xen/install/">install</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/ubuntu_solarized/install.sh/">install.sh</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/xen/install/">install</a></div></section></div>
 
 
 
