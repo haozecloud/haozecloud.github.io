@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>linuxshadow文件 - 原点独白</title>
+
+  
+    <meta name="description" content="说到用户管理，就不得不提到shadow这个文件，shadow有三个功能：  隐藏密码 扩充密码的功能 提供账号管理工具  隐藏密码： 因为&#x2F;etc&#x2F;passwd和&#x2F;etc&#x2F;group文件的权限必须是0644，这意味着所有的用户都能读取到内容，所以为了安全起见，我们通过shaodw把用户和组的密码分别隐藏在&#x2F;etc&#x2F;shadow,&amp;#x2F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linuxshadow文件">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shadow%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="说到用户管理，就不得不提到shadow这个文件，shadow有三个功能：  隐藏密码 扩充密码的功能 提供账号管理工具  隐藏密码： 因为&#x2F;etc&#x2F;passwd和&#x2F;etc&#x2F;group文件的权限必须是0644，这意味着所有的用户都能读取到内容，所以为了安全起见，我们通过shaodw把用户和组的密码分别隐藏在&#x2F;etc&#x2F;shadow,&amp;#x2F">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399129291.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399151313.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399169696.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399191502.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399247448.png">
+<meta property="article:published_time" content="2023-09-27T00:03:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:03:56.259Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399129291.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/10/03/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/git%20%E6%97%A5%E5%BF%97/"><span class="title">git log</span></a><a class="item title" href="/2023/09/27/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/dns/DNS%E9%85%8D%E7%BD%AE/"><span class="title">DNS配置</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/docker/kubernetes/"><span class="title">kubernetes</span></a><a class="item title" href="/2023/09/25/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/sysctl/sysctl/"><span class="title">sysctl</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/ubuntu_solarized/install.sh/"><span class="title">install.sh</span></a></div></widget>
+
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/">Linux系统管理宝典</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>linuxshadow文件</span></h1>
+<p>说到用户管理，就不得不提到shadow这个文件，shadow有三个功能：</p>
+<ul>
+<li>隐藏密码</li>
+<li>扩充密码的功能</li>
+<li>提供账号管理工具</li>
+</ul>
+<p><strong>隐藏密码：</strong> 因为&#x2F;etc&#x2F;passwd和&#x2F;etc&#x2F;group文件的权限必须是0644，这意味着所有的用户都能读取到内容，所以为了安全起见，我们通过shaodw把用户和组的密码分别隐藏在&#x2F;etc&#x2F;shadow,&#x2F;etc&#x2F;gshadow文件中，且这两个文件只有管理员，也就是root能调用</p>
+<p><strong>提供账号管理工具</strong> ：我们之前所介绍的用户和组管理的相关命令，都是shadow所提供的工具</p>
+<p><strong>扩充密码功能</strong>： 这个扩充密码功能就是除了密码之外的额外功能，如，密码的有效期限，设置群组管理员（组长）等，这些都是记录在&#x2F;etc&#x2F;shadow,&#x2F;etc&#x2F;gshadow文件中</p>
+<p><strong>&#x2F;etc&#x2F;shadow:</strong> 存储用户密码及密码额外功能的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文件内容：</span><br><span class="line">root:$6$T52Xvk7zu84.tDXp$nfXcm6LTfUx.ZviEo7Eq1bPjDO...::0:99999:7:::</span><br><span class="line">bin:*:18027:0:99999:7:::</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;etc&#x2F;shadow文件的格式与&#x2F;etc&#x2F;passwd类似，也是每一行代表一个账号的数据，使用：进行分隔.</p>
+<p><strong>内容详解</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">USERNAME:PASSWORD:LAST_CHANGED:MIN_DAYS:MAX_DAYS:WARNNING:EXPIRES:INVALID:RESERVED</span><br><span class="line"></span><br><span class="line">1、USERNAME：用户账号名称。</span><br><span class="line"></span><br><span class="line">2、PASSWORD：加密后的密码。</span><br><span class="line"></span><br><span class="line">3、LAST_CHANGED：密码最后一次修改的日期。</span><br><span class="line"></span><br><span class="line">4、MIN_DAYS：密码修改的最小间隔天数。</span><br><span class="line"></span><br><span class="line">5、MAX_DAYS：密码修改的最大天数。</span><br><span class="line"></span><br><span class="line">6、WARNNING：密码过期前警告的天数。</span><br><span class="line"></span><br><span class="line">7、EXPIRES：密码过期的日期</span><br><span class="line"></span><br><span class="line">8、INVALID:	账号失效日期</span><br><span class="line"></span><br><span class="line">9、RESERVED：保留位，未定义功能</span><br></pre></td></tr></table></figure>
+
+<p>这里面我们所提到的日期都是从1970年1月1日起经过的天数，所以我们看到的不是日期的格式，而是一组数字，我们接下来看下另一个文件</p>
+<p><strong>&#x2F;etc&#x2F;gshadow:</strong> 存储组密码及密码额外功能的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">文件内容：</span><br><span class="line">root:::</span><br><span class="line">bin:::</span><br><span class="line">daemon:::</span><br></pre></td></tr></table></figure>
+
+<p><strong>内容详解</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GROUPNAME:PASSWORD:ADMINISTRATORS:MEMBERS   </span><br><span class="line"></span><br><span class="line">GROUPNAME:	组名</span><br><span class="line"></span><br><span class="line">PASSWORD：	组密码</span><br><span class="line"></span><br><span class="line">ADMINISTRATORS： 组长</span><br><span class="line"></span><br><span class="line">MEMBERS：	组成员</span><br></pre></td></tr></table></figure>
+
+<p>除此之外用户管理还有一个简单的方法，那就是以root用户身份登录图形界面</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399129291.png" alt="1571302990425.png"/></div><div class="image-meta"><span class="image-caption center">1571302990425.png</span></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399151313.png" alt="1571303014802.png"/></div><div class="image-meta"><span class="image-caption center">1571303014802.png</span></div></div>
+
+<p><strong>cockpit</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># systemctl start cockpit</span><br><span class="line">http://localhost:9090</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399169696.png" alt="image20200331143440902.png"/></div><div class="image-meta"><span class="image-caption center">image20200331143440902.png</span></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399191502.png" alt="image20200331143459395.png"/></div><div class="image-meta"><span class="image-caption center">image20200331143459395.png</span></div></div>
+
+<p><strong>管理密码的有效期限</strong></p>
+<p>Shadow除了会把密码数据隐藏到其他文件、提供许多账号管理工具外，还允许你为账号或密码设置有效期限，以提高Linux 的安全性。目前的 Shadow 可以设置下列两种期限：</p>
+<p>密码过期</p>
+<p>一旦超过密码过期日期，用户成功的登录Linux 时，会强迫用户设置一个新的密码。设置完毕后，才会开启用户的 Shell 程序。设置密码过期的目的，在于提高 Linux 的安全性。</p>
+<p>账号过期</p>
+<p>若超过账号过期日期，Linux 会禁止用户登录系统，即使输入正确的密码，也无法登录。当账号过期时，Linux 会提示用户联系管理员修改账号过期日期。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your account has expired; please contact your system administrator 	</span><br></pre></td></tr></table></figure>
+
+<p>我们可以使用chage命令来查看或调整这些相关的期限</p>
+<ul>
+<li>chage命令</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# chage -l hello</span><br><span class="line">最近一次密码修改时间					：从不</span><br><span class="line">密码过期时间					：从不</span><br><span class="line">密码失效时间					：从不</span><br><span class="line">帐户过期时间						：从不</span><br><span class="line">两次改变密码之间相距的最小天数		：0</span><br><span class="line">两次改变密码之间相距的最大天数		：99999</span><br><span class="line">在密码过期之前警告的天数	：7</span><br><span class="line"></span><br><span class="line">chage</span><br><span class="line">  -m	设置密码修改的最小天数</span><br><span class="line">  -M	设置密码修改的最大天数</span><br><span class="line">  -d	设置密码最后修改日期</span><br><span class="line">  -I	设置密码过期后，锁定账号的天数</span><br><span class="line">  -E	设置账号过期日期，0=立即过期，-1=永不过期</span><br><span class="line">  -W	设置密码过期前的警告天数</span><br><span class="line">  -l	查看指定用户的相关信息</span><br><span class="line">  -h	帮助</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/11/1602399247448.png" alt="image20200331164400723.png"/></div><div class="image-meta"><span class="image-caption center">image20200331164400723.png</span></div></div>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-nmcli%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/">linuxnmcli命令详解</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shell%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">shell数据处理</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Zabbix模板管理 - 原点独白</title>
+
+  
+    <meta name="description" content="模板(template): 对于我们来说是非常重要的，因为它保存了监控项，应用集（给监控项分的组），触发器，图形，聚合图形，自动发现规则，web监测等的一组实体。最主要的是给懒人们提供了方便 我们使用模板可以方便应用到主机，更改模板也会将更改应用到所有链接的主机。避免了每一台主机都需要手动去添加，手动去更改的麻烦 参考: https:&#x2F;&#x2F;www.zabbix.com&#x2F;documentation&#x2F;3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix模板管理">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/Zabbix%E6%A8%A1%E6%9D%BF%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="模板(template): 对于我们来说是非常重要的，因为它保存了监控项，应用集（给监控项分的组），触发器，图形，聚合图形，自动发现规则，web监测等的一组实体。最主要的是给懒人们提供了方便 我们使用模板可以方便应用到主机，更改模板也会将更改应用到所有链接的主机。避免了每一台主机都需要手动去添加，手动去更改的麻烦 参考: https:&#x2F;&#x2F;www.zabbix.com&#x2F;documentation&#x2F;3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593961462.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593971773.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593979759.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594059969.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594004364.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594087710.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594114851.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594145519.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594169936.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594203095.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594219316.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594230717.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594286591.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594316548.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594328789.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594344461.png">
+<meta property="article:published_time" content="2023-09-27T00:04:58.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:05:00.037Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593961462.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">Zabbix模板管理</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF"><span class="toc-text">一、创建一个模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AF%BC%E5%87%BA%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF"><span class="toc-text">二、导出一个模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AF%BC%E5%85%A5%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF"><span class="toc-text">三、导入一个模板</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/">企业级监控系统-Zabbix</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:04:58.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>Zabbix模板管理</span></h1>
+<p><strong>模板(template)</strong>: 对于我们来说是非常重要的，因为它保存了监控项，应用集（给监控项分的组），触发器，图形，聚合图形，自动发现规则，web监测等的一组实体。最主要的是给懒人们提供了方便</p>
+<p>我们使用模板可以方便应用到主机，更改模板也会将更改应用到所有链接的主机。避免了每一台主机都需要手动去添加，手动去更改的麻烦</p>
+<p>参考: <a target="_blank" rel="noopener" href="https://www.zabbix.com/documentation/3.4/zh/manual/config/templates">https://www.zabbix.com/documentation/3.4/zh/manual/config/templates</a></p>
+<p>在工作中，我们也可以根据自己公司的实际情况去创建模板，然后将目标应用到公司的服务器上去</p>
+<h2 id="一、创建一个模板"><a href="#一、创建一个模板" class="headerlink" title="一、创建一个模板"></a>一、创建一个模板</h2><p>配置—模板</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593961462.png" alt="模板1.png"/></div><div class="image-meta"><span class="image-caption center">模板1.png</span></div></div>
+
+<p>点击创建模板进入模板菜单</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593971773.png" alt="模板2.png"/></div><div class="image-meta"><span class="image-caption center">模板2.png</span></div></div>
+
+<p>模板创建成功后，需要设置模板中的相关属性</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603593979759.png" alt="模板3.png"/></div><div class="image-meta"><span class="image-caption center">模板3.png</span></div></div>
+
+<p>由于我们之前修改过系统自带的模板，我们现在把他还原，也就是把之前我们添加的那个查看用户数量的相关信息都删除，然后再将监控用户数量这个设置添加到自己的模板中</p>
+<p>首先找到之前添加的位置</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594059969.png" alt="image20200215142907258.png"/></div><div class="image-meta"><span class="image-caption center">image20200215142907258.png</span></div></div>
+
+<p>选择“监控项”把之前我们手动添加的内容并删除</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594004364.png" alt="image20200215143108427.png"/></div><div class="image-meta"><span class="image-caption center">image20200215143108427.png</span></div></div>
+
+<p>注意：如果是先删除“监控项”中的记录，那么“触发器”和“图形”中的也会跟着删除，如果是先删除“触发器”和“图形”中的记录，一定要记得回到“监控项”中将记录删除，删除完成之后，找到我们自己的模板选择监控项</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594087710.png" alt="image20200215153151362.png"/></div><div class="image-meta"><span class="image-caption center">image20200215153151362.png</span></div></div>
+
+<p>然后我们创建一个监控项</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594114851.png" alt="image20200215153833443.png"/></div><div class="image-meta"><span class="image-caption center">image20200215153833443.png</span></div></div>
+
+<p>监控项添加好了我们接着添加图形</p>
+<p>点击图形–创建图形</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594145519.png" alt="image20200215154057905.png"/></div><div class="image-meta"><span class="image-caption center">image20200215154057905.png</span></div></div>
+
+<p>接下来是触发器–创建触发器</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594169936.png" alt="image20200215154323984.png"/></div><div class="image-meta"><span class="image-caption center">image20200215154323984.png</span></div></div>
+
+<p>设置完成之后点击“插入”和“添加”</p>
+<p>现在这个模板我就定义完成了，那这个模板怎么使用呢？</p>
+<p>直接点击配置–主机，选择node2</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594203095.png" alt="image20200215155458753.png"/></div><div class="image-meta"><span class="image-caption center">image20200215155458753.png</span></div></div>
+
+<p>然后选择模板，取消并清理，选择我们自己创建的模板，点击更新</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594219316.png" alt="image20200215155614926.png"/></div><div class="image-meta"><span class="image-caption center">image20200215155614926.png</span></div></div>
+
+<p>然后你就可以看到了</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594230717.png" alt="image20200215155638220.png"/></div><div class="image-meta"><span class="image-caption center">image20200215155638220.png</span></div></div>
+
+<p>切换到监测–图形就可以查看到图形内容了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">注意：设置完成之后建议重新启动zabbix-proxy和zabbix-agent服务，如果是新的主机，新的主机上要存在相关的脚本和配置文件，相关操作还记得吧</span><br><span class="line">mkdir /etc/zabbix/libexec</span><br><span class="line"></span><br><span class="line">cat/etc/zabbix/libexec/check_user_number.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line">#Description: 登陆用户监控脚本</span><br><span class="line">count=`who |wc -l`</span><br><span class="line">echo $count</span><br><span class="line"></span><br><span class="line">chmod 755 /etc/zabbix/libexec/check_user_number.sh</span><br><span class="line"></span><br><span class="line">/etc/zabbix/libexec/check_user_number.sh</span><br><span class="line"></span><br><span class="line">vim /etc/zabbix/zabbix_agentd.d/check_user.conf</span><br><span class="line"></span><br><span class="line">UserParameter=check.user,/etc/zabbix/libexec/check_user_number.sh</span><br><span class="line"> </span><br><span class="line">systemctl restart zabbix-agent zabbix-proxy</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、导出一个模板"><a href="#二、导出一个模板" class="headerlink" title="二、导出一个模板"></a>二、导出一个模板</h2><p>导入导出模式是一个非常好的功能，在一台监控主机上的设置如果想用再其它监控主机而不想从头建立模板的时候，就需要用到这个功能</p>
+<p><strong>导入导出</strong>可以帮你轻松实现，导出的是<strong>xml</strong>格式文件.</p>
+<p>配置－－主机－－选取要导出的主机（前面打勾）－－下面选择导出</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594286591.png" alt="image20200215175546553.png"/></div><div class="image-meta"><span class="image-caption center">image20200215175546553.png</span></div></div>
+
+<p>各位要注意，导出的只是模板，如果想拿到其它主机上使用的话，模板里面所涉及到的key，插件也需要一起保存，所谓的插件就是存放在&#x2F;etc&#x2F;zabbix&#x2F;libexec目录下的内容，而key就是存放在&#x2F;etc&#x2F;zabbix&#x2F;zabbix_agent.d&#x2F;*.conf文件</p>
+<h2 id="三、导入一个模板"><a href="#三、导入一个模板" class="headerlink" title="三、导入一个模板"></a>三、导入一个模板</h2><p>你可以在网上下载好zabbix的监控模板，下载的时候记得把相关的key文件和插件文件一同下载,下载完成之后将对应的key文件和插件拷贝到对应目录</p>
+<p>在被监控主机上添加key和插件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 ~]# cd znginx-master/</span><br><span class="line">[root@node2 znginx-master]# ls</span><br><span class="line">Readme.txt  userparameter_znginx.conf.sample  zbx_export_templates.xml  znginx</span><br><span class="line">[root@node2 znginx-master]# cp znginx /etc/zabbix/libexec/</span><br><span class="line">[root@node2 znginx-master]# cp userparameter_znginx.conf.sample /etc/zabbix/zabbix_agentd.d/</span><br><span class="line">[root@node2 znginx-master]# cd /etc/zabbix/zabbix_agentd.d/</span><br><span class="line">[root@node2 zabbix_agentd.d]# mv userparameter_znginx.conf.sample userparameter_znginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>配置—模板—导入</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594316548.png" alt="image20200215182702772.png"/></div><div class="image-meta"><span class="image-caption center">image20200215182702772.png</span></div></div>
+
+<p>点击导入文件部分的按钮，选择对应的xml文件，点击导入</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594328789.png" alt="image20200215182818104.png"/></div><div class="image-meta"><span class="image-caption center">image20200215182818104.png</span></div></div>
+
+<p>返回模板中看下是否有新导入的模板</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603594344461.png" alt="image20200215182935259.png"/></div><div class="image-meta"><span class="image-caption center">image20200215182935259.png</span></div></div>
+
+<p>然后你就可以正常使用了</p>
+<p>注意：在导入过程中记得选择xml文件，而下载模板文件的时候注意版本跨度不要太大，否则模板会无法正常使用。</p>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/Zabbix%E5%88%86%E5%B8%83%E5%BC%8F%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F/">Zabbix分布式监控系统</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-Zabbix/Zabbix%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/">Zabbix用户管理</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>ELK介绍 - 原点独白</title>
+
+  
+    <meta name="description" content="一、项目背景运维人员需要对系统和业务日志进行精准把控，便于分析系统和业务状态。日志分布在不同的服务器上，传统的使用传统的方法依次登录每台服务器查看日志，既繁琐又效率低下。所以我们需要集中化的日志管理工具将位于不同服务器上的日志收集到一起, 然后进行分析,展示。 前面我们学习过rsyslog,它就可以实现集中化的日志管理，可是rsyslog集中后的日志实现统计与检索又成了一个问题。使用wc, gre">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK介绍">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、项目背景运维人员需要对系统和业务日志进行精准把控，便于分析系统和业务状态。日志分布在不同的服务器上，传统的使用传统的方法依次登录每台服务器查看日志，既繁琐又效率低下。所以我们需要集中化的日志管理工具将位于不同服务器上的日志收集到一起, 然后进行分析,展示。 前面我们学习过rsyslog,它就可以实现集中化的日志管理，可是rsyslog集中后的日志实现统计与检索又成了一个问题。使用wc, gre">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974367132.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974302132.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974397761.png">
+<meta property="article:published_time" content="2023-09-27T00:10:39.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:10:40.471Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974367132.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">ELK介绍</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="toc-text">一、项目背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90"><span class="toc-text">二、项目分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="toc-text">2.1、数据分析流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%AE%A4%E8%AF%86ELK"><span class="toc-text">三、认识ELK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81ELK%E5%AD%A6%E4%B9%A0%E5%87%86%E5%A4%87"><span class="toc-text">四、ELK学习准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1%E3%80%81%E5%AE%9E%E9%AA%8C%E6%8B%93%E6%89%91%E5%9B%BE"><span class="toc-text">4.1、实验拓扑图:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2%E3%80%81%E9%83%A8%E7%BD%B2%E5%89%8D%E5%87%86%E5%A4%87"><span class="toc-text">4.2、部署前准备</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/">构建可视化数据分析系统-ELK</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>ELK介绍</span></h1>
+<h2 id="一、项目背景"><a href="#一、项目背景" class="headerlink" title="一、项目背景"></a>一、项目背景</h2><p>运维人员需要对系统和业务日志进行精准把控，便于分析系统和业务状态。日志分布在不同的服务器上，传统的使用传统的方法依次登录每台服务器查看日志，既繁琐又效率低下。所以我们需要<strong>集中化</strong>的日志管理工具将<strong>位于不同服务器上的日志收集到一起, 然后进行分析,展示</strong>。</p>
+<p>前面我们学习过rsyslog,它就可以实现集中化的日志管理，可是rsyslog集中后的日志实现统计与检索又成了一个问题。使用wc, grep, awk等相关命令可以实现统计与检索，但如果要求更高的场景，这些命令也会力不从心。所以我们需要一套专业的日志收集分析展示系统。</p>
+<h2 id="二、项目分析"><a href="#二、项目分析" class="headerlink" title="二、项目分析"></a>二、项目分析</h2><h3 id="2-1、数据分析流程"><a href="#2-1、数据分析流程" class="headerlink" title="2.1、数据分析流程"></a>2.1、数据分析流程</h3><ol>
+<li>数据收集</li>
+<li>数据分析</li>
+<li>数据展示</li>
+</ol>
+<p>明确数据分析流程后，我们来看一下能够进行数据处理的软件-ELK</p>
+<p>ELK是一套开源的日志分析系统，由elasticsearch+logstash+Kibana组成。它可以实时的收集、处理、展示分析数据，可以让人通过图表直观的看到数据分析结果。</p>
+<p>ELK一般应用数据分析领域比如：</p>
+<p> 日志分析处理</p>
+<p> 结合Hadoop实现大数据分析处理和展示</p>
+<p> 数据搜索</p>
+<h2 id="三、认识ELK"><a href="#三、认识ELK" class="headerlink" title="三、认识ELK"></a>三、认识ELK</h2><p><strong>ELK介绍</strong></p>
+<p>ELK是一套开源的日志分析系统，由elasticsearch+logstash+Kibana组成。</p>
+<p>官网说明:<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/products">https://www.elastic.co/cn/products</a></p>
+<p>首先: 先一句话简单了解E,L,K这三个软件</p>
+<p>Elasticsearch 垃圾处理厂<br>Elasticsearch 是基于 JSON 的分布式搜索和分析引擎，专为实现水平扩展、高可靠性和管理便捷性而设计</p>
+<p>Elasticsearch 是一个分布式的 RESTful 风格的搜索和数据分析引擎，能够解决不断涌现出的各种用例。作为 Elastic Stack 的核心，它集中存储您的数据，帮助您发现意料之中以及意料之外的情况。</p>
+<p>Logstash 垃圾中转站</p>
+<p>Logstash 是动态数据收集管道，拥有可扩展的插件生态系统，能够与 Elasticsearch 产生强大的协同作用。<br>Logstash 是开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到您最喜欢的 “存储库” 中。（我们的存储库当然是 Elasticsearch）</p>
+<p>Kibana 垃圾处理报表<br>Kibana 能够以图表的形式呈现数据，并且具有可扩展的用户界面，供您全方位配置和管理 Elastic Stack。</p>
+<p>Kibana 让您能够自由地选择如何呈现您的数据。或许您一开始并不知道自己想要什么。不过借助 Kibana 的交互式可视化，您可以先从一个问题出发，看看能够从中发现些什么。<br>一张图片胜过千万行日志</p>
+<p>Beats 垃圾桶 垃圾回收车<br>Beats 是轻量型采集器的平台，从边缘机器向 Logstash 和 Elasticsearch 发送数据。</p>
+<p>Beats 是数据采集的得力工具。将这些采集器安装在您的服务器中，它们就会把数据汇总到 Elasticsearch。如果需要更加强大的处理性能，Beats 还能将数据输送到 Logstash 进行转换和解析。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974367132.png" alt="elk架构图.png"/></div><div class="image-meta"><span class="image-caption center">elk架构图.png</span></div></div>
+
+<p>ELK下载地址:<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads">https://www.elastic.co/cn/downloads</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974302132.png" alt="elk_download_page.png"/></div><div class="image-meta"><span class="image-caption center">elk_download_page.png</span></div></div>
+
+<h2 id="四、ELK学习准备"><a href="#四、ELK学习准备" class="headerlink" title="四、ELK学习准备"></a>四、ELK学习准备</h2><h3 id="4-1、实验拓扑图"><a href="#4-1、实验拓扑图" class="headerlink" title="4.1、实验拓扑图:"></a>4.1、实验拓扑图:</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/6/1601974397761.png" alt="elk部署图3933846.png"/></div><div class="image-meta"><span class="image-caption center">elk部署图3933846.png</span></div></div>
+
+<ul>
+<li><p>收集系统日志</p>
+<p>   F-E-K</p>
+<p>   L-E-K</p>
+<p>   F-L-E-K</p>
+</li>
+<li><p>收集web服务器access.log日志</p>
+</li>
+<li><p>收集mysql slow日志</p>
+</li>
+</ul>
+<h3 id="4-2、部署前准备"><a href="#4-2、部署前准备" class="headerlink" title="4.2、部署前准备"></a>4.2、部署前准备</h3><ul>
+<li>静态IP(要求能上公网,最好用虚拟机的NAT网络类型上网)</li>
+<li>主机名及IP绑定</li>
+<li>关闭防火墙和selinux</li>
+<li>时间同步 chrony</li>
+<li>yum源(centos安装完系统后的默认yum源就OK)</li>
+</ul>
+<ol>
+<li><p>所有服务器全部采用静态ip</p>
+<table>
+<thead>
+<tr>
+<th>主机名称</th>
+<th>IP地址</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>manage01</td>
+<td>192.168.98.200&#x2F;24</td>
+<td>kibana数据展示</td>
+</tr>
+<tr>
+<td>node1</td>
+<td>192.168.98.201&#x2F;24</td>
+<td>ES1</td>
+</tr>
+<tr>
+<td>node2</td>
+<td>192.168.98.202&#x2F;24</td>
+<td>ES2</td>
+</tr>
+<tr>
+<td>node3</td>
+<td>192.168.98.203&#x2F;24</td>
+<td>logstash或(业务机器)</td>
+</tr>
+<tr>
+<td>node4</td>
+<td>192.168.98.204&#x2F;24</td>
+<td>filebeat-业务机器</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>主机名及IP互相绑定</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# cat /etc/hosts</span><br><span class="line">127.0.0.1   localhost</span><br><span class="line">::1         localhost </span><br><span class="line">192.168.98.200	manage01</span><br><span class="line">192.168.98.201	node1</span><br><span class="line">192.168.98.202	node2</span><br><span class="line">192.168.98.203	node3</span><br><span class="line">192.168.98.204	node4</span><br><span class="line"></span><br><span class="line">其他机器同理</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭防火墙, selinux</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@manage01 ~]# systemctl disable firewalld</span><br><span class="line">[root@manage01 ~]# iptables -F</span><br><span class="line">[root@manage01 ~]# iptables -t nat -F</span><br><span class="line">[root@manage01 ~]# sed -i -r &#x27;/SELINUX=/c\SELINUX=disabled&#x27; /etc/selinux/config</span><br><span class="line">[root@manage01 ~]# reboot</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">其他机器同理</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>采用时间服务器，时间同步</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">1、修改配置文件，配置时间服务器为阿里云的时间服务器</span><br><span class="line">[root@manage01 ~]# egrep &quot;^server&quot; /etc/chrony.conf </span><br><span class="line">server ntp1.aliyun.com</span><br><span class="line">server ntp2.aliyun.com</span><br><span class="line">server ntp3.aliyun.com</span><br><span class="line">server ntp4.aliyun.com</span><br><span class="line"></span><br><span class="line">#注释</span><br><span class="line"># pool 2.centos.pool.ntp.org iburst</span><br><span class="line"></span><br><span class="line">2、重启服务chronyd</span><br><span class="line">[root@manage01 ~]# systemctl restart chronyd.service </span><br><span class="line"></span><br><span class="line">3、查看源信息</span><br><span class="line">#chronyc chrony的命令行客户端</span><br><span class="line">[root@manage01 ~]# chronyc sources -v</span><br><span class="line">210 Number of sources = 2</span><br><span class="line"></span><br><span class="line">  .-- Source mode  &#x27;^&#x27; = server, &#x27;=&#x27; = peer, &#x27;#&#x27; = local clock.</span><br><span class="line"> / .- Source state &#x27;*&#x27; = current synced, &#x27;+&#x27; = combined , &#x27;-&#x27; = not combined,</span><br><span class="line">| /   &#x27;?&#x27; = unreachable, &#x27;x&#x27; = time may be in error, &#x27;~&#x27; = time too variable.</span><br><span class="line">||                                                 .- xxxx [ yyyy ] +/- zzzz</span><br><span class="line">||      Reachability register (octal) -.           |  xxxx = adjusted offset,</span><br><span class="line">||      Log2(Polling interval) --.      |          |  yyyy = measured offset,</span><br><span class="line">||                                \     |          |  zzzz = estimated error.</span><br><span class="line">||                                 |    |           \</span><br><span class="line">MS Name/IP address         Stratum Poll Reach LastRx Last sample               </span><br><span class="line">===============================================================================</span><br><span class="line">^? 120.25.115.20                 2   6     1     3   +663us[ +663us] +/-   23ms</span><br><span class="line">^? 203.107.6.88                  2   6     1     2  -1326us[-1326us] +/-   17ms</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yum源设置</p>
+<p> 建议采用默认yum源就可以</p>
+</li>
+</ol>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E9%83%A8%E7%BD%B2Elasticsearch%E9%9B%86%E7%BE%A4/">ELK-部署Elasticsearch集群</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7ES-Head%E5%BA%94%E7%94%A8/">ELK数据管理工具ES-Head应用</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

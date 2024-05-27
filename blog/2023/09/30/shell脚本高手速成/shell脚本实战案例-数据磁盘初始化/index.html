@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>shell脚本实战案例-数据磁盘初始化 - 原点独白</title>
+
+  
+    <meta name="description" content="一、案例应用场景生产环境中的服务器一般会分为系统盘和数据盘两种磁盘，以dell R730举例，该服务器是一个2U的机架式服务器，满载可以挂载14块磁盘[2块在机箱内做系统盘，12块在面板做数据盘]，我们一般的策略是系统盘做raid1，保障系统稳定性12块数据磁盘我们做raid10 或者 raid50，保障数据盘容错的同时还能做到优化IO的效果。 raid磁盘的容量是一定的，线上的数据又是不断增长的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell脚本实战案例-数据磁盘初始化">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B-%E6%95%B0%E6%8D%AE%E7%A3%81%E7%9B%98%E5%88%9D%E5%A7%8B%E5%8C%96/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、案例应用场景生产环境中的服务器一般会分为系统盘和数据盘两种磁盘，以dell R730举例，该服务器是一个2U的机架式服务器，满载可以挂载14块磁盘[2块在机箱内做系统盘，12块在面板做数据盘]，我们一般的策略是系统盘做raid1，保障系统稳定性12块数据磁盘我们做raid10 或者 raid50，保障数据盘容错的同时还能做到优化IO的效果。 raid磁盘的容量是一定的，线上的数据又是不断增长的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-30T01:27:13.000Z">
+<meta property="article:modified_time" content="2023-09-30T13:27:13.606Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">shell脚本实战案例-数据磁盘初始化</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A1%88%E4%BE%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">一、案例应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A1%88%E4%BE%8B%E9%9C%80%E6%B1%82"><span class="toc-text">二、案例需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A1%88%E4%BE%8B%E7%AE%97%E6%B3%95"><span class="toc-text">三、案例算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-text">四、代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%AE%9E%E7%8E%B0%E9%AA%8C%E8%AF%81"><span class="toc-text">五、实现验证</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">Linux配置文件</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/">shell脚本高手速成</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-30T01:27:13.000Z">2023-09-30</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>shell脚本实战案例-数据磁盘初始化</span></h1>
+<h2 id="一、案例应用场景"><a href="#一、案例应用场景" class="headerlink" title="一、案例应用场景"></a>一、案例应用场景</h2><p>生产环境中的服务器一般会分为系统盘和数据盘两种磁盘，以dell R730举例，该服务器是一个2U的机架式服务器，满载可以挂载14块磁盘[2块在机箱内做系统盘，12块在面板做数据盘]，我们一般的策略是系统盘做raid1，保障系统稳定性12块数据磁盘我们做raid10 或者 raid50，保障数据盘容错的同时还能做到优化IO的效果。</p>
+<p>raid磁盘的容量是一定的，线上的数据又是不断增长的，也就是说总有一天会把你的数据磁盘填满，那怎么办？为了解决这个问题，人们想到了LVM[逻辑卷管理系统]，当前数据盘容量不够用的时候，我们可以通过san存储获得网络磁盘，然后将该网络存储动态加入LVM中的卷组后就可以扩大LV了。整个过程采用在线扩容的方式，不会影响线上业务正是基于这个原因，我们又在系统中把raid数据盘在存数据之前做成了LVM磁盘，方便后续的扩容。</p>
+<p>注意：有数据的磁盘不能再做LVM，因为需要格式化，数据会全部丢失。必须提前布局，否则就得提前准备跑路资金了。</p>
+<h2 id="二、案例需求"><a href="#二、案例需求" class="headerlink" title="二、案例需求"></a>二、案例需求</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">给虚拟机添加一块磁盘(以sdb为例)，要求使用脚本对该磁盘分三个区：</span><br><span class="line"></span><br><span class="line"> 1）主分区 /dev/sdb3 543M 文件系统 ext4 要求开机自动挂载到/data/data1目录</span><br><span class="line"></span><br><span class="line"> 2) 逻辑分区 /dev/sdb5 2G</span><br><span class="line"></span><br><span class="line"> 3) 逻辑分区 /dev/sdb6 3G</span><br><span class="line"></span><br><span class="line">使用/dev/sdb5 /dev/sdb6 新建卷组vg100，并创建一个PE为16M,容量为2.5G的逻辑卷lv100，</span><br><span class="line">格式化为xfs,默认开机自动挂载到/data/data2目录</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、案例算法"><a href="#三、案例算法" class="headerlink" title="三、案例算法"></a>三、案例算法</h2><p>算法：完成一个任务的代码思路。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">脚本思路---算法</span><br><span class="line">1、分区</span><br><span class="line">2、创建逻辑卷</span><br><span class="line">    2.1  创建物理卷</span><br><span class="line">    2.2  创建卷组</span><br><span class="line">    2.3  创建逻辑卷</span><br><span class="line">3、格式化 /dev/sdb3   /dev/vg100/lv100</span><br><span class="line">4、修改/etc/fstab文件</span><br><span class="line">5、挂载分区</span><br><span class="line">6、验证并输出挂载结果</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、代码实现"><a href="#四、代码实现" class="headerlink" title="四、代码实现"></a>四、代码实现</h2><p>代码实现的要点：要清楚每一步的步骤，不同的系统可能有细微的差别，一味的复制可不行的，需要提前手动做一下，把步骤捋清楚。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">实验代码    01_disk_partition.sh</span><br><span class="line">#!/bin/bash</span><br><span class="line"># </span><br><span class="line">#Author: Bai Shuming</span><br><span class="line">#Created Time: 2019/11/1 21:05</span><br><span class="line">#Release: </span><br><span class="line">#Description:</span><br><span class="line">#</span><br><span class="line">#给虚拟机添加一块磁盘(以sdb为例)，要求使用脚本对该磁盘分三个区：</span><br><span class="line">#  1）主分区 /dev/sdb3   543M   文件系统 ext4  要求开机自动挂载到/data/data1目录</span><br><span class="line">#  2)   逻辑分区  /dev/sdb5   2G</span><br><span class="line">#  3)   逻辑分区  /dev/sdb6   3G</span><br><span class="line">#使用/dev/sdb5   /dev/sdb6   新建卷组vg100，并创建一个PE为16M,容量为2.5G的逻辑卷lv100，</span><br><span class="line">#格式化为xfs,默认开机自动挂载到/data/data2目录</span><br><span class="line"></span><br><span class="line">#1、分区</span><br><span class="line">fdisk /dev/sdb &lt;&lt;EOF</span><br><span class="line">n</span><br><span class="line">p</span><br><span class="line">3</span><br><span class="line"></span><br><span class="line">+543M</span><br><span class="line">n</span><br><span class="line">e</span><br><span class="line">4</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n</span><br><span class="line"></span><br><span class="line">+2G</span><br><span class="line">n</span><br><span class="line"></span><br><span class="line">+3G</span><br><span class="line">w</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">#2、创建逻辑卷</span><br><span class="line">   #2.1 创建物理卷</span><br><span class="line">    pvcreate /dev/sdb5 /dev/sdb6</span><br><span class="line">   #2.2 创建卷组</span><br><span class="line">    vgcreate -s 16M vg100 /dev/sdb&#123;5..6&#125;</span><br><span class="line">   #2.3 创建逻辑卷</span><br><span class="line">    lvcreate -L 2.5G -n lv100 vg100</span><br><span class="line">#3、格式化</span><br><span class="line">mkfs.ext4 /dev/sdb3</span><br><span class="line">mkfs.xfs /dev/vg100/lv100</span><br><span class="line"></span><br><span class="line">#4、修改/etc/fstab,实现自动挂载</span><br><span class="line">echo  &quot;/dev/sdb3   /data/data1 ext4  defaults   0 0&quot; &gt;&gt; /etc/fstab</span><br><span class="line">echo &quot;/dev/vg100/lv100 /data/data2  xfs   defaults 0 0&quot; &gt;&gt; /etc/fstab</span><br><span class="line"></span><br><span class="line">#5、挂载分区</span><br><span class="line">mkdir -p /data/data&#123;1..2&#125;</span><br><span class="line">mount -a</span><br><span class="line"></span><br><span class="line">#6、验证并输出挂载结果</span><br><span class="line">mount |grep &quot;/dev/sdb3&quot;</span><br><span class="line">test $? -eq 0&amp;&amp;echo &quot;/dev/sdb3 挂载成功&quot; || echo &quot;/dev/sdb3挂载失败&quot;</span><br><span class="line"></span><br><span class="line">##注意检索的时候，mount输出中LV的表示方式，或者直接检索挂载点/data/data2也可以。</span><br><span class="line">mount |grep &quot;vg100-lv100&quot;</span><br><span class="line">test $? -eq 0&amp;&amp;echo &quot;/dev/vg100/lv100 挂载成功&quot; || echo &quot;/dev/vg100/lv100挂载失败&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、实现验证"><a href="#五、实现验证" class="headerlink" title="五、实现验证"></a>五、实现验证</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用如下命令查看是否挂载成功</span><br><span class="line">[root@zutuanxue ~]# df -Th</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA/">shell脚本格式化输出</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E8%84%9A%E6%9C%AC%E6%A1%88%E4%BE%8B-nginx%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/">shell脚本案例-nginx安装脚本</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

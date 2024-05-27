@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>ELK-收集mysqlslow日志 - 原点独白</title>
+
+  
+    <meta name="description" content="案例分析开发和DBA为了能够实时掌握mysql的运行情况，需要对mysql中执行的sql指令大于1秒的统计出来，并且通过ELK分析，统计，实时查看。通过分析可以让DBA能够优化数据库，能够提升运行速度。 一、MySQL设置a、mysql安装 1安装脚本  mysql默认root密码更改 1[root@node4 mysql]# mysql_secure_installation  b、mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK-收集mysqlslow日志">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E6%94%B6%E9%9B%86mysqlslow%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="案例分析开发和DBA为了能够实时掌握mysql的运行情况，需要对mysql中执行的sql指令大于1秒的统计出来，并且通过ELK分析，统计，实时查看。通过分析可以让DBA能够优化数据库，能够提升运行速度。 一、MySQL设置a、mysql安装 1安装脚本  mysql默认root密码更改 1[root@node4 mysql]# mysql_secure_installation  b、mysql">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T00:10:39.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:10:40.486Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">ELK-收集mysqlslow日志</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="toc-text">案例分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81MySQL%E8%AE%BE%E7%BD%AE"><span class="toc-text">一、MySQL设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86"><span class="toc-text">二、数据收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81kibana%E5%B1%95%E7%A4%BA"><span class="toc-text">三、kibana展示</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/">构建可视化数据分析系统-ELK</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:10:39.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>ELK-收集mysqlslow日志</span></h1>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>开发和DBA为了能够实时掌握mysql的运行情况，需要对mysql中执行的sql指令大于1秒的统计出来，并且通过ELK分析，统计，实时查看。通过分析可以让DBA能够优化数据库，能够提升运行速度。</p>
+<h2 id="一、MySQL设置"><a href="#一、MySQL设置" class="headerlink" title="一、MySQL设置"></a>一、MySQL设置</h2><p><strong>a、mysql安装</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">安装脚本</span><br></pre></td></tr></table></figure>
+
+<p>mysql默认root密码更改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node4 mysql]# mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<p><strong>b、mysql slow日志开启</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#开启slow log</span><br><span class="line">slow_query_log=1</span><br><span class="line">slow_query_log_file=/usr/local/mysql/mysql-slow.log</span><br><span class="line">long-query-time=1</span><br><span class="line"></span><br><span class="line">#允许使用Load data命令</span><br><span class="line">secure_file_priv=&#x27;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>重启mysql生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node4 mysql]# /etc/init.d/mysql.server restart</span><br><span class="line">Shutting down MySQL.. SUCCESS! </span><br><span class="line">Starting MySQL. SUCCESS!</span><br></pre></td></tr></table></figure>
+
+<p><strong>c、生成测试数据</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node4 mysql]# seq 1 10000000 &gt; /tmp/big</span><br></pre></td></tr></table></figure>
+
+<p>导入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table db1.t1(id int(11));</span><br><span class="line">mysql&gt; load data infile &#x27;/tmp/big&#x27; into table db1.t1;</span><br><span class="line">Query OK, 10000000 rows affected (21.73 sec)</span><br><span class="line">Records: 10000000  Deleted: 0  Skipped: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
+
+<p>生成slow日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from db1.t1 where id=8;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">|    8 |</span><br><span class="line">+------+</span><br><span class="line">1 row in set (3.46 sec)</span><br></pre></td></tr></table></figure>
+
+<p>查看slow 日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@node4 mysql]# cat mysql-slow.log </span><br><span class="line">/usr/local/mysql/bin/mysqld, Version: 5.7.28-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 0  Unix socket: /tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line">/usr/local/mysql/bin/mysqld, Version: 5.7.28-log (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 0  Unix socket: /tmp/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"># Time: 2020-02-18T13:15:34.406907Z</span><br><span class="line"># User@Host: root[root] @ localhost []  Id:     2</span><br><span class="line"># Query_time: 21.729690  Lock_time: 0.005813 Rows_sent: 0  Rows_examined: 0</span><br><span class="line">SET timestamp=1582031734;</span><br><span class="line">load data infile &#x27;/tmp/big&#x27; into table db1.t1;</span><br><span class="line"># Time: 2020-02-18T13:16:03.022224Z</span><br><span class="line"># User@Host: root[root] @ localhost []  Id:     2</span><br><span class="line"># Query_time: 3.458640  Lock_time: 0.004334 Rows_sent: 1  Rows_examined: 10000000</span><br><span class="line">SET timestamp=1582031763;</span><br><span class="line">select * from db1.t1 where id=8;</span><br><span class="line"># Time: 2020-02-18T13:23:11.893639Z</span><br><span class="line"># User@Host: root[root] @ localhost []  Id:     3</span><br><span class="line"># Query_time: 3.583976  Lock_time: 0.000412 Rows_sent: 1  Rows_examined: 10000000</span><br><span class="line">SET timestamp=1582032191;</span><br><span class="line">select * from db1.t1 where id=88;</span><br><span class="line"># Time: 2020-02-18T13:23:17.347380Z</span><br><span class="line"># User@Host: root[root] @ localhost []  Id:     3</span><br><span class="line"># Query_time: 3.557843  Lock_time: 0.000113 Rows_sent: 1  Rows_examined: 10000000</span><br><span class="line">SET timestamp=1582032197;</span><br><span class="line">select * from db1.t1 where id=888;</span><br><span class="line"># Time: 2020-02-18T13:23:22.470483Z</span><br><span class="line"># User@Host: root[root] @ localhost []  Id:     3</span><br><span class="line"># Query_time: 3.498105  Lock_time: 0.000173 Rows_sent: 1  Rows_examined: 10000000</span><br><span class="line">SET timestamp=1582032202;</span><br><span class="line">select * from db1.t1 where id=8888;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、数据收集"><a href="#二、数据收集" class="headerlink" title="二、数据收集"></a>二、数据收集</h2><p>###a、mysql slow日志格式整理收集</p>
+<p>通过filebeat多行模式收集mysql slow日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@node4 ~]# egrep -v &quot;^#|^$|  #&quot; /etc/filebeat/filebeat.yml </span><br><span class="line">filebeat.inputs:</span><br><span class="line">- type: log</span><br><span class="line">  enabled: true</span><br><span class="line">  paths:</span><br><span class="line">    - /usr/local/mysql/mysql-slow.log</span><br><span class="line">  #开启多行收集</span><br><span class="line">  multiline.pattern: &quot;^# User@Host:&quot;</span><br><span class="line">  multiline.negate: true</span><br><span class="line">  multiline.match: after</span><br><span class="line">  </span><br><span class="line">filebeat.config.modules:</span><br><span class="line">  path: $&#123;path.config&#125;/modules.d/*.yml</span><br><span class="line">  reload.enabled: false</span><br><span class="line">setup.template.settings:</span><br><span class="line">  index.number_of_shards: 1</span><br><span class="line">setup.kibana:</span><br><span class="line">output.logstash:</span><br><span class="line">   hosts: [&quot;192.168.98.203:5044&quot;]</span><br><span class="line">processors:</span><br><span class="line">  - add_host_metadata: ~</span><br><span class="line">  - add_cloud_metadata: ~</span><br><span class="line">  - add_docker_metadata: ~</span><br><span class="line">  - add_kubernetes_metadata: ~</span><br><span class="line"></span><br><span class="line">参数说明</span><br><span class="line">multiline.pattern：正则表达式，去匹配指定的一行，这里去匹配的以“# User@Host:”开头的那一行；</span><br><span class="line">multiline.negate：取值true 或 false；</span><br><span class="line">默认是false，就是将multiline.pattern匹配到的那一行合并到上一行；</span><br><span class="line">如果配置是true，就是将除了multiline.pattern匹的那一行的其他所有行合并到其上一行；</span><br><span class="line">multiline.match：after 或 before，就是指定将要合并到上一行的内容，合并到上一行的末尾或开头；</span><br></pre></td></tr></table></figure>
+
+<p>logstash中的数据是这样存储的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">          &quot;host&quot; =&gt; &#123;</span><br><span class="line">             &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                 &quot;name&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                   &quot;os&quot; =&gt; &#123;</span><br><span class="line">              &quot;family&quot; =&gt; &quot;redhat&quot;,</span><br><span class="line">                &quot;name&quot; =&gt; &quot;CentOS Linux&quot;,</span><br><span class="line">              &quot;kernel&quot; =&gt; &quot;4.18.0-80.el8.x86_64&quot;,</span><br><span class="line">            &quot;codename&quot; =&gt; &quot;Core&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;8 (Core)&quot;,</span><br><span class="line">            &quot;platform&quot; =&gt; &quot;centos&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;containerized&quot; =&gt; false,</span><br><span class="line">                   &quot;id&quot; =&gt; &quot;d8100d9fc21041ae9364bbb1ca84da02&quot;,</span><br><span class="line">         &quot;architecture&quot; =&gt; &quot;x86_64&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">           &quot;log&quot; =&gt; &#123;</span><br><span class="line">        &quot;offset&quot; =&gt; 4629,</span><br><span class="line">          &quot;file&quot; =&gt; &#123;</span><br><span class="line">            &quot;path&quot; =&gt; &quot;/usr/local/mysql/mysql-slow.log&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">          &quot;tags&quot; =&gt; [</span><br><span class="line">        [0] &quot;beats_input_codec_plain_applied&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;@timestamp&quot; =&gt; 2020-02-19T02:50:06.763Z,</span><br><span class="line">         &quot;input&quot; =&gt; &#123;</span><br><span class="line">        &quot;type&quot; =&gt; &quot;log&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    	#这里有一个message行，记录了时间</span><br><span class="line">       &quot;message&quot; =&gt; &quot;# Time: 2020-02-19T02:50:05.740090Z&quot;,</span><br><span class="line">           &quot;ecs&quot; =&gt; &#123;</span><br><span class="line">        &quot;version&quot; =&gt; &quot;1.4.0&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">         &quot;agent&quot; =&gt; &#123;</span><br><span class="line">            &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                &quot;type&quot; =&gt; &quot;filebeat&quot;,</span><br><span class="line">        &quot;ephemeral_id&quot; =&gt; &quot;3736821d-5c17-429a-a8af-0a9b28ba87b7&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;7.6.0&quot;,</span><br><span class="line">                  &quot;id&quot; =&gt; &quot;060fdb52-cc79-463e-9cbf-f7d8fee5db89&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">      &quot;@version&quot; =&gt; &quot;1&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">           &quot;log&quot; =&gt; &#123;</span><br><span class="line">          &quot;file&quot; =&gt; &#123;</span><br><span class="line">            &quot;path&quot; =&gt; &quot;/usr/local/mysql/mysql-slow.log&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;offset&quot; =&gt; 4665,</span><br><span class="line">         &quot;flags&quot; =&gt; [</span><br><span class="line">            [0] &quot;multiline&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">          &quot;host&quot; =&gt; &#123;</span><br><span class="line">             &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                 &quot;name&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                   &quot;os&quot; =&gt; &#123;</span><br><span class="line">              &quot;family&quot; =&gt; &quot;redhat&quot;,</span><br><span class="line">                &quot;name&quot; =&gt; &quot;CentOS Linux&quot;,</span><br><span class="line">              &quot;kernel&quot; =&gt; &quot;4.18.0-80.el8.x86_64&quot;,</span><br><span class="line">            &quot;codename&quot; =&gt; &quot;Core&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;8 (Core)&quot;,</span><br><span class="line">            &quot;platform&quot; =&gt; &quot;centos&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;containerized&quot; =&gt; false,</span><br><span class="line">                   &quot;id&quot; =&gt; &quot;d8100d9fc21041ae9364bbb1ca84da02&quot;,</span><br><span class="line">         &quot;architecture&quot; =&gt; &quot;x86_64&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">          &quot;tags&quot; =&gt; [</span><br><span class="line">        [0] &quot;beats_input_codec_plain_applied&quot;</span><br><span class="line">    ],</span><br><span class="line">    &quot;@timestamp&quot; =&gt; 2020-02-19T02:50:06.763Z,</span><br><span class="line">         &quot;input&quot; =&gt; &#123;</span><br><span class="line">        &quot;type&quot; =&gt; &quot;log&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">       ####看这里message!mysql slow日志这样才的</span><br><span class="line">       &quot;message&quot; =&gt; &quot;# User@Host: root[root] @ localhost []  Id:     2\n# Query_time: 4.764090  Lock_time: 0.001112 Rows_sent: 1  Rows_examined: 10000000\nSET timestamp=1582080605;\nselect * from db1.t1 where id=1;&quot;,</span><br><span class="line">           &quot;ecs&quot; =&gt; &#123;</span><br><span class="line">        &quot;version&quot; =&gt; &quot;1.4.0&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">         &quot;agent&quot; =&gt; &#123;</span><br><span class="line">            &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                &quot;type&quot; =&gt; &quot;filebeat&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;7.6.0&quot;,</span><br><span class="line">        &quot;ephemeral_id&quot; =&gt; &quot;3736821d-5c17-429a-a8af-0a9b28ba87b7&quot;,</span><br><span class="line">                  &quot;id&quot; =&gt; &quot;060fdb52-cc79-463e-9cbf-f7d8fee5db89&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">      &quot;@version&quot; =&gt; &quot;1&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>b、使用grok插件格式化数据</strong></p>
+<p><strong>grok</strong>是一种采用组合多个预定义的正则表达式，用来匹配分割文本并映射到关键字的工具。通常用来对日志数据进行预处理。logstash的filter模块中grok插件是其实现之一。</p>
+<p>处理思路：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、第一个message数据行，没有用到，删除；</span><br><span class="line">2、第二个message数据行的数据做json格式；</span><br><span class="line">3、时间根据第二个message数据行中的时间戳转换；</span><br><span class="line">4、数据已经做成json格式了，自然第二个message也没用了，删除第二个message行；</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过不断测试，查看Logstash中的数据存储</strong></p>
+<p>1、第一个message数据行，没有用到，删除；</p>
+<p>2、第二个message数据行的数据做json格式；</p>
+<p>3、时间根据第二个message数据行中的时间戳转换；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">#2、将第二个message数据格式化为json格斯</span><br><span class="line">grok &#123;</span><br><span class="line">        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %&#123;USER:query_user&#125;\[[^\]]+\] @ (?:(?&lt;query_host&gt;\S*) )?\[(?:%&#123;IP:query_ip&#125;)?\]\s+Id:\s+%&#123;NUMBER:row_id:int&#125;\s*# Query_time: %&#123;NUMBER:query_time:float&#125;\s+Lock_time: %&#123;NUMBER:lock_time:float&#125;\s+Rows_sent: %&#123;NUMBER:rows_sent:int&#125;\s+Rows_examined: %&#123;NUMBER:rows_examined:int&#125;\s*(?:use %&#123;DATA:database&#125;;\s*)?SET timestamp=%&#123;NUMBER:timestamp&#125;;\s*(?&lt;query&gt;(?&lt;action&gt;\w+)\s+.*)&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#1、匹配&quot;message&quot; =&gt; &quot;# Time: &quot;数据行[第一个message]，添加一个标签 drop</span><br><span class="line">grok &#123;</span><br><span class="line">        match =&gt; &#123; &quot;message&quot; =&gt; &quot;# Time: &quot; &#125;</span><br><span class="line">        add_tag =&gt; [ &quot;drop&quot; ]</span><br><span class="line">        tag_on_failure =&gt; []</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#1、删除标签为drop的数据行</span><br><span class="line">    if  &quot;drop&quot; in [tags] &#123;</span><br><span class="line">        drop &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#3、匹配message中的时间戳，根据亚洲/上海的格式生成本地时间</span><br><span class="line">    date &#123;</span><br><span class="line">        match =&gt; [&quot;mysql.slowlog.timestamp&quot;, &quot;UNIX&quot;, &quot;YYYY-MM-dd HH:mm:ss&quot;]</span><br><span class="line">        target =&gt; &quot;@timestamp&quot;</span><br><span class="line">        timezone =&gt; &quot;Asia/Shanghai&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    ruby &#123;</span><br><span class="line">        code =&gt; &quot;event.set(&#x27;[@metadata][today]&#x27;, Time.at(event.get(&#x27;@timestamp&#x27;).to_i).localtime.strftime(&#x27;%Y.%m.%d&#x27;))&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>logstash中数据存储</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">            &quot;agent&quot; =&gt; &#123;</span><br><span class="line">        &quot;ephemeral_id&quot; =&gt; &quot;3736821d-5c17-429a-a8af-0a9b28ba87b7&quot;,</span><br><span class="line">                &quot;type&quot; =&gt; &quot;filebeat&quot;,</span><br><span class="line">            &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;7.6.0&quot;,</span><br><span class="line">                  &quot;id&quot; =&gt; &quot;060fdb52-cc79-463e-9cbf-f7d8fee5db89&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">       #看这里，根据时间戳生成的时间</span><br><span class="line">       &quot;@timestamp&quot; =&gt; 2020-02-19T03:01:46.833Z,</span><br><span class="line">            &quot;input&quot; =&gt; &#123;</span><br><span class="line">        &quot;type&quot; =&gt; &quot;log&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">       &quot;query_host&quot; =&gt; &quot;localhost&quot;,</span><br><span class="line">             &quot;tags&quot; =&gt; [</span><br><span class="line">        [0] &quot;beats_input_codec_plain_applied&quot;</span><br><span class="line">    ],</span><br><span class="line">           &quot;row_id&quot; =&gt; 2,</span><br><span class="line">           ###看这里，第二个message数据</span><br><span class="line">          &quot;message&quot; =&gt; &quot;# User@Host: root[root] @ localhost []  Id:     2\n# Query_time: 4.448631  Lock_time: 0.000213 Rows_sent: 1  Rows_examined: 10000000\nSET timestamp=1582081300;\nselect * from db1.t1 where id=1;&quot;,</span><br><span class="line">         &quot;@version&quot; =&gt; &quot;1&quot;,</span><br><span class="line">         ###从这往下看，能看到这里面夹杂这生成的json数据</span><br><span class="line">         #row_id   query_time   lock_time  rows_examined query query_user等都是</span><br><span class="line">       &quot;query_time&quot; =&gt; 4.448631,</span><br><span class="line">        &quot;lock_time&quot; =&gt; 0.000213,</span><br><span class="line">              &quot;ecs&quot; =&gt; &#123;</span><br><span class="line">        &quot;version&quot; =&gt; &quot;1.4.0&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;rows_examined&quot; =&gt; 10000000,</span><br><span class="line">            &quot;query&quot; =&gt; &quot;select * from db1.t1 where id=1;&quot;,</span><br><span class="line">              &quot;log&quot; =&gt; &#123;</span><br><span class="line">         &quot;flags&quot; =&gt; [</span><br><span class="line">            [0] &quot;multiline&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;offset&quot; =&gt; 5346,</span><br><span class="line">          &quot;file&quot; =&gt; &#123;</span><br><span class="line">            &quot;path&quot; =&gt; &quot;/usr/local/mysql/mysql-slow.log&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">             &quot;host&quot; =&gt; &#123;</span><br><span class="line">                 &quot;name&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                   &quot;os&quot; =&gt; &#123;</span><br><span class="line">            &quot;codename&quot; =&gt; &quot;Core&quot;,</span><br><span class="line">                &quot;name&quot; =&gt; &quot;CentOS Linux&quot;,</span><br><span class="line">              &quot;family&quot; =&gt; &quot;redhat&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;8 (Core)&quot;,</span><br><span class="line">              &quot;kernel&quot; =&gt; &quot;4.18.0-80.el8.x86_64&quot;,</span><br><span class="line">            &quot;platform&quot; =&gt; &quot;centos&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">             &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">         &quot;architecture&quot; =&gt; &quot;x86_64&quot;,</span><br><span class="line">                   &quot;id&quot; =&gt; &quot;d8100d9fc21041ae9364bbb1ca84da02&quot;,</span><br><span class="line">        &quot;containerized&quot; =&gt; false</span><br><span class="line">    &#125;,</span><br><span class="line">           &quot;action&quot; =&gt; &quot;select&quot;,</span><br><span class="line">        &quot;rows_sent&quot; =&gt; 1,</span><br><span class="line">        &quot;timestamp&quot; =&gt; &quot;1582081300&quot;,</span><br><span class="line">       &quot;query_user&quot; =&gt; &quot;root&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过grok插件，实现日志过滤</strong></p>
+<p>关于正则表达式内容，参考shell脚本中的正则表达式一章</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">补充知识点</span><br><span class="line">空格匹配   \s</span><br><span class="line">回车匹配   \s*</span><br><span class="line">非空格匹配  \S [大写]</span><br></pre></td></tr></table></figure>
+
+<p>grok中的语法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">grok匹配规则</span><br><span class="line">%&#123;数据类型：变量名&#125;</span><br><span class="line">例如 5.12 可能是一个事件的持续时间,192.168.98.200可能是请求的client地址。所以这两个值可以用 %&#123;NUMBER:duration&#125; %&#123;IP:client&#125; 来匹配。</span><br><span class="line"></span><br><span class="line">自定义数据类型</span><br><span class="line">(?&lt;字段名&gt;表达式)</span><br><span class="line"></span><br><span class="line">例如，日志有一个student_id 为一个长度为10或11个字符的十六进制值。使用下列语法可以获取该片段，并把值赋予student_id</span><br><span class="line">(?&lt;student_id&gt;[0-9A-F]&#123;10,11&#125;)</span><br><span class="line"></span><br><span class="line">具体参考</span><br><span class="line">https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html</span><br></pre></td></tr></table></figure>
+
+<p>删除第二个message数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">#1、将第二个message数据格式化为json格斯</span><br><span class="line">grok &#123;</span><br><span class="line">        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %&#123;USER:query_user&#125;\[[^\]]+\] @ (?:(?&lt;query_host&gt;\S*) )?\[(?:%&#123;IP:query_ip&#125;)?\]\s+Id:\s+%&#123;NUMBER:row_id:int&#125;\s*# Query_time: %&#123;NUMBER:query_time:float&#125;\s+Lock_time: %&#123;NUMBER:lock_time:float&#125;\s+Rows_sent: %&#123;NUMBER:rows_sent:int&#125;\s+Rows_examined: %&#123;NUMBER:rows_examined:int&#125;\s*(?:use %&#123;DATA:database&#125;;\s*)?SET timestamp=%&#123;NUMBER:timestamp&#125;;\s*(?&lt;query&gt;(?&lt;action&gt;\w+)\s+.*)&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#匹配&quot;message&quot; =&gt; &quot;# Time: &quot;数据行[第一个message]，添加一个标签 drop</span><br><span class="line">grok &#123;</span><br><span class="line">        match =&gt; &#123; &quot;message&quot; =&gt; &quot;# Time: &quot; &#125;</span><br><span class="line">        add_tag =&gt; [ &quot;drop&quot; ]</span><br><span class="line">        tag_on_failure =&gt; []</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#删除标签为drop的数据行</span><br><span class="line">    if  &quot;drop&quot; in [tags] &#123;</span><br><span class="line">        drop &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#匹配message中的时间戳，根据亚洲/上海的格式生成本地时间</span><br><span class="line">    date &#123;</span><br><span class="line">        match =&gt; [&quot;mysql.slowlog.timestamp&quot;, &quot;UNIX&quot;, &quot;YYYY-MM-dd HH:mm:ss&quot;]</span><br><span class="line">        target =&gt; &quot;@timestamp&quot;</span><br><span class="line">        timezone =&gt; &quot;Asia/Shanghai&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    ruby &#123;</span><br><span class="line">        code =&gt; &quot;event.set(&#x27;[@metadata][today]&#x27;, Time.at(event.get(&#x27;@timestamp&#x27;).to_i).localtime.strftime(&#x27;%Y.%m.%d&#x27;))&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#删除message字段</span><br><span class="line"> mutate &#123;</span><br><span class="line">        remove_field =&gt; [ &quot;message&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实现过滤后，logstash数据存储状态</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        &quot;lock_time&quot; =&gt; 0.000226,</span><br><span class="line">             &quot;host&quot; =&gt; &#123;</span><br><span class="line">                 &quot;name&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">         &quot;architecture&quot; =&gt; &quot;x86_64&quot;,</span><br><span class="line">                   &quot;os&quot; =&gt; &#123;</span><br><span class="line">                &quot;name&quot; =&gt; &quot;CentOS Linux&quot;,</span><br><span class="line">              &quot;family&quot; =&gt; &quot;redhat&quot;,</span><br><span class="line">            &quot;platform&quot; =&gt; &quot;centos&quot;,</span><br><span class="line">              &quot;kernel&quot; =&gt; &quot;4.18.0-80.el8.x86_64&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;8 (Core)&quot;,</span><br><span class="line">            &quot;codename&quot; =&gt; &quot;Core&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">             &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                   &quot;id&quot; =&gt; &quot;d8100d9fc21041ae9364bbb1ca84da02&quot;,</span><br><span class="line">        &quot;containerized&quot; =&gt; false</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;rows_examined&quot; =&gt; 10000000,</span><br><span class="line">           &quot;action&quot; =&gt; &quot;select&quot;,</span><br><span class="line">        &quot;rows_sent&quot; =&gt; 1,</span><br><span class="line">             &quot;tags&quot; =&gt; [</span><br><span class="line">        [0] &quot;beats_input_codec_plain_applied&quot;</span><br><span class="line">    ],</span><br><span class="line">           &quot;row_id&quot; =&gt; 2,</span><br><span class="line">              &quot;log&quot; =&gt; &#123;</span><br><span class="line">          &quot;file&quot; =&gt; &#123;</span><br><span class="line">            &quot;path&quot; =&gt; &quot;/usr/local/mysql/mysql-slow.log&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">         &quot;flags&quot; =&gt; [</span><br><span class="line">            [0] &quot;multiline&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;offset&quot; =&gt; 5119</span><br><span class="line">    &#125;,</span><br><span class="line">         &quot;@version&quot; =&gt; &quot;1&quot;,</span><br><span class="line">              &quot;ecs&quot; =&gt; &#123;</span><br><span class="line">        &quot;version&quot; =&gt; &quot;1.4.0&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">            &quot;input&quot; =&gt; &#123;</span><br><span class="line">        &quot;type&quot; =&gt; &quot;log&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">       ###看这里下面数据,数据已经被定义为json格式了，</span><br><span class="line">       &quot;query_host&quot; =&gt; &quot;localhost&quot;,</span><br><span class="line">       &quot;@timestamp&quot; =&gt; 2020-02-19T02:57:11.812Z,</span><br><span class="line">       &quot;query_time&quot; =&gt; 4.377673,</span><br><span class="line">       &quot;query_user&quot; =&gt; &quot;root&quot;,</span><br><span class="line">            &quot;query&quot; =&gt; &quot;select * from db1.t1 where id=1;&quot;,</span><br><span class="line">        &quot;timestamp&quot; =&gt; &quot;1582081027&quot;,</span><br><span class="line">            &quot;agent&quot; =&gt; &#123;</span><br><span class="line">                &quot;type&quot; =&gt; &quot;filebeat&quot;,</span><br><span class="line">             &quot;version&quot; =&gt; &quot;7.6.0&quot;,</span><br><span class="line">            &quot;hostname&quot; =&gt; &quot;node4&quot;,</span><br><span class="line">                  &quot;id&quot; =&gt; &quot;060fdb52-cc79-463e-9cbf-f7d8fee5db89&quot;,</span><br><span class="line">        &quot;ephemeral_id&quot; =&gt; &quot;3736821d-5c17-429a-a8af-0a9b28ba87b7&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>c、logstash将数据交给elasticsearch</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 conf.d]# cat mysql_logstash_es.conf</span><br><span class="line">#采集数据</span><br><span class="line">input &#123;</span><br><span class="line">	beats &#123;</span><br><span class="line">        port =&gt; 5044</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#过滤</span><br><span class="line">filter &#123;</span><br><span class="line">grok &#123;</span><br><span class="line">        match =&gt; [ &quot;message&quot;, &quot;(?m)^# User@Host: %&#123;USER:query_user&#125;\[[^\]]+\] @ (?:(?&lt;query_host&gt;\S*) )?\[(?:%&#123;IP:query_ip&#125;)?\]\s+Id:\s+%&#123;NUMBER:row_id:int&#125;\s*# Query_time: %&#123;NUMBER:query_time:float&#125;\s+Lock_time: %&#123;NUMBER:lock_time:float&#125;\s+Rows_sent: %&#123;NUMBER:rows_sent:int&#125;\s+Rows_examined: %&#123;NUMBER:rows_examined:int&#125;\s*(?:use %&#123;DATA:database&#125;;\s*)?SET timestamp=%&#123;NUMBER:timestamp&#125;;\s*(?&lt;query&gt;(?&lt;action&gt;\w+)\s+.*)&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    grok &#123;</span><br><span class="line">        match =&gt; &#123; &quot;message&quot; =&gt; &quot;# Time: &quot; &#125;</span><br><span class="line">        add_tag =&gt; [ &quot;drop&quot; ]</span><br><span class="line">        tag_on_failure =&gt; []</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if  &quot;drop&quot; in [tags] &#123;</span><br><span class="line">        drop &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    date &#123;</span><br><span class="line">        match =&gt; [&quot;mysql.slowlog.timestamp&quot;, &quot;UNIX&quot;, &quot;YYYY-MM-dd HH:mm:ss&quot;]</span><br><span class="line">        target =&gt; &quot;@timestamp&quot;</span><br><span class="line">        timezone =&gt; &quot;Asia/Shanghai&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    ruby &#123;</span><br><span class="line">        code =&gt; &quot;event.set(&#x27;[@metadata][today]&#x27;, Time.at(event.get(&#x27;@timestamp&#x27;).to_i).localtime.strftime(&#x27;%Y.%m.%d&#x27;))&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> mutate &#123;</span><br><span class="line">        remove_field =&gt; [ &quot;message&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#输出到es</span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch&#123;</span><br><span class="line">        hosts =&gt; [&quot;192.168.98.201:9200&quot;]</span><br><span class="line">        index =&gt; &quot;zutuanxue_node4_mysql-%&#123;+YYYY.MM.dd&#125;&quot;   </span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">stdout &#123;</span><br><span class="line">	      codec =&gt; rubydebug</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、kibana展示"><a href="#三、kibana展示" class="headerlink" title="三、kibana展示"></a>三、kibana展示</h2><p>绘制图表</p>
+<ul>
+<li>query_time分布</li>
+<li>统计slow日志数量</li>
+</ul>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2Elasticsearch/">ELK-单机部署Elasticsearch</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E6%9E%84%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F-ELK/ELK-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">ELK-数据管理</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

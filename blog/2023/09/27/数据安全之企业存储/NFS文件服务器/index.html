@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>NFS文件服务器 - 原点独白</title>
+
+  
+    <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NFS文件服务器">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/NFS%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T00:01:42.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:01:43.461Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper recent"><div class="widget-header cap theme dis-select"><span class="name">最近更新</span></div><div class="widget-body related-posts fs14"><a class="item title" href="/2023/10/03/CI%E5%92%8CCD%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/git%20%E6%97%A5%E5%BF%97/"><span class="title">git log</span></a><a class="item title" href="/2023/09/27/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/dns/DNS%E9%85%8D%E7%BD%AE/"><span class="title">DNS配置</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/docker/kubernetes/"><span class="title">kubernetes</span></a><a class="item title" href="/2023/09/25/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/sysctl/sysctl/"><span class="title">sysctl</span></a><a class="item title" href="/2023/09/28/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/ubuntu_solarized/install.sh/"><span class="title">install.sh</span></a></div></widget>
+
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/">数据安全之企业存储</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:01:42.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>NFS文件服务器</span></h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br></pre></td><td class="code"><pre><span class="line">一、NFS介绍</span><br><span class="line">NFS就是Network File System的缩写，最早由Sun公司所发展出来的.最大的功能就是可以通过网络，让不同的主机能共享文件。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。</span><br><span class="line"></span><br><span class="line">NFS优势：</span><br><span class="line"></span><br><span class="line">可以把服务器上的文件像本地一样的操作，节省本地的存储空间</span><br><span class="line"></span><br><span class="line">nfs配置简单，而且服务本身对系统资源占用较少</span><br><span class="line"></span><br><span class="line">nfs服务可以支持很多其它的服务，如kickstart，配合在一起，可以实现更多功能</span><br><span class="line"></span><br><span class="line">应用场景</span><br><span class="line"></span><br><span class="line">共享存储服务器： 图片服务器、视频服务器等</span><br><span class="line"></span><br><span class="line">家目录漫游：域用户家目录服务器</span><br><span class="line"></span><br><span class="line">文件服务器：内容文件存储服务器</span><br><span class="line"></span><br><span class="line">工作原理</span><br><span class="line"></span><br><span class="line">NFS体系有两个主要部分：</span><br><span class="line"></span><br><span class="line">NFS服务端机器：通过NFS协议将文件共享到网络。</span><br><span class="line"></span><br><span class="line">NFS客户端机器：通过网络挂载NFS共享目录到本地。</span><br><span class="line"></span><br><span class="line">NFS服务器与客户端在进行数据传输时，需要先确定端口，而这个端口的确定需要借助RPC(Remote Procedure Call,远程过程调用)协议的协助。RPC最主要的功能就是在指定每个NFS服务所对应的端口号，并且告知客户端，让客户端可以连接到正确的端口上去。当我们启动NFS服务时会随机取用数个端口，并主动向RPC注册，因此RPC可以知道每个端口对应的NFS，而RPC又是固定使用 port 111监听客户端的需求并且能够准确的告知客户端正确的端口。</span><br><span class="line"></span><br><span class="line">image20200307151530148.png</span><br><span class="line"></span><br><span class="line">1.客户端向服务器的111端口发送nfs请求</span><br><span class="line"></span><br><span class="line">2.RPC找到对应的nfs端口并告知客户端</span><br><span class="line"></span><br><span class="line">3.客户端知道正确的端口后，直接与nfs server端建立连接</span><br><span class="line"></span><br><span class="line">二、安装部署</span><br><span class="line">[root@zutuanxue ~]# rpm -qa | grep nfs-utils</span><br><span class="line">nfs-utils-2.3.3-14.el8.x86_64</span><br><span class="line">#管理用户登录及文件权限</span><br><span class="line">[root@zutuanxue ~]# rpm -qa | grep rpcbind</span><br><span class="line">rpcbind-1.2.5-3.el8.x86_64</span><br><span class="line">#管理端口</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# systemctl is-enabled rpcbind</span><br><span class="line">enabled</span><br><span class="line">#检查rpcbind服务的状态</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# systemctl enable nfs-server.service </span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/nfs-server.service → /usr/lib/systemd/system/nfs-server.service. </span><br><span class="line">[root@zutuanxue ~]# systemctl start nfs-server.service </span><br><span class="line">#设置开机启动，并启动nfs服务</span><br><span class="line">相关文件</span><br><span class="line"></span><br><span class="line">/etc/exports： 共享配置文件，用来设置共享</span><br><span class="line"></span><br><span class="line">/etc/nfs.conf： nfs服务的配置文件，可以设置端口和超时时间等，大多数时候不需要修改</span><br><span class="line"></span><br><span class="line">/etc/sysconfig/nfs： 端口设置文件，重启服务后系统会自动调整nfs.conf内容</span><br><span class="line"></span><br><span class="line">/var/lib/nfs/etab: 记录nfs共享的完整权限设定值</span><br><span class="line"></span><br><span class="line">三、配置说明</span><br><span class="line">/etc/exports</span><br><span class="line"></span><br><span class="line">格式：</span><br><span class="line"></span><br><span class="line">共享目录    客户端(权限1，权限2）</span><br><span class="line"></span><br><span class="line">共享目录：在本地的位置（绝对路径）</span><br><span class="line">客户端：一台主机，一群主机（IP地址、网段、主机名、域名）</span><br><span class="line">权限：</span><br><span class="line">ro    </span><br><span class="line">	只读访问（默认） </span><br><span class="line">rw    </span><br><span class="line">	读写访问  </span><br><span class="line">sync 	</span><br><span class="line">	将数据同步写入内存缓冲区与磁盘中，效率低，但可以保证数据的一致性；（默认）  </span><br><span class="line">async   </span><br><span class="line">	将数据先保存在内存缓冲区中，必要时才写入磁盘；</span><br><span class="line">secure  </span><br><span class="line">	客户端只能使用小于1024的端口连接（默认）  </span><br><span class="line">insecure  </span><br><span class="line">	允许客户端使用大于1024的端口连接  </span><br><span class="line">wdelay   </span><br><span class="line">	检查是否有相关的写操作，如果有则将这些写操作一起执行，这样可以提高效率（默认）；</span><br><span class="line">no_wdelay  </span><br><span class="line">	若有写操作则立即执行，应与sync配合使用；</span><br><span class="line">hide       </span><br><span class="line">	在NFS共享目录中不共享其子目录（默认）  </span><br><span class="line">no_hide    </span><br><span class="line">	共享NFS目录的子目录  </span><br><span class="line">subtree_check     </span><br><span class="line">	如果共享目录是子目录时，强制NFS检查父目录的权限（默认）  </span><br><span class="line">no_subtree_check  </span><br><span class="line">	和上面相对，不检查父目录权限  </span><br><span class="line">all_squash      </span><br><span class="line">	共享文件的UID和GID映射匿名用户anonymous，适合公用目录。  </span><br><span class="line">no_all_squash    </span><br><span class="line">	保留共享文件的UID和GID（默认）  </span><br><span class="line">root_squash 		</span><br><span class="line">	root用户的所有请求映射成如anonymous用户一样的权限（默认）  </span><br><span class="line">no_root_squash    </span><br><span class="line">	root用户具有根目录的完全管理访问权限  </span><br><span class="line">anonuid=xxx       </span><br><span class="line">	指定NFS服务器/etc/passwd文件中匿名用户的UID  </span><br><span class="line">anongid=xxx       </span><br><span class="line">	指定NFS服务器/etc/passwd文件中匿名用户的GID</span><br><span class="line">相关命令</span><br><span class="line"></span><br><span class="line">exportfs - 管理NFS共享文件系统列表</span><br><span class="line">	-a     发布获取消所有目录共享。</span><br><span class="line">	-r     重新挂载/etc/exports里面的共享目录,同时更新/etc/exports 和/var/lib/nfs/xtab的内容</span><br><span class="line">	-u     取消一个或多个目录的共享。</span><br><span class="line">	-v     输出详细信息。</span><br><span class="line">	-o options,...	指定一系列共享选项(如rw,async,root_squash)</span><br><span class="line">	-i     忽略/etc/exports和/etc/exports.d目录下文件。此时只有命令行中给定选项和默认选项会生效。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">例如：</span><br><span class="line">#exportfs   -rv		//重新挂载共享目录，并且显示。</span><br><span class="line">#exportfs   -au	//卸载所有共享目录。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">showmount	可以在server/client上使用此命令来查看server</span><br><span class="line">#showmount	[-ae]	hostname/ip</span><br><span class="line">-a或--all</span><br><span class="line">    以 host:dir 这样的格式来显示客户主机名和挂载点目录。</span><br><span class="line">-d或--directories</span><br><span class="line">    仅显示被客户挂载的目录名。</span><br><span class="line">-e或--exports</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# showmount -e</span><br><span class="line">Export list for manage01:</span><br><span class="line">/opt *</span><br><span class="line"></span><br><span class="line">四、NFS共享案例</span><br><span class="line">案例需求</span><br><span class="line"></span><br><span class="line">新建目录/ro，/rw</span><br><span class="line"></span><br><span class="line">以只读的方式共享目录 /ro 同时只能被 192.168.98.0 域中的系统访问</span><br><span class="line"></span><br><span class="line">以读写的方式共享目录 /rw 能被 192.168.98.0 域中的系统访问</span><br><span class="line"></span><br><span class="line">实验环境</span><br><span class="line"></span><br><span class="line">两台安装了CentOS8的主机，关闭selinux，关闭防火墙</span><br><span class="line"></span><br><span class="line">zutuanxue: NFS server</span><br><span class="line">node1: NFS client</span><br><span class="line">image20200307195109955.png</span><br><span class="line"></span><br><span class="line">创建共享目录</span><br><span class="line">[root@zutuanxue ~]# mkdir /ro</span><br><span class="line">[root@zutuanxue ~]# mkdir /rw</span><br><span class="line">由于客户端挂载用户是nfsnobody，本题要求客户端挂载后可读写，我们是用root用户建立的目录，所以要给其他人7的权限</span><br><span class="line">[root@zutuanxue ~]# chmod 757 /rw/  </span><br><span class="line"></span><br><span class="line">通过/etc/exports文件定义共享目录</span><br><span class="line">[root@zutuanxue ~]# cat /etc/exports</span><br><span class="line">/ro 192.168.98.0/24(ro)</span><br><span class="line">/rw 192.168.98.0/24(rw)</span><br><span class="line"></span><br><span class="line">启动nfs服务</span><br><span class="line">[root@zutuanxue ~]# systemctl restart nfs-server.service </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@zutuanxue opt]# ps aux | egrep &quot;rpc|nfs&quot;</span><br><span class="line">rpc.nfsd（nfsd）：基本的NFS守护进程（2049端口），主要负责登录权限检测。</span><br><span class="line">rpc.mountd（mountd）：负责管理NFS的文件系统，对客户端存取服务器的文件进行一系列的管理。</span><br><span class="line">rpc.rquotad（rquotad）：提供远程磁盘限额服务。</span><br><span class="line">rpc.lockd（nlockmgr）：用于管理文件的锁定，防止多个客户端同时写入某个文件时产生的冲突。</span><br><span class="line">rpc.statd（staus）：用来检查共享目录的一致性</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">如果服务之前已经启动可以重新加载所有共享</span><br><span class="line">[root@zutuanxue ~]# exportfs -rv</span><br><span class="line">exporting 192.168.98.0/24:/rw</span><br><span class="line">exporting 192.168.98.0/24:/ro</span><br><span class="line"></span><br><span class="line">查看共享目录</span><br><span class="line">[root@zutuanxue ~]# exportfs -v</span><br><span class="line">/ro       	192.168.98.0/24(sync,wdelay,hide,no_subtree_check,sec=sys,ro,secure,root_squash,no_all_squash)</span><br><span class="line">/rw    	192.168.98.0/24(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)</span><br><span class="line">五、客户端访问</span><br><span class="line">使用showmount命令查看远程nfs服务器共享目录</span><br><span class="line">[root@node1 ~]# showmount -e 192.168.98.200</span><br><span class="line">Export list for 192.168.98.200:</span><br><span class="line">/protected 192.168.98.0/24</span><br><span class="line">/public    192.168.98.0/24</span><br><span class="line"></span><br><span class="line">新建挂载点</span><br><span class="line">[root@node1 ~]# mkdir /mnt/ro</span><br><span class="line">[root@node1 ~]# mkdir /mnt/rw</span><br><span class="line"></span><br><span class="line">挂载NFS服务器共享目录</span><br><span class="line">[root@node1 ~]# mount -t nfs 192.168.98.200:/ro /mnt/ro/</span><br><span class="line">[root@node1 ~]# mount -t nfs 192.168.98.200:/rw /mnt/rw/</span><br><span class="line"></span><br><span class="line">验证挂载</span><br><span class="line">[root@node1 ~]# mount | grep mnt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">测试权限</span><br><span class="line">[root@node1 ~]# touch /mnt/ro/test</span><br><span class="line">touch: 无法创建&quot;/mnt/public/test&quot;: 只读文件系统</span><br><span class="line">[root@node1 ~]# touch /mnt/rw/test</span><br><span class="line">[root@node1 ~]# ls  /mnt/rw/ -l</span><br><span class="line">总用量 0</span><br><span class="line">-rw-r--r-- 1 nfsnobody nfsnobody 0 2月  28 11:52 test</span><br><span class="line"></span><br><span class="line">如果需要开机挂载的话可以修改/etc/fstab</span><br><span class="line">192.168.98.200:/ro      /mnt/ro nfs     defaults        0 0</span><br><span class="line">192.168.98.200:/rw      /mnt/rw nfs     defaults        0 0</span><br><span class="line"></span><br><span class="line">温馨提示：还可以使用前面课程提到过的autofs实现自动挂载</span><br><span class="line">六、nfs固定端口</span><br><span class="line">nfs工作需要的端口除了2049和111之外还有额外的端口，而这些端口都是随机的，所以在有安全防护的时候，为了保证NFS可以正常工作就需要将这些随机的端口固定</span><br><span class="line"></span><br><span class="line">我们可以使用rpcinfo命令来查看nfs的端口</span><br><span class="line">[root@zutuanxue ~]# rpcinfo -p</span><br><span class="line">   program vers proto   port  service</span><br><span class="line">    100000    4   tcp    111  portmapper</span><br><span class="line">    100000    3   tcp    111  portmapper</span><br><span class="line">    100000    2   tcp    111  portmapper</span><br><span class="line">    100000    4   udp    111  portmapper</span><br><span class="line">    100000    3   udp    111  portmapper</span><br><span class="line">    100000    2   udp    111  portmapper</span><br><span class="line">    100024    1   udp  37242  status</span><br><span class="line">    100024    1   tcp  39231  status</span><br><span class="line">    100005    1   udp  20048  mountd</span><br><span class="line">    100005    1   tcp  20048  mountd</span><br><span class="line">    100005    2   udp  20048  mountd</span><br><span class="line">    100005    2   tcp  20048  mountd</span><br><span class="line">    100005    3   udp  20048  mountd</span><br><span class="line">    100005    3   tcp  20048  mountd</span><br><span class="line">    100003    3   tcp   2049  nfs</span><br><span class="line">    100003    4   tcp   2049  nfs</span><br><span class="line">    100227    3   tcp   2049  nfs_acl</span><br><span class="line">    100021    1   udp  41958  nlockmgr</span><br><span class="line">    100021    3   udp  41958  nlockmgr</span><br><span class="line">    100021    4   udp  41958  nlockmgr</span><br><span class="line">    100021    1   tcp  35847  nlockmgr</span><br><span class="line">    100021    3   tcp  35847  nlockmgr</span><br><span class="line">    100021    4   tcp  35847  nlockmgr</span><br><span class="line">重启nfs服务</span><br><span class="line">[root@zutuanxue ~]# systemctl restart nfs-server.service </span><br><span class="line">再次查看端口</span><br><span class="line">[root@zutuanxue ~]# rpcinfo -p</span><br><span class="line">   program vers proto   port  service</span><br><span class="line">    100000    4   tcp    111  portmapper</span><br><span class="line">    100000    3   tcp    111  portmapper</span><br><span class="line">    100000    2   tcp    111  portmapper</span><br><span class="line">    100000    4   udp    111  portmapper</span><br><span class="line">    100000    3   udp    111  portmapper</span><br><span class="line">    100000    2   udp    111  portmapper</span><br><span class="line">    100024    1   udp  37242  status</span><br><span class="line">    100024    1   tcp  39231  status</span><br><span class="line">    100005    1   udp  20048  mountd</span><br><span class="line">    100005    1   tcp  20048  mountd</span><br><span class="line">    100005    2   udp  20048  mountd</span><br><span class="line">    100005    2   tcp  20048  mountd</span><br><span class="line">    100005    3   udp  20048  mountd</span><br><span class="line">    100005    3   tcp  20048  mountd</span><br><span class="line">    100003    3   tcp   2049  nfs</span><br><span class="line">    100003    4   tcp   2049  nfs</span><br><span class="line">    100227    3   tcp   2049  nfs_acl</span><br><span class="line">    100021    1   udp  45032  nlockmgr</span><br><span class="line">    100021    3   udp  45032  nlockmgr</span><br><span class="line">    100021    4   udp  45032  nlockmgr</span><br><span class="line">    100021    1   tcp  36303  nlockmgr</span><br><span class="line">    100021    3   tcp  36303  nlockmgr</span><br><span class="line">    100021    4   tcp  36303  nlockmgr</span><br><span class="line">你会发现除了2049和111之外的端口都是在随机变化的，而这些随机变化的端口会在我们进行安全设置的时候带来困扰，所以我们需要讲端口固定</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# vim /etc/sysconfig/nfs</span><br><span class="line">MOUNTD_PORT=10001　#　rpc.mountd使用的端口</span><br><span class="line">STATD_PORT=10002	#		rpc.statd使用的端口</span><br><span class="line">LOCKD_TCPPORT=10003	#		nlockmgr使用的TCP端口（rpc.lockd）</span><br><span class="line">LOCKD_UDPPORT=10003	#		nlockmgr使用的UDP端口</span><br><span class="line">RQUOTAD_PORT=10004	#	rpc.rquotad使用的端口</span><br><span class="line">重新启动服务</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# systemctl restart nfs-server.service nfs-convert.service </span><br><span class="line">[root@zutuanxue ~]# rpcinfo -p</span><br><span class="line">   program vers proto   port  service</span><br><span class="line">    100000    4   tcp    111  portmapper</span><br><span class="line">    100000    3   tcp    111  portmapper</span><br><span class="line">    100000    2   tcp    111  portmapper</span><br><span class="line">    100000    4   udp    111  portmapper</span><br><span class="line">    100000    3   udp    111  portmapper</span><br><span class="line">    100000    2   udp    111  portmapper</span><br><span class="line">    100005    1   udp  10001  mountd</span><br><span class="line">    100005    1   tcp  10001  mountd</span><br><span class="line">    100005    2   udp  10001  mountd</span><br><span class="line">    100005    2   tcp  10001  mountd</span><br><span class="line">    100005    3   udp  10001  mountd</span><br><span class="line">    100005    3   tcp  10001  mountd</span><br><span class="line">    100024    1   udp  10002  status</span><br><span class="line">    100024    1   tcp  10002  status</span><br><span class="line">    100003    3   tcp   2049  nfs</span><br><span class="line">    100003    4   tcp   2049  nfs</span><br><span class="line">    100227    3   tcp   2049  nfs_acl</span><br><span class="line">    100021    1   udp  10003  nlockmgr</span><br><span class="line">    100021    3   udp  10003  nlockmgr</span><br><span class="line">    100021    4   udp  10003  nlockmgr</span><br><span class="line">    100021    1   tcp  10003  nlockmgr</span><br><span class="line">    100021    3   tcp  10003  nlockmgr</span><br><span class="line">    100021    4   tcp  10003  nlockmgr</span><br><span class="line">注意：如果之前没有启动过nfs服务的话，直接启动就可以，如果之前启动过nfs服务，需要同时重启nfs-convert服务，将我们刚才调整的设置写入到nfs.conf配置文件中，启动完成之后我们之前设置的/etc/sysconfig/nfs文件的名称会改为nfs.rpmsavexxxxxxxxxx27 1[root@zutuanxue ~]# systemctl restart nfs-server.service nfs-convert.service 2[root@zutuanxue ~]# rpcinfo -p3   program vers proto   port  service4    100000    4   tcp    111  portmapper5    100000    3   tcp    111  portmapper6    100000    2   tcp    111  portmapper7    100000    4   udp    111  portmapper8    100000    3   udp    111  portmapper9    100000    2   udp    111  portmapper10    100005    1   udp  10001  mountd11    100005    1   tcp  10001  mountd12    100005    2   udp  10001  mountd13    100005    2   tcp  10001  mountd14    100005    3   udp  10001  mountd15    100005    3   tcp  10001  mountd16    100024    1   udp  10002  status17    100024    1   tcp  10002  status18    100003    3   tcp   2049  nfs19    100003    4   tcp   2049  nfs20    100227    3   tcp   2049  nfs_acl21    100021    1   udp  10003  nlockmgr22    100021    3   udp  10003  nlockmgr23    100021    4   udp  10003  nlockmgr24    100021    1   tcp  10003  nlockmgr25    100021    3   tcp  10003  nlockmgr26    100021    4   tcp  10003  nlockmgr27注意：如果之前没有启动过nfs服务的话，直接启动就可以，如果之前启动过nfs服务，需要同时重启nfs-convert服务，将我们刚才调整的设置写入到nfs.conf配置文件中，启动完成之后我们之前设置的/etc/sysconfig/nfs文件的名称会改为nfs.rpmsave</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E9%9A%90%E8%97%8F%E6%9D%83%E9%99%90/">linux隐藏权限</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BC%81%E4%B8%9A%E5%AD%98%E5%82%A8/Samba%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/">Samba文件服务器</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

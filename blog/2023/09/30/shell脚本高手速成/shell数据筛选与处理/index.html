@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>shell数据筛选与处理 - 原点独白</title>
+
+  
+    <meta name="description" content="聊聊大家常说的数据分析：  数据收集：负责数据的收集 数据清洗：负责数据的筛选 数据分析：数据运算、整理 数据展示：图表或表格方式输出结果  shell脚本数据的处理  1）数据检索:grep tr cut  2）数据处理:uniq sort tee paste xargs 之前的脚本中我们都是通过grep、cut、tr、uniq、sort等命令通过管道组合在一起将字符串检索出来，然后在通过she">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell数据筛选与处理">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E6%95%B0%E6%8D%AE%E7%AD%9B%E9%80%89%E4%B8%8E%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="聊聊大家常说的数据分析：  数据收集：负责数据的收集 数据清洗：负责数据的筛选 数据分析：数据运算、整理 数据展示：图表或表格方式输出结果  shell脚本数据的处理  1）数据检索:grep tr cut  2）数据处理:uniq sort tee paste xargs 之前的脚本中我们都是通过grep、cut、tr、uniq、sort等命令通过管道组合在一起将字符串检索出来，然后在通过she">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-30T01:27:13.000Z">
+<meta property="article:modified_time" content="2023-09-30T13:27:13.540Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">shell数据筛选与处理</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#shell%E5%AF%B9%E8%BE%93%E5%87%BA%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86-awk"><span class="toc-text">shell对输出流的处理-awk</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81awk%E4%BB%8B%E7%BB%8D"><span class="toc-text">1、awk介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81awk%E8%AF%AD%E6%B3%95"><span class="toc-text">2、awk语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81awk%E5%9F%BA%E6%9C%AC%E5%BA%94%E7%94%A8"><span class="toc-text">3、awk基本应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%EF%BC%89awk%E5%AF%B9%E5%AD%97%E6%AE%B5-%E5%88%97-%E7%9A%84%E6%8F%90%E5%8F%96"><span class="toc-text">3.1）awk对字段(列)的提取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2%EF%BC%89%E5%91%BD%E4%BB%A4%E9%80%89%E9%A1%B9%E8%AF%A6%E8%A7%A3"><span class="toc-text">3.2）命令选项详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3%EF%BC%89awk%E5%AF%B9%E8%AE%B0%E5%BD%95-%E8%A1%8C-%E7%9A%84%E6%8F%90%E5%8F%96"><span class="toc-text">3.3）awk对记录(行)的提取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4%EF%BC%89awk%E5%AF%B9%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8F%90%E5%8F%96"><span class="toc-text">3.4）awk对字符串提取</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81awk%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">4、awk程序的优先级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81awk%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8"><span class="toc-text">5、awk高级应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1%EF%BC%89awk%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F%E5%92%8C%E6%95%B0%E7%BB%84"><span class="toc-text">5.1）awk定义变量和数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2%EF%BC%89awk%E8%BF%90%E7%AE%97"><span class="toc-text">5.2）awk运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3%EF%BC%89awk-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">5.3）awk 环境变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4%EF%BC%89%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-text">5.4）流程控制</span></a></li></ol></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">Linux配置文件</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/">shell脚本高手速成</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-30T01:27:13.000Z">2023-09-30</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>shell数据筛选与处理</span></h1>
+<p>聊聊大家常说的数据分析：</p>
+<ul>
+<li>数据收集：负责数据的收集</li>
+<li>数据清洗：负责数据的筛选</li>
+<li>数据分析：数据运算、整理</li>
+<li>数据展示：图表或表格方式输出结果</li>
+</ul>
+<p><strong>shell脚本数据的处理</strong></p>
+<p> 1）数据检索:grep tr cut</p>
+<p> 2）数据处理:uniq sort tee paste xargs</p>
+<p>之前的脚本中我们都是通过grep、cut、tr、uniq、sort等命令通过管道组合在一起将字符串检索出来，然后在通过shell中对应的运算得到结果，在数据检索过程中大家可能也体会到了其中的辛苦和蹩脚。没办法，会的就这么多，还需要完成任务。</p>
+<p>缺点：复杂的命令组合</p>
+<p> 多次运算</p>
+<p> 上手难</p>
+<p><strong>解决办法</strong></p>
+<p>好了，学完这节课大家的所有之前的痛苦就都能解决了，今天要给大家介绍一个更加厉害的命令awk。他可以让大家从输出流中检索出自己需要的数据而不需要再向以前那样通过大量命令组合来完成，只需一个命令awk就能完成。并且还能够通过awk对数据进行处理，而不再需要额外的shell运算。</p>
+<p><strong>awk的应用场景</strong></p>
+<p> 字符串截取</p>
+<p> 数据运算</p>
+<p>比如内存使用率脚本</p>
+<h2 id="shell对输出流的处理-awk"><a href="#shell对输出流的处理-awk" class="headerlink" title="shell对输出流的处理-awk"></a>shell对输出流的处理-awk</h2><h3 id="1、awk介绍"><a href="#1、awk介绍" class="headerlink" title="1、awk介绍"></a>1、awk介绍</h3><p>在日常计算机管理中，总会有很多数据输出到屏幕或者文件，这些输出包含了标准输出、标准错误输出。默认情况下，这些信息全部输出到默认输出设备—屏幕。然而，大量的数据输出中，只有一小部分是我们需要重点关注的，我们需要把我们需要的或者关注的这些信息过滤或者提取以备后续需要时调用。早先的学习中，我们学过使用grep来过滤这些数据，使用cut、tr命令提出某些字段，但是他们都不具备提取并处理数据的能力，都必须先过滤，再提取转存到变量，然后在通过变量提取去处理，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">内存使用率的统计步骤</span><br><span class="line"></span><br><span class="line">1) 通过free -m提取出内存总量，赋值给变量 memory_totle</span><br><span class="line"></span><br><span class="line">2）通过free -m提取出n内存使用量，赋值给变量memory_use</span><br><span class="line"></span><br><span class="line">3）通过数学运算计算内存使用率</span><br></pre></td></tr></table></figure>
+
+<p>需要执行多步才能得到内存使用率，那么有没有一个命令能够集过滤、提取、运算为一体呢？当然，就是今天我要给大家介绍的命令：awk</p>
+<p>平行命令还有gawk、pgawk、dgawk</p>
+<p>awk是一种可以处理数据、产生格式化报表的语言，功能十分强大。awk 认为文件中的每一行是一条记录 记录与记录的分隔符为换行符,每一列是一个字段 字段与字段的分隔符默认是一个或多个空格或tab制表符.</p>
+<p>awk的工作方式是读取数据，将每一行数据视为一条记录（record）每条记录以字段分隔符分成若干字段，然后输出各个字段的值.</p>
+<h3 id="2、awk语法"><a href="#2、awk语法" class="headerlink" title="2、awk语法"></a>2、awk语法</h3><p>awk [options] ‘[BEGIN]{program}[END]’ [FILENAME]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">常用命令选项</span><br><span class="line">-F fs 指定描绘一行中数据字段的文件分隔符  默认为空格</span><br><span class="line">-f file 指定读取程序的文件名</span><br><span class="line">-v var=value 定义awk程序中使用的变量和默认值</span><br><span class="line"></span><br><span class="line">注意：awk 程序由左大括号和右大括号定义。 程序命令必须放置在两个大括号之间。由于awk命令行假定程序是单文本字符串，所以必须将程序包括在单引号内。</span><br><span class="line">1）程序必须放在大括号内</span><br><span class="line">2）程序必须要用单引号引起来</span><br><span class="line"></span><br><span class="line">awk程序运行优先级是:</span><br><span class="line">    1)BEGIN: 在开始处理数据流之前执行，可选项</span><br><span class="line">    2)program: 如何处理数据流，必选项</span><br><span class="line">    3)END: 处理完数据流后执行，可选项</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、awk基本应用"><a href="#3、awk基本应用" class="headerlink" title="3、awk基本应用"></a>3、awk基本应用</h3><p>能够熟练使用awk对标准输出的行、列、字符串截取</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat test </span><br><span class="line">1 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">2 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">3 the quick brown fox         jumps over the lazy cat . dog</span><br><span class="line">4 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">5 the quick brown fox jumps over the lazy cat . dog</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1）awk对字段-列-的提取"><a href="#3-1）awk对字段-列-的提取" class="headerlink" title="3.1）awk对字段(列)的提取"></a>3.1）awk对字段(列)的提取</h3><p>字段提取:提取一个文本中的一列数据并打印输出</p>
+<p>字段相关内置变量</p>
+<p>$0 表示整行文本</p>
+<p>$1 表示文本行中的第一个数据字段</p>
+<p>$2 表示文本行中的第二个数据字段</p>
+<p>$N 表示文本行中的第N个数据字段</p>
+<p>$NF 表示文本行中的最后一个数据字段</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">读入test每行数据并把每行数据打印出来</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;print $0&#125;&#x27; test </span><br><span class="line">1 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">2 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">3 the quick brown fox         jumps over the lazy cat . dog</span><br><span class="line">4 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">5 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line"></span><br><span class="line">打印test第六个字段</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;print $6&#125;&#x27; test</span><br><span class="line">jumps</span><br><span class="line">jumps</span><br><span class="line">jumps</span><br><span class="line">jumps</span><br><span class="line">jumps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">打印test最后一个字段</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;print $NF&#125;&#x27; test</span><br><span class="line">dog</span><br><span class="line">dog</span><br><span class="line">dog</span><br><span class="line">dog</span><br><span class="line">dog</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2）命令选项详解"><a href="#3-2）命令选项详解" class="headerlink" title="3.2）命令选项详解"></a>3.2）命令选项详解</h4><p>-F: 指定字段与字段的分隔符</p>
+<p>当输出的数据流字段格式不是awk默认的字段格式时，我们可以使用-F命令选项来重新定义数据流字段分隔符。比如:</p>
+<p>处理的文件是&#x2F;etc&#x2F;passwd，希望打印第一列、第三列、最后一列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk -F &#x27;:&#x27; &#x27;&#123;print $1,$3,$NF&#125;&#x27; /etc/passwd</span><br><span class="line">root 0 /bin/bash</span><br><span class="line">bin 1 /sbin/nologin</span><br><span class="line">daemon 2 /sbin/nologin</span><br><span class="line">adm 3 /sbin/nologin</span><br><span class="line">lp 4 /sbin/nologin</span><br><span class="line">sync 5 /bin/sync</span><br><span class="line">shutdown 6 /sbin/shutdown</span><br><span class="line">halt 7 /sbin/halt</span><br><span class="line">mail 8 /sbin/nologin</span><br><span class="line">operator 11 /sbin/nologin</span><br><span class="line">games 12 /sbin/nologin</span><br><span class="line">ftp 14 /sbin/nologin</span><br><span class="line">nobody 99 /sbin/nologin</span><br><span class="line">systemd-network 192 /sbin/nologin</span><br><span class="line">dbus 81 /sbin/nologin</span><br><span class="line">polkitd 999 /sbin/nologin</span><br><span class="line">postfix 89 /sbin/nologin</span><br><span class="line">chrony 998 /sbin/nologin</span><br><span class="line">sshd 74 /sbin/nologin</span><br><span class="line">ntp 38 /sbin/nologin</span><br><span class="line">tcpdump 72 /sbin/nologin</span><br><span class="line">nscd 28 /sbin/nologin</span><br><span class="line">mysql 997 /sbin/nologin</span><br><span class="line">www 996 /sbin/nologin</span><br><span class="line">apache 48 /sbin/nologin</span><br><span class="line">tss 59 /sbin/nologin</span><br><span class="line">zabbix 995 /sbin/nologin</span><br><span class="line">saslauth 994 /sbin/nologin</span><br><span class="line">grafana 993 /sbin/nologin</span><br><span class="line"></span><br><span class="line">可以看的出，awk输出字段默认的分隔符也是空格</span><br></pre></td></tr></table></figure>
+
+<p>-f file: 如果awk命令是日常重复工作，而又没有太多变化，可以将程序写入文件，每次使用-f调用程序文件就好，方便，高效。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cat abc </span><br><span class="line">&#123;print $1,$3,$NF&#125;</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk -f abc test</span><br><span class="line">1 quick dog</span><br><span class="line">2 quick dog</span><br><span class="line">3 quick dog</span><br><span class="line">4 quick dog</span><br><span class="line">5 quick dog</span><br></pre></td></tr></table></figure>
+
+<p>-v 定义变量，既然作者写awk的时候就是按着语言去写的，那么语言中最重要的要素—变量肯定不能缺席，所以可以使用-v命令选项定义变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk -v name=&#x27;baism&#x27; &#x27;BEGIN&#123;print name&#125;&#x27;</span><br><span class="line">baism</span><br><span class="line"></span><br><span class="line">定义了一个变量 name=baism，然后调用变量读出数据。</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3）awk对记录-行-的提取"><a href="#3-3）awk对记录-行-的提取" class="headerlink" title="3.3）awk对记录(行)的提取"></a>3.3）awk对记录(行)的提取</h4><p>记录提取：提取一个文本中的一行并打印输出</p>
+<p>记录的提取方法有两种：a、通过行号 b、通过正则匹配</p>
+<p>记录相关内置变量</p>
+<p>NR: 指定行号 number row</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">提取test第三行数据</span><br><span class="line"></span><br><span class="line">指定行号为3</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;NR==3&#123;print $0&#125;&#x27; test </span><br><span class="line">3 the quick brown fox         jumps over the lazy cat . dog</span><br><span class="line"></span><br><span class="line">指定行的第一个字段精确匹配字符串为3</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;$1==&quot;3&quot;&#123;print $0&#125;&#x27; test </span><br><span class="line">3 the quick brown fox         jumps over the lazy cat . dog</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4）awk对字符串提取"><a href="#3-4）awk对字符串提取" class="headerlink" title="3.4）awk对字符串提取"></a>3.4）awk对字符串提取</h4><p>记录和字段的汇合点就是字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">打印test第三行的第六个字段</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;NR==3&#123;print $6&#125;&#x27; test</span><br><span class="line">jumps</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、awk程序的优先级"><a href="#4、awk程序的优先级" class="headerlink" title="4、awk程序的优先级"></a>4、awk程序的优先级</h3><p>awk代码块的优先级</p>
+<p>关于awk程序的执行优先级，BEGIN是优先级最高的代码块，是在执行PROGRAM之前执行的，不需要提供数据源，因为不涉及到任何数据的处理，也不依赖与PROGRAM代码块；PROGRAM是对数据流干什么，是必选代码块，也是默认代码块。所以在执行时必须提供数据源；END是处理完数据流后的操作，如果需要执行END代码块，就必须需要PROGRAM的支持，单个无法执行。</p>
+<p>BEGIN：处理数据源之前干什么 不需要数据源就可以执行</p>
+<p>PROGRAM： 对数据源干什么 【默认必须有】 需要数据源</p>
+<p>END：处理完数据源后干什么 需要program 需要数据源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">优先级展示</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print &quot;hello zutuanxue&quot;&#125;&#123;print $0&#125;END&#123;print &quot;bye zutuanxue&quot;&#125;&#x27; test</span><br><span class="line">hello zutuanxue</span><br><span class="line">1 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">2 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">3 the quick brown fox         jumps over the lazy cat . dog</span><br><span class="line">4 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">5 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">bye zutuanxue</span><br><span class="line"></span><br><span class="line">不需要数据源，可以直接执行</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print &quot;hello world&quot;&#125;&#x27;</span><br><span class="line">hello world</span><br><span class="line"></span><br><span class="line">没有提供数据流，所以无法执行成功</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;print &quot;hello world&quot;&#125;&#x27;</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;END&#123;print &quot;hello world&quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、awk高级应用"><a href="#5、awk高级应用" class="headerlink" title="5、awk高级应用"></a>5、awk高级应用</h3><p>awk是一门语言，那么就会符合语言的特性，除了可以定义变量外，还可以定义数组，还可以进行运算，流程控制，我们接下来看看吧。</p>
+<h4 id="5-1）awk定义变量和数组"><a href="#5-1）awk定义变量和数组" class="headerlink" title="5.1）awk定义变量和数组"></a>5.1）awk定义变量和数组</h4><p>定义变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk -v name=&#x27;baism&#x27; &#x27;BEGIN&#123;print name&#125;&#x27;</span><br><span class="line">baism</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;name=&quot;baism&quot;;print name&#125;&#x27;</span><br><span class="line">baism</span><br></pre></td></tr></table></figure>
+
+<p>数组定义方式: 数组名[索引]&#x3D;值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">定义数组array，有两个元素，分别是100，200，打印数组元素。</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;array[0]=100;array[1]=200;print array[0],array[1]&#125;&#x27;</span><br><span class="line">100 200</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;a[0]=100;a[1]=200;print a[0]&#125;&#x27;</span><br><span class="line">100</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;a[0]=100;a[1]=200;print a[1]&#125;&#x27;</span><br><span class="line">200</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2）awk运算"><a href="#5-2）awk运算" class="headerlink" title="5.2）awk运算"></a>5.2）awk运算</h4><ol>
+<li>赋值运算 &#x3D;</li>
+<li>比较运算 &gt; &gt;&#x3D; &#x3D;&#x3D; &lt; &lt;&#x3D; !&#x3D;</li>
+<li>数学运算 + - * &#x2F; % ** ++ –</li>
+<li>逻辑运算 &amp;&amp; || ！</li>
+<li>匹配运算 ~ !~ 精确匹配 &#x3D;&#x3D; !&#x3D;</li>
+</ol>
+<p>a.赋值运算：主要是对变量或者数组赋值，如：</p>
+<p>变量赋值 name&#x3D;‘baism’ school&#x3D;‘zutuanxue’</p>
+<p>数组赋值 array[0]&#x3D;100</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk -v name=&#x27;baism&#x27; &#x27;BEGIN&#123;print name&#125;&#x27;</span><br><span class="line">baism</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;school=&quot;zutuanxue&quot;;print school&#125;&#x27;</span><br><span class="line">zutuanxue</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;array[0]=100;print array[0]&#125;&#x27;</span><br><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<p>b.比较运算，如果比较的是字符串则按ascii编码顺序表比较。如果结果返回为真则用1表示，如果返回为假则用0表示</p>
+<p>ascii</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print &quot;a&quot; &gt;= &quot;b&quot; &#125;&#x27;</span><br><span class="line">0</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print &quot;a&quot; &lt;= &quot;b&quot; &#125;&#x27;</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk &#x27;$1&gt;4&#123;print $0&#125;&#x27; test</span><br><span class="line">5 the quick brown fox jumps over the lazy cat . dog</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100 &gt;= 1 &#125;&#x27;</span><br><span class="line">1</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100 == 1 &#125;&#x27;</span><br><span class="line">0</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100 &lt;= 1 &#125;&#x27;</span><br><span class="line">0</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100 &lt; 1 &#125;&#x27;</span><br><span class="line">0</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100 != 1 &#125;&#x27;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>c.数学运算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100+3 &#125;&#x27;</span><br><span class="line">103</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100-3 &#125;&#x27;</span><br><span class="line">97</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100*3 &#125;&#x27;</span><br><span class="line">300</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100/3 &#125;&#x27;</span><br><span class="line">33.3333</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100**3 &#125;&#x27;</span><br><span class="line">1000000</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100%3 &#125;&#x27;</span><br><span class="line">1</span><br><span class="line">[root@zutuanxue ~]# awk -v &#x27;count=0&#x27; &#x27;BEGIN&#123;count++;print count&#125;&#x27;</span><br><span class="line">1</span><br><span class="line">[root@zutuanxue ~]# awk -v &#x27;count=0&#x27; &#x27;BEGIN&#123;count--;print count&#125;&#x27;</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+<p>d.逻辑运算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">与运算:真真为真，真假为假，假假为假</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100&gt;=2 &amp;&amp; 100&gt;=3 &#125;&#x27;</span><br><span class="line">1</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100&gt;=2 &amp;&amp; 1&gt;=100 &#125;&#x27;</span><br><span class="line">0</span><br><span class="line"></span><br><span class="line">或运算:真真为真，真假为真，假假为假</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100&gt;=2 || 1&gt;=100 &#125;&#x27;</span><br><span class="line">1</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;print 100&gt;=200 || 1&gt;=100 &#125;&#x27;</span><br><span class="line">0</span><br><span class="line"></span><br><span class="line">非运算</span><br><span class="line">[root@manage01 resource]# awk &#x27;BEGIN&#123;print ! (100&gt;=2)&#125;&#x27;</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+
+<p>e.匹配运算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# awk -F &#x27;:&#x27; &#x27;$1 ~ &quot;^ro&quot; &#123;print $0&#125;&#x27; /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# awk -F &#x27;:&#x27; &#x27;$1 !~ &quot;^ro&quot; &#123;print $0&#125;&#x27; /etc/passwd</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br><span class="line">shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown</span><br><span class="line">halt:x:7:0:halt:/sbin:/sbin/halt</span><br><span class="line">mail:x:8:12:mail:/var/spool/mail:/sbin/nologin</span><br><span class="line">operator:x:11:0:operator:/root:/sbin/nologin</span><br><span class="line">games:x:12:100:games:/usr/games:/sbin/nologin</span><br><span class="line">ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin</span><br><span class="line">nobody:x:99:99:Nobody:/:/sbin/nologin</span><br><span class="line">systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line">polkitd:x:999:997:User for polkitd:/:/sbin/nologin</span><br><span class="line">postfix:x:89:89::/var/spool/postfix:/sbin/nologin</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin</span><br><span class="line">ntp:x:38:38::/etc/ntp:/sbin/nologin</span><br><span class="line">tcpdump:x:72:72::/:/sbin/nologin</span><br><span class="line">nscd:x:28:28:NSCD Daemon:/:/sbin/nologin</span><br><span class="line">mysql:x:997:995::/home/mysql:/sbin/nologin</span><br><span class="line">www:x:996:994::/home/www:/sbin/nologin</span><br><span class="line">apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">tss:x:59:59:Account used by the trousers package to sandbox the tcsd daemon:/dev/null:/sbin/nologin</span><br><span class="line">zabbix:x:995:993:Zabbix Monitoring System:/var/lib/zabbix:/sbin/nologin</span><br><span class="line">saslauth:x:994:76:Saslauthd user:/run/saslauthd:/sbin/nologin</span><br><span class="line">grafana:x:993:992:grafana user:/usr/share/grafana:/sbin/nologin</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3）awk-环境变量"><a href="#5-3）awk-环境变量" class="headerlink" title="5.3）awk 环境变量"></a>5.3）awk 环境变量</h4><table>
+<thead>
+<tr>
+<th align="left">变量</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">FIELDWIDTHS</td>
+<td align="left">以空格分隔的数字列表，用空格定义每个数据字段的精确宽度</td>
+</tr>
+<tr>
+<td align="left">FS</td>
+<td align="left">输入字段分隔符号 数据源的字段分隔符 -F</td>
+</tr>
+<tr>
+<td align="left">OFS</td>
+<td align="left">输出字段分隔符号</td>
+</tr>
+<tr>
+<td align="left">RS</td>
+<td align="left">输入记录分隔符</td>
+</tr>
+<tr>
+<td align="left">ORS</td>
+<td align="left">输出记录分隔符号</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">FIELDWIDTHS:重定义列宽并打印，注意不可以使用$0打印所有，因为$0是打印本行全内容，不会打印你定义的字段</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;FIELDWIDTHS=&quot;5 2 8&quot;&#125;NR==1&#123;print $1,$2,$3&#125;&#x27; /etc/passwd</span><br><span class="line">root: x: 0:0:root</span><br><span class="line"></span><br><span class="line">FS:指定数据源中字段分隔符，类似命令选项-F</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;FS=&quot;:&quot;&#125;NR==1&#123;print $1,$3,$NF&#125;&#x27; /etc/passwd</span><br><span class="line">root 0 /bin/bash</span><br><span class="line"></span><br><span class="line">OFS:指定输出到屏幕后字段的分隔符</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;FS=&quot;:&quot;;OFS=&quot;-&quot;&#125;NR==1&#123;print $1,$3,$NF&#125;&#x27; /etc/passwd</span><br><span class="line">root-0-/bin/bash</span><br><span class="line"></span><br><span class="line">RS:指定记录的分隔符</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;RS=&quot;&quot;&#125;&#123;print $1,$13,$25,$37,$49&#125;&#x27; test</span><br><span class="line">1 2 3 4 5</span><br><span class="line"></span><br><span class="line">将记录的分隔符修改为空行后，所有的行会变成一行，所以所有字段就在一行了。</span><br><span class="line"></span><br><span class="line">ORS:输出到屏幕后记录的分隔符，默认为回车</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;BEGIN&#123;RS=&quot;&quot;;ORS=&quot;*&quot;&#125;&#123;print $1,$13,$25,$37,$49&#125;&#x27; test</span><br><span class="line">1 2 3 4 5*[root@zutuanxue ~]# </span><br><span class="line"></span><br><span class="line">可以看出，提示符和输出在一行了，因为默认回车换成了*</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-4）流程控制"><a href="#5-4）流程控制" class="headerlink" title="5.4）流程控制"></a>5.4）流程控制</h4><p><strong>if判断语句</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat num</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line"></span><br><span class="line">单if语句</span><br><span class="line">打印$1大于5的行</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;if($1&gt;5)print $0&#125;&#x27; num</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line"></span><br><span class="line">if...else语句</span><br><span class="line">假如$1大于5则除以2输出，否则乘以2输出</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;if($1&gt;5)print $1/2;else print $1*2&#125;&#x27; num</span><br><span class="line">2</span><br><span class="line">4</span><br><span class="line">6</span><br><span class="line">8</span><br><span class="line">10</span><br><span class="line">3</span><br><span class="line">3.5</span><br><span class="line">4</span><br><span class="line">4.5</span><br></pre></td></tr></table></figure>
+
+<p><strong>for循环语句</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat num2</span><br><span class="line">60 50 100</span><br><span class="line">150 30 10</span><br><span class="line">70 100 40</span><br><span class="line"></span><br><span class="line">将一行中的数据都加起来  $1+$2+$3</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;sum=0;for (i=1;i&lt;4;i++)&#123;sum+=$i&#125;print sum&#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">190</span><br><span class="line">210</span><br><span class="line"></span><br><span class="line">如果看的不明白可以看下面格式</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;</span><br><span class="line">&gt; sum=0</span><br><span class="line">&gt; for (i=1;i&lt;4;i++) &#123;</span><br><span class="line">&gt;     sum+=$i</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt; print sum</span><br><span class="line">&gt; &#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">190</span><br><span class="line">210</span><br></pre></td></tr></table></figure>
+
+<p><strong>while循环语句</strong>–先判断后执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat num2</span><br><span class="line">60 50 100</span><br><span class="line">150 30 10</span><br><span class="line">70 100 40</span><br><span class="line"></span><br><span class="line">将文件中的每行的数值累加，和大于或等于150就停止累加</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;sum=0;i=1;while(sum&lt;150)&#123;sum+=$i;i++&#125;print sum&#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">150</span><br><span class="line">170</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">如果看的不明白可以看下面格式</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;                                                 </span><br><span class="line">sum=0</span><br><span class="line">i=1</span><br><span class="line">while (sum&lt;150) &#123;</span><br><span class="line">   sum+=$i</span><br><span class="line">   i++</span><br><span class="line">&#125;</span><br><span class="line">print sum</span><br><span class="line">&#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">150</span><br><span class="line">170</span><br></pre></td></tr></table></figure>
+
+<p><strong>do…while循环语句</strong>–先执行后判断</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat num2</span><br><span class="line">60 50 100</span><br><span class="line">150 30 10</span><br><span class="line">70 100 40</span><br><span class="line"></span><br><span class="line">将文件中的每行的数值累加，和大于或等于150就停止累加</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;sum=0;i=1;do&#123;sum+=$i;i++&#125;while(sum&lt;150);print sum&#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">150</span><br><span class="line">170</span><br><span class="line">如果看的不明白可以看下面格式</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;</span><br><span class="line">&gt; sum=0</span><br><span class="line">&gt; i=1</span><br><span class="line">&gt; do &#123;</span><br><span class="line">&gt; sum+=$i</span><br><span class="line">&gt; i++</span><br><span class="line">&gt; &#125;while (sum&lt;150)</span><br><span class="line">&gt; print sum</span><br><span class="line">&gt; &#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">150</span><br><span class="line">170</span><br></pre></td></tr></table></figure>
+
+<p><strong>循环控制语句</strong></p>
+<p>break 跳出循环,继续执行后续语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">学习用例</span><br><span class="line">[root@zutuanxue ~]# cat num2</span><br><span class="line">60 50 100</span><br><span class="line">150 30 10</span><br><span class="line">70 100 40</span><br><span class="line"></span><br><span class="line">累加每行数值，和大于150停止累加</span><br><span class="line">[root@zutuanxue ~]# awk &#x27;&#123;</span><br><span class="line">&gt; sum=0</span><br><span class="line">&gt; i=1</span><br><span class="line">&gt; while (i&lt;4)&#123;</span><br><span class="line">&gt;    sum+=$i</span><br><span class="line">&gt;    if (sum&gt;150)&#123;</span><br><span class="line">&gt;       break</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;    i++</span><br><span class="line">&gt; &#125;</span><br><span class="line">&gt; print sum</span><br><span class="line">&gt; &#125;&#x27; num2</span><br><span class="line">210</span><br><span class="line">180</span><br><span class="line">170</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E5%AF%B9%E6%96%87%E4%BB%B6%E7%9A%84%E6%93%8D%E4%BD%9C/">shell对文件的操作</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6-if%E5%88%A4%E6%96%AD%E8%AF%AD%E5%8F%A5/">shell流程控制-if判断语句</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

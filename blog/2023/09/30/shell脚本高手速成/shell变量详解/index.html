@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>shell变量详解 - 原点独白</title>
+
+  
+    <meta name="description" content="一、变量介绍在编程中，我们总有一些数据需要临时存放在内存，以待后续使用时快速读出。先了解一下计算机的存储单位吧。 1234567891011121314计算机的单位:1B&#x3D;8bit1KB&#x3D;1024B1MB&#x3D;1024KB1GB&#x3D;1024MB1TB&#x3D;1024GB1PB&#x3D;1024TB1EB&#x3D;1024PB1ZB&#x3D;1024EB...好了，已经够大了！当然还有YB、BB更大的单位，同样进制也是1024.1G&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell变量详解">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E5%8F%98%E9%87%8F%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、变量介绍在编程中，我们总有一些数据需要临时存放在内存，以待后续使用时快速读出。先了解一下计算机的存储单位吧。 1234567891011121314计算机的单位:1B&#x3D;8bit1KB&#x3D;1024B1MB&#x3D;1024KB1GB&#x3D;1024MB1TB&#x3D;1024GB1PB&#x3D;1024TB1EB&#x3D;1024PB1ZB&#x3D;1024EB...好了，已经够大了！当然还有YB、BB更大的单位，同样进制也是1024.1G&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/9/21/1600685218168.png">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/9/21/1600685550727.png">
+<meta property="article:published_time" content="2023-09-30T01:27:13.000Z">
+<meta property="article:modified_time" content="2023-09-30T13:27:13.521Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/9/21/1600685218168.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">shell变量详解</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8F%98%E9%87%8F%E4%BB%8B%E7%BB%8D"><span class="toc-text">一、变量介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89"><span class="toc-text">二、变量定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1%E3%80%81%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F%EF%BC%9F"><span class="toc-text">2.1、什么时候需要定义变量？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2%E3%80%81%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%8F%98%E9%87%8F"><span class="toc-text">2.2、定义一个变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3%E3%80%81%E5%8F%96%E6%B6%88%E5%8F%98%E9%87%8F-unset"><span class="toc-text">2.3、取消变量 unset</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4%E3%80%81-%E6%9C%89%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F-declare"><span class="toc-text">2.4、 有类型变量 declare</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%8F%98%E9%87%8F%E5%88%86%E7%B1%BB"><span class="toc-text">三、变量分类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1%E3%80%81%E6%9C%AC%E5%9C%B0%E5%8F%98%E9%87%8F"><span class="toc-text">3.1、本地变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2%E3%80%81%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">3.2、环境变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3%E3%80%81%E5%B0%86%E5%BD%93%E5%89%8D%E5%8F%98%E9%87%8F%E5%8F%98%E6%88%90%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-export"><span class="toc-text">3.3、将当前变量变成环境变量 export</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4%E3%80%81%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-text">3.4、全局变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5%E3%80%81%E5%86%85%E7%BD%AE%E5%8F%98%E9%87%8F"><span class="toc-text">3.5、内置变量</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8F%98%E9%87%8F%E5%8F%96%E5%80%BC"><span class="toc-text">四、变量取值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%85%B6%E4%BB%96%E5%8F%98%E9%87%8F%EF%BC%88%E6%89%A9%E5%B1%95%EF%BC%89"><span class="toc-text">五、其他变量（扩展）</span></a></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">Linux配置文件</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/">shell脚本高手速成</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-30T01:27:13.000Z">2023-09-30</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>shell变量详解</span></h1>
+<h2 id="一、变量介绍"><a href="#一、变量介绍" class="headerlink" title="一、变量介绍"></a>一、变量介绍</h2><p>在编程中，我们总有一些数据需要临时存放在内存，以待后续使用时快速读出。先了解一下计算机的存储单位吧。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">计算机的单位:</span><br><span class="line">1B=8bit</span><br><span class="line"></span><br><span class="line">1KB=1024B</span><br><span class="line">1MB=1024KB</span><br><span class="line">1GB=1024MB</span><br><span class="line">1TB=1024GB</span><br><span class="line">1PB=1024TB</span><br><span class="line">1EB=1024PB</span><br><span class="line">1ZB=1024EB</span><br><span class="line">...</span><br><span class="line">好了，已经够大了！当然还有YB、BB更大的单位，同样进制也是1024.</span><br><span class="line"></span><br><span class="line">1G=1024*1024*1024=1073741824B</span><br></pre></td></tr></table></figure>
+
+<p>假如你将一个1B的字符存入内存，如何读出呢？有没有一种大海捞针的感觉啊！我们讨论一下计算机是如何通过让我们人类快速将数据存在内存，如何从内存中读出数据的。我们研究过变量后就明白了。</p>
+<p>变量：变量是编程中最常用的一种临时在内存中存取数据的一种方式。</p>
+<p>变量存取原理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">关于内存的说明</span><br><span class="line">a、系统启动    内存被按照1B一个单位划分成N块     并且以十六进制为每一个空间编号</span><br><span class="line"></span><br><span class="line">b、内存跟踪表记录  使用和未使用的内存的地址编号</span><br><span class="line"></span><br><span class="line">c、内存申请    系统从未使用的内存中拿出一个或者一段连续空间  给你使用   同时在内存跟踪表中记录</span><br><span class="line">该地址被占用不在分给别人，同时在系统中建立映射机制   </span><br><span class="line">比如:变量名 STRING1=‘ABC’</span><br><span class="line"></span><br><span class="line">name&lt;==&gt;0x5</span><br><span class="line"></span><br><span class="line">d、释放内存</span><br><span class="line">从内存跟踪表中将记录删除，下次存数据直接覆盖</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/9/21/1600685218168.png" alt="变量存储.png"/></div><div class="image-meta"><span class="image-caption center">变量存储.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CHAR1(0x3)=A</span><br><span class="line">从图片可以看出，当我们在脚本中定义变量存值的时候，可以从以下方面看到变化：</span><br><span class="line">a、内存占用：如果存的是一个字符则占用1个字节，如果存的是字符串则是字符串的长度加1个字节长度(\0是一个</span><br><span class="line">特殊字符，代表字符串结束)。</span><br><span class="line"></span><br><span class="line">b、变量名与内存空间关系：计算机中会将对应的内存空间地址和变量名称绑定在一起，此时代表这段内存空间已经被</span><br><span class="line">程序占用，其他程序不可复用；然后将变量名对应的值存在对应内存地址的空间里。</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、变量定义"><a href="#二、变量定义" class="headerlink" title="二、变量定义"></a>二、变量定义</h2><h5 id="2-1、什么时候需要定义变量？"><a href="#2-1、什么时候需要定义变量？" class="headerlink" title="2.1、什么时候需要定义变量？"></a>2.1、什么时候需要定义变量？</h5><p>如果某个内容需要多次使用，并且在代码中重复出现，那么可以用变量代表该内容。这样在修改内容的时候，仅仅需要修改变量的值。<br>在代码运作的过程中，可能会把某些命令的执行结果保存起来，后续代码需要使用这些结果，就可以直接使用这个变量。</p>
+<h5 id="2-2、定义一个变量"><a href="#2-2、定义一个变量" class="headerlink" title="2.2、定义一个变量"></a>2.2、定义一个变量</h5><p>变量格式： 变量名&#x3D;值</p>
+<p>在shell编程中的变量名和等号之间不能有空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">变量名命名规则：</span><br><span class="line">    命名只能使用英文字母，数字和下划线，首个字符不能以数字开头。</span><br><span class="line">    中间不能有空格，可以使用下划线（_）。</span><br><span class="line">    不能使用标点符号。</span><br><span class="line">    不能使用bash里的关键字（可用help命令查看保留关键字）。</span><br></pre></td></tr></table></figure>
+
+<p>定义变量举例：<br>VAR1&#x3D;1<br>age&#x3D;18 整形<br>name&#x3D;‘baism’ 字符串<br>score&#x3D;88.8 浮点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">注意：字符串要用单引号或双引号引起来</span><br><span class="line">建议变量名为大写，和命令区分</span><br><span class="line">			_name</span><br></pre></td></tr></table></figure>
+
+<p>定义变量演示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">变量赋值，此种方法设置为本地变量</span><br><span class="line">[root@zutuanxue ~]# name=&quot;baism&quot;</span><br><span class="line">[root@zutuanxue ~]# school=&#x27;ayitula&#x27;</span><br><span class="line">[root@zutuanxue ~]# age=30</span><br><span class="line">[root@zutuanxue ~]# score=88.8</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3、取消变量-unset"><a href="#2-3、取消变量-unset" class="headerlink" title="2.3、取消变量 unset"></a>2.3、取消变量 unset</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">取消当前环境中的变量，如果是变量设置是保存在文件中，下次重启又会恢复</span><br><span class="line">[root@zutuanxue ~]# unset name</span><br><span class="line">[root@zutuanxue ~]# echo $name</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-4、-有类型变量-declare"><a href="#2-4、-有类型变量-declare" class="headerlink" title="2.4、 有类型变量 declare"></a>2.4、 有类型变量 declare</h5><p>-i 将变量看成整数<br>-r 使变量只读 readonly,该变量的值无法改变，并且不能为unset<br>-x 标记变量通过环境导出 export<br>-a 指定为索引数组（普通数组）；查看普通数组<br>-A 指定为关联数组；查看关联数组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# declare -i num=&#x27;asa&#x27;</span><br><span class="line">[root@zutuanxue ~]# echo $num</span><br><span class="line">0</span><br><span class="line">[root@zutuanxue ~]# num=100</span><br><span class="line">[root@zutuanxue ~]# echo $num</span><br><span class="line">100</span><br><span class="line">[root@zutuanxue ~]# declare -r num</span><br><span class="line">[root@zutuanxue ~]# echo $num</span><br><span class="line">100</span><br><span class="line">[root@zutuanxue~]# num=200</span><br><span class="line">-bash: num: 只读变量</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# declare -x</span><br><span class="line">declare -x HISTCONTROL=&quot;ignoredups&quot;</span><br><span class="line">declare -x HISTSIZE=&quot;1000&quot;</span><br><span class="line">declare -x HOME=&quot;/root&quot;</span><br><span class="line">declare -x HOSTNAME=&quot;Bai_Shuming&quot;</span><br><span class="line">declare -x LANG=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">declare -x LESSOPEN=&quot;||/usr/bin/lesspipe.sh %s&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、变量分类"><a href="#三、变量分类" class="headerlink" title="三、变量分类"></a>三、变量分类</h2><p>系统中的变量根据作用域及生命周期可以分为四类：本地变量、环境变量、全局变量、内置变量</p>
+<h5 id="3-1、本地变量"><a href="#3-1、本地变量" class="headerlink" title="3.1、本地变量"></a>3.1、本地变量</h5><p>用户自定义的变量，定义在脚本或者当前终端中，脚本执行完毕或终端结束变量失效。</p>
+<h5 id="3-2、环境变量"><a href="#3-2、环境变量" class="headerlink" title="3.2、环境变量"></a>3.2、环境变量</h5><p>定义在用户家目录下的.bashrc或.bash_profile文件中，用户私有变量，只能本用户使用。</p>
+<p>查看当前用户的环境变量 env</p>
+<p>查询当前用户的所有变量(临时变量与环境变量) set</p>
+<h5 id="3-3、将当前变量变成环境变量-export"><a href="#3-3、将当前变量变成环境变量-export" class="headerlink" title="3.3、将当前变量变成环境变量 export"></a>3.3、将当前变量变成环境变量 export</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">定义一个临时变量</span><br><span class="line">1、</span><br><span class="line">[root@zutuanxue tmp]# export A=hello //临时将一个本地变量（临时变量）变成环境变量</span><br><span class="line">[root@zutuanxue tmp]# env|grep ^A</span><br><span class="line">A=hello</span><br><span class="line">2、</span><br><span class="line">[root@zutuanxue tmp]# A=HELLO</span><br><span class="line">[root@zutuanxue tmp]# export A</span><br><span class="line"></span><br><span class="line">3、定义一个永久生效变量：</span><br><span class="line">vim .bash_profile 或者 ~/.bashrc</span><br><span class="line">A=hello</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">关于export说明</span><br><span class="line">用户登录时:</span><br><span class="line">1) 用户登录到Linux系统后，系统将启动一个用户shell。在这个shell中，可以使用shell命令或声明变量，也可以</span><br><span class="line">创建并运行 shell脚本程序。</span><br><span class="line"></span><br><span class="line">运行脚本时:</span><br><span class="line">2) 运行shell脚本程序时，系统将创建一个子shell。此时，系统中将有两个shell，一个是登录时系统启动的shell，</span><br><span class="line">另一个是系统为运行脚本程序创建的shell。当一个脚本程序运行完毕，它的脚本shell将终止，可以返回到执行该脚本</span><br><span class="line">之前的shell。</span><br><span class="line"></span><br><span class="line">从这种意义上来说，用户可以有许多 shell，每个shell都是由某个shell（称为父shell）派生的。</span><br><span class="line">在子shell中定义的变量只在该子shell内有效。如果在一个shell脚本程序中定义了一个变量，当该脚本程序运行时，</span><br><span class="line">这个定义的变量只是该脚本程序内的一个局部变量，其他的shell不能引用它，要使某个变量的值可以在其他shell中</span><br><span class="line">被改变，可以使用export命令对已定义的变量进行输出。 </span><br><span class="line"></span><br><span class="line">export命令将使系统在创建每一个新的shell时定义这个变量的一个拷贝。这个过程称之为变量输出。</span><br></pre></td></tr></table></figure>
+
+<p>父shell与子shell</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/9/21/1600685550727.png" alt="shell父子关系.png"/></div><div class="image-meta"><span class="image-caption center">shell父子关系.png</span></div></div>
+
+<h5 id="3-4、全局变量"><a href="#3-4、全局变量" class="headerlink" title="3.4、全局变量"></a>3.4、全局变量</h5><p>使用export命令将本地变量输出为当前shell中的环境变量<br>所有用户及shell都可以使用，可以在&#x2F;etc&#x2F;profile &#x2F;etc&#x2F;bashrc下永久定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">打印全局变量 printenv</span><br><span class="line"></span><br><span class="line">定义格式</span><br><span class="line">export SCHOOL=&#x27;zutuanxue&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">测试方法：</span><br><span class="line">通过不同用户登录测试是否能读取变量</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-5、内置变量"><a href="#3-5、内置变量" class="headerlink" title="3.5、内置变量"></a>3.5、内置变量</h5><p>系统变量(内置bash中变量) ： shell本身已经固定好了它的名字和作用.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">$?：上一条命令执行后返回的状态，当返回状态值为0时表示执行正常，非0值表示执行异常或出错</span><br><span class="line"> 若退出状态值为0，表示命令运行成功</span><br><span class="line"> 若退出状态值为127,表示command not found</span><br><span class="line"> 若退出状态值为126,表示找到了该命令但无法执行（权限不够）</span><br><span class="line"> 若退出状态值为1&amp;2,表示没有那个文件或目录</span><br><span class="line"> </span><br><span class="line">$$：当前所在进程的进程号     echo $$   eg：kill -9 `echo $$`  = exit   退出当前会话</span><br><span class="line"></span><br><span class="line">$!：后台运行的最后一个进程号  （当前终端）  # gedit &amp;</span><br><span class="line">!$ 调用最后一条命令历史中的参数</span><br><span class="line">!! 调用最后一条命令历史</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$#：脚本后面接的参数的个数</span><br><span class="line">$*：脚本后面所有参数，参数当成一个整体输出，每一个变量参数之间以空格隔开</span><br><span class="line">$@: 脚本后面所有参数，参数是独立的，也是全部输出</span><br><span class="line"></span><br><span class="line">$0：当前执行的进程/程序名  echo $0     </span><br><span class="line">$1~$9 位置参数变量</span><br><span class="line">$&#123;10&#125;~$&#123;n&#125; 扩展位置参数变量  第10个位置变量必须用&#123;&#125;大括号括起来</span><br><span class="line">./1.sh a b c</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# cat 2.sh </span><br><span class="line">#!/bin/bash</span><br><span class="line">#xxxx</span><br><span class="line">echo &quot;\$0 = $0&quot;</span><br><span class="line">echo &quot;\$# = $#&quot;</span><br><span class="line">echo &quot;\$* = $*&quot;</span><br><span class="line">echo &quot;\$@ = $@&quot;</span><br><span class="line">echo &quot;\$1 = $1&quot; </span><br><span class="line">echo &quot;\$2 = $2&quot; </span><br><span class="line">echo &quot;\$3 = $3&quot; </span><br><span class="line">echo &quot;\$11 = $&#123;11&#125;&quot; </span><br><span class="line">echo &quot;\$12 = $&#123;12&#125;&quot; </span><br><span class="line"></span><br><span class="line">了解$*和$@的区别：</span><br><span class="line">$* :表示将变量看成一个整体</span><br><span class="line">$@ :表示变量是独立的</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line">for i in &quot;$@&quot;</span><br><span class="line">do</span><br><span class="line">echo $i</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">echo &quot;======我是分割线=======&quot;</span><br><span class="line"></span><br><span class="line">for i in &quot;$*&quot;</span><br><span class="line">do</span><br><span class="line">echo $i</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">[root@zutuanxue shell01]# bash 3.sh a b c</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">======我是分割线=======</span><br><span class="line">a b c</span><br></pre></td></tr></table></figure>
+
+<p>变量总结说明：</p>
+<p>本地变量：当前用户自定义的变量。当前进程中有效，其他进程及当前进程的子进程无效。</p>
+<p>环境变量：当前进程有效，并且能够被子进程调用。</p>
+<p>全局变量：全局所有的用户和程序都能调用，且继承，新建的用户也默认能调用.</p>
+<p>内置变量：shell本身已经固定好了它的名字和作用.</p>
+<table>
+<thead>
+<tr>
+<th>变量类型</th>
+<th>作用域</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地变量</td>
+<td>当前shell环境(子shell不能用)</td>
+<td>脚本结束或终端结束</td>
+</tr>
+<tr>
+<td>环境变量</td>
+<td>当前shell或者子shell</td>
+<td>当前进程结束</td>
+</tr>
+<tr>
+<td>全局变量</td>
+<td>所有用户及shell环境</td>
+<td>关机</td>
+</tr>
+<tr>
+<td>内置变量</td>
+<td>所有用户及shell环境</td>
+<td>关机</td>
+</tr>
+</tbody></table>
+<h2 id="四、变量取值"><a href="#四、变量取值" class="headerlink" title="四、变量取值"></a>四、变量取值</h2><p>读取变量内容符: 读取方法：变量名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">变量内容读出</span><br><span class="line">[root@zutuanxue ~]# echo $name</span><br><span class="line">baism</span><br><span class="line">[root@zutuanxue ~]# echo $school</span><br><span class="line">ayitula</span><br><span class="line">[root@zutuanxue ~]# echo $age</span><br><span class="line">30</span><br><span class="line">[root@zutuanxue ~]# echo $score</span><br><span class="line">88.8</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">变量读取过程中，默认单引号是不解释变量的.比如</span><br><span class="line">[root@zutuanxue ~]# echo &#x27;$name&#x27;</span><br><span class="line">$name</span><br><span class="line"></span><br><span class="line">如果必须使用单引号还要读取变量的值可以使用eval命令[重新运算求出参数的内容] </span><br><span class="line">[root@zutuanxue ~]# eval  echo &#x27;$name&#x27;</span><br><span class="line">baism</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、其他变量（扩展）"><a href="#五、其他变量（扩展）" class="headerlink" title="五、其他变量（扩展）"></a>五、其他变量（扩展）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">1）取出一个目录下的目录和文件：dirname和 basename </span><br><span class="line">2）变量&quot;内容&quot;的删除和替换</span><br><span class="line">一个“%”代表从右往左去掉一个/key/</span><br><span class="line">两个“%%”代表从右往左最大去掉/key/</span><br><span class="line">一个“#”代表从左往右去掉一个/key/</span><br><span class="line">两个“##”代表从左往右最大去掉/key/</span><br><span class="line"></span><br><span class="line"># A=/root/Desktop/shell/mem.txt </span><br><span class="line"># echo $A</span><br><span class="line">/root/Desktop/shell/mem.txt</span><br><span class="line"># dirname $A   取出目录</span><br><span class="line">/root/Desktop/shell</span><br><span class="line"># basename $A  取出文件</span><br><span class="line">mem.txt</span><br><span class="line"></span><br><span class="line"># url=www.taobao.com</span><br><span class="line"># echo $&#123;#url&#125;      获取变量的长度</span><br><span class="line"># echo $&#123;url#*.&#125;       以分隔符.界限  *匹配所有</span><br><span class="line"># echo $&#123;url##*.&#125;</span><br><span class="line"># echo $&#123;url%.*&#125;</span><br><span class="line"># echo $&#123;url%%.*&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E5%87%BD%E6%95%B0/">shell函数</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/30/shell%E8%84%9A%E6%9C%AC%E9%AB%98%E6%89%8B%E9%80%9F%E6%88%90/shell%E5%AF%B9%E6%96%87%E4%BB%B6%E7%9A%84%E6%93%8D%E4%BD%9C/">shell对文件的操作</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

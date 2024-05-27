@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>shell数据处理 - 原点独白</title>
+
+  
+    <meta name="description" content="一、linux中的常用符号        * 代表任意字符串   ？ 代表任意字符   &#x2F; 代表根目录或作为路径间隔符使用   \ 转义字符。   &lt;ENTER&gt; 续行符。可以使用续行符将一个命令行分写在多行上   $ 变量值置换，如：$PATH表示环境变量PATH的值   ’ 在’…’中间的字符都会被当做普通字符处理   ‘’ 在’’…’’中间的字符会被当做文字处理并允许变">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell数据处理">
+<meta property="og:url" content="https://haozecloud.github.io/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shell%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="原点独白">
+<meta property="og:description" content="一、linux中的常用符号        * 代表任意字符串   ？ 代表任意字符   &#x2F; 代表根目录或作为路径间隔符使用   \ 转义字符。   &lt;ENTER&gt; 续行符。可以使用续行符将一个命令行分写在多行上   $ 变量值置换，如：$PATH表示环境变量PATH的值   ’ 在’…’中间的字符都会被当做普通字符处理   ‘’ 在’’…’’中间的字符会被当做文字处理并允许变">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603601398337.png">
+<meta property="article:published_time" content="2023-09-27T00:03:55.000Z">
+<meta property="article:modified_time" content="2023-09-27T12:03:56.545Z">
+<meta property="article:author" content="Zhang Hao Ze">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603601398337.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png">
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/原点独白-2023-10-04.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">原点独白</div><div class="sub cap">微信公众号</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/">文章</a><a class="nav-item" href="/wiki/">项目</a><a class="nav-item" href="/images/">照片</a><a class="nav-item" href="/more/">日常</a></nav>
+</header>
+
+
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">shell数据处理</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81linux%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E7%AC%A6%E5%8F%B7"><span class="toc-text">一、linux中的常用符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95"><span class="toc-text">二、历史记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E3%80%81%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA%E3%80%81%E6%A0%87%E5%87%86%E9%94%99%E8%AF%AF"><span class="toc-text">三、标准输入、标准输出、标准错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%AE%A1%E9%81%93"><span class="toc-text">四、管道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="toc-text">五、数据处理常用工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1%E3%80%81find%E6%96%87%E4%BB%B6%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4"><span class="toc-text">5.1、find文件查找命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2%E3%80%81grep-egrep-%E6%95%B0%E6%8D%AE%E6%A3%80%E7%B4%A2%E5%91%BD%E4%BB%A4"><span class="toc-text">5.2、grep&amp;egrep 数据检索命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3%E3%80%81sort-%E5%AF%B9%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="toc-text">5.3、sort 对文件内容进行排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4%E3%80%81uniq-%E6%95%B0%E6%8D%AE%E5%8E%BB%E9%87%8D"><span class="toc-text">5.4、uniq 数据去重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5%E3%80%81tree-%E4%BB%A5%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84%E5%88%97%E5%87%BA%E7%9B%AE%E5%BD%95%E5%86%85%E5%AE%B9"><span class="toc-text">5.5、tree 以树状结构列出目录内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6%E3%80%81xargs%E5%91%BD%E4%BB%A4"><span class="toc-text">5.6、xargs命令</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://pd.qq.com/s/77potx4h8" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/QQ-2023-09-29.svg"/></a><a class="social" href="https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=12070008&hosteuin=oinFoK4soe-lNn**&id=3144152480&ADTAG=wxfshare" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/qq音乐-2023-09-29.svg"/></a><a class="social" href="https://www.cnblogs.com/mant" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/linux-2023-09-29.svg"/></a><a class="social" href="https://alidocs.dingtalk.com/i/p/O5pXBPdVlgnMQG7Z" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://cloud-1317067033.cos.ap-chengdu.myqcloud.com/images/钉钉-2023-09-29.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/">Linux系统管理宝典</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-09-27T00:03:55.000Z">2023-09-27</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>shell数据处理</span></h1>
+<h2 id="一、linux中的常用符号"><a href="#一、linux中的常用符号" class="headerlink" title="一、linux中的常用符号"></a>一、linux中的常用符号</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>代表任意字符串</td>
+</tr>
+<tr>
+<td>？</td>
+<td>代表任意字符</td>
+</tr>
+<tr>
+<td>&#x2F;</td>
+<td>代表根目录或作为路径间隔符使用</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义字符。</td>
+</tr>
+<tr>
+<td>&lt;ENTER&gt;</td>
+<td>续行符。可以使用续行符将一个命令行分写在多行上</td>
+</tr>
+<tr>
+<td>$</td>
+<td>变量值置换，如：$PATH表示环境变量PATH的值</td>
+</tr>
+<tr>
+<td>’</td>
+<td>在’…’中间的字符都会被当做普通字符处理</td>
+</tr>
+<tr>
+<td>‘’</td>
+<td>在’’…’’中间的字符会被当做文字处理并允许变量值置换</td>
+</tr>
+<tr>
+<td>&#96;</td>
+<td>命令替换，置换`…&#96;中命令的执行结果</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>输入重定向字符</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>输出重定向字符</td>
+</tr>
+<tr>
+<td>|</td>
+<td>管道字符</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>后台执行字符。在一个命令之后加上字符“&amp;”，该命令就会以后台方式执行</td>
+</tr>
+<tr>
+<td>;</td>
+<td>按照顺序执行的多个命令</td>
+</tr>
+<tr>
+<td>()</td>
+<td>在子Shell中执行命令</td>
+</tr>
+<tr>
+<td>{}</td>
+<td>在当前Shell中执行命令</td>
+</tr>
+<tr>
+<td>!</td>
+<td>执行命令历史记录中的命令</td>
+</tr>
+<tr>
+<td>~</td>
+<td>代表登录用户的宿主目录（自家目录）</td>
+</tr>
+</tbody></table>
+<h2 id="二、历史记录"><a href="#二、历史记录" class="headerlink" title="二、历史记录"></a>二、历史记录</h2><p>linux系统在shell中保留了用户键入的每一个命令的历史记录，并且提供了很多种方法让用户通过历史记录找到曾经使用过的命令，并且调用这个历史记录的命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# history</span><br><span class="line">    1  ifconfig</span><br><span class="line">    2  nmcli connection modify ens33 ipv4.addresses 192.168.2.220/24 ipv4.gateway 192.168.2.1 ipv4.method manual autoconnect yes</span><br><span class="line">    3  route -n</span><br><span class="line">    4  nmcli connection down ens33</span><br><span class="line">   .</span><br><span class="line">   .</span><br><span class="line">   .</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>替换</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>！！</td>
+<td>前一个命令</td>
+</tr>
+<tr>
+<td>！n</td>
+<td>命令号n</td>
+</tr>
+<tr>
+<td>！-n</td>
+<td>倒数第n个命令</td>
+</tr>
+<tr>
+<td>！cmd</td>
+<td>最后用来启动cmd的命令</td>
+</tr>
+</tbody></table>
+<p><strong>与历史记录相关的文件和变量</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# echo $HISTFILE</span><br><span class="line">/root/.bash_history</span><br><span class="line">#用户的历史记录保存的位置</span><br><span class="line">[root@zutuanxue ~]# echo $HISTFILESIZE</span><br><span class="line">1000</span><br><span class="line">#启动时，从历史记录中读取的记录条数</span><br><span class="line">[root@zutuanxue ~]# echo $HISTSIZE</span><br><span class="line">1000</span><br><span class="line">#退出时，被写入历史记录的最大条数</span><br></pre></td></tr></table></figure>
+
+<p><strong>历史记录技巧</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">esc+./alt+.	调用上一条命令的最后一部分内容</span><br><span class="line">ctrl+r	在历史记录中搜索给出关键字的命令</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、标准输入、标准输出、标准错误"><a href="#三、标准输入、标准输出、标准错误" class="headerlink" title="三、标准输入、标准输出、标准错误"></a>三、标准输入、标准输出、标准错误</h2><p>在linux系统中，大多数时候我们从键盘读取输入，在终端显示输出，而我们在键盘中输入的内容，多数都是执行命令，这些命令属于终端程序，除了终端程序还有图形程序和屏幕程序（如vim），不管是哪一种程序都会涉及到输入，输出，错误，多数情况下，我们在键盘输入信息，在显示器查看信息（正确的信息和错误的信息），这些输入的信息我们称之为标准输入（可以用0表示），输出的信息我们称之为标准输出（可以用1表示），而错误的信息（可以用2表示），我们称之为标准错误。在日常使用中我们除了可以使用键盘输入信息，从显示器读取信息之外，还可以指定程序从键盘以外的地方读取需要输入的内容，也可以让程序将信息输出到显示器以外的地方。</p>
+<p><strong>重定向输入和输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#重定向输出</span><br><span class="line">[root@zutuanxue ~]# mkdir a</span><br><span class="line">[root@zutuanxue ~]# cd a</span><br><span class="line">[root@zutuanxue a]# mkdir aa ab ac</span><br><span class="line">[root@zutuanxue a]# cd aa</span><br><span class="line">[root@zutuanxue aa]# touch bb bc bd</span><br><span class="line">[root@zutuanxue ~]# ls a/ &gt; test	</span><br><span class="line">[root@zutuanxue ~]# cat test</span><br><span class="line">aa</span><br><span class="line">ab</span><br><span class="line">ac</span><br><span class="line">[root@zutuanxue ~]# ls a/aa/ &gt;&gt; test</span><br><span class="line">[root@zutuanxue ~]# cat test</span><br><span class="line">aa</span><br><span class="line">ab</span><br><span class="line">ac</span><br><span class="line">bb</span><br><span class="line">bc</span><br><span class="line">bd</span><br><span class="line"></span><br><span class="line">&gt;覆盖</span><br><span class="line">&gt;&gt;追加</span><br><span class="line">#重定向输入</span><br><span class="line">[root@zutuanxue ~]# wc -l test</span><br><span class="line">6 hello</span><br><span class="line">[root@zutuanxue ~]# wc -l &lt; test </span><br><span class="line">6</span><br><span class="line">注意：第一个例子，会输出文件名；第二个不会，因为它仅仅知道从标准输入读取内容。</span><br></pre></td></tr></table></figure>
+
+<p>我们知道标准输入可以用0来表示，标准输出可以用1来表示，标准错误可以用2来表示，而有些时候这些输出的信息中即包含了正确的信息，也包含了错误的信息，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# ls /etc/rc.d/</span><br><span class="line">init.d  rc0.d  rc1.d  rc2.d  rc3.d  rc4.d  rc5.d  rc6.d  rc.local</span><br><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/*</span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/init.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc0.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc1.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc2.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc3.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc4.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc5.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc6.d&#x27; 时出错: 是一个目录</span><br><span class="line"></span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>我们通过ls命令查看&#x2F;etc&#x2F;rc.d这个目录的时候，我们发现，这个目录中即有目录，也有文件，而当我们使用“head -1”命令去查看文件的第一行内容的时候， 很显然目录是无法查看第一行的，这时就会有报错，当我想把这些信息都写入到一个指定的文件中而不想看到这些内容我该如何去做？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/* &gt; test</span><br><span class="line">head: 读取&#x27;/etc/rc.d/init.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc0.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc1.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc2.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc3.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc4.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc5.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc6.d&#x27; 时出错: 是一个目录</span><br><span class="line">[root@zutuanxue ~]# cat test</span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>我们可以利用之前的&gt;将输出的信息重定向到一个指定的文件，但是仍然会收到错误提示，这是为什么呢？因为在linux当中正确的输出和错误的输出实际上是两种数据流，默认情况下这两种数据流都会在显示器上打印出来，而我们使用的&gt;相当于1&gt;,也就是将正确的信息写入到了test文件中，错误的信息依旧会看到。利用前面的提到0，1，2这三个数字，我们可以这样做</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/* &gt; test 2&gt; test.err</span><br><span class="line">[root@zutuanxue ~]# cat test</span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br><span class="line">[root@zutuanxue ~]# cat test.err </span><br><span class="line">head: 读取&#x27;/etc/rc.d/init.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc0.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc1.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc2.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc3.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc4.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc5.d&#x27; 时出错: 是一个目录</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc6.d&#x27; 时出错: 是一个目录</span><br></pre></td></tr></table></figure>
+
+<p>但是这依然是两个文件，能不能将这些信息都写入到一个文件中呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/* &gt; test.both 2&gt;&amp;1</span><br><span class="line">[root@zutuanxue ~]# cat test.both </span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/init.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc0.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc1.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc2.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc3.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc4.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc5.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc6.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/* &gt;&amp; test.both1</span><br><span class="line">[root@zutuanxue ~]# cat test.both1 </span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/init.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc0.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc1.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc2.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc3.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc4.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc5.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">head: 读取&#x27;/etc/rc.d/rc6.d&#x27; 时出错: 是一个目录</span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">这两种使用方式都是告诉shell将错误信息写入到正确信息所写入的文件中。</span><br><span class="line">如果这些错误信息是我们早就知道的，并且还不想看到的呢？</span><br><span class="line">[root@zutuanxue ~]# head -1 /etc/rc.d/* 2&gt; /dev/null </span><br><span class="line">==&gt; /etc/rc.d/init.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc0.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc1.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc2.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc3.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc4.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc5.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc6.d &lt;==</span><br><span class="line">==&gt; /etc/rc.d/rc.local &lt;==</span><br><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">/dev/null:表示的是一个黑洞，通常用于丢弃不需要的数据输出</span><br></pre></td></tr></table></figure>
+
+<p>综上所述针对于输入输出重定向与合并的用法有</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cmd &lt; file</td>
+<td>从file重定向标准输入</td>
+</tr>
+<tr>
+<td>cmd &gt; file</td>
+<td>把标准输出重定向到file中，如果file存在的话，覆盖（损坏）它</td>
+</tr>
+<tr>
+<td>cmd&gt;&gt;file</td>
+<td>把标准输出重定向到file中，如果file存在，附加给它</td>
+</tr>
+<tr>
+<td>cmd 2&gt;file</td>
+<td>把标准错误重定向到file，如果file 存在，覆盖（损坏）它</td>
+</tr>
+<tr>
+<td>cmd 2&gt;&gt; file</td>
+<td>把标准错误重定向到file中，如果file 存在，附加给他</td>
+</tr>
+<tr>
+<td>cmd&gt;file 2&gt;&amp;1</td>
+<td>合并标准输出和标准错误，并且重定向到file中（可移植的语法）</td>
+</tr>
+<tr>
+<td>cmd &gt;&amp; file</td>
+<td>合并标准输出和标准错误，并且重定向到file中（方便的语法）</td>
+</tr>
+</tbody></table>
+<h2 id="四、管道"><a href="#四、管道" class="headerlink" title="四、管道"></a>四、管道</h2><p>在前面，我们已经看到，进程的输出可以被重定向到终端显示器以外的地方，或者可以让进程从终端键盘以外的地方读取输入。一种最常用，最有力的重定向形式是把这二者结合起来，在这种形式下，一个命令的输出（标准输出）被直接“用管道输送”到另一个命令的输入（标准输入）中，从而构成了 Linux（和Unix）所谓的管道（pipe）。当两个命令用管道连接起来时，第一个进程的标准输出流被直接连接到第二个进程的标准输入序列。为了用bash创建管道，用一个垂直的小节线 | 把这两个命令连接起来。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://www.zutuanxue.com:8000/static/media/images/2020/10/25/1603601398337.png" alt="image20200323144226709.png"/></div><div class="image-meta"><span class="image-caption center">image20200323144226709.png</span></div></div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# pwd</span><br><span class="line">/root</span><br><span class="line">[root@zutuanxue ~]# ls | grep ana</span><br><span class="line">anaconda-ks.cfg</span><br><span class="line">注意：从管道读数据是一次性操作，数据一旦被读，它就从管道中被抛弃，释放空间以便写更多的数据。它只能处理经由前面一个指令传出的正确输出信息，对错误信息信息没有直接处理能力。然后，传递给下一个命令，作为标准的输入。</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、数据处理常用工具"><a href="#五、数据处理常用工具" class="headerlink" title="五、数据处理常用工具"></a>五、数据处理常用工具</h2><h3 id="5-1、find文件查找命令"><a href="#5-1、find文件查找命令" class="headerlink" title="5.1、find文件查找命令"></a>5.1、find文件查找命令</h3><p>. 代表当前目录</p>
+<p>~ 代表用户家目录</p>
+<p><strong>find命令选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">-name	按照文件名查找文件。</span><br><span class="line">[root@zutuanxue ~]# find ~ -name &quot;test.*&quot;</span><br><span class="line">/root/test.err</span><br><span class="line">/root/test.both</span><br><span class="line">/root/test.both1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-perm	按照文件权限来查找文件。</span><br><span class="line">[root@zutuanxue ~]# chmod 777 hello</span><br><span class="line">[root@zutuanxue ~]# find . -perm 777</span><br><span class="line">./hello</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-user	按照文件属主来查找文件。</span><br><span class="line">-group	按照文件所属的组来查找文件。</span><br><span class="line">-uid	查找指定uid</span><br><span class="line">-gid	查找指定gid</span><br><span class="line">[root@zutuanxue ~]# chown hello.hello test</span><br><span class="line">[root@zutuanxue ~]# find . -user hello</span><br><span class="line">./test</span><br><span class="line">[root@zutuanxue ~]# find . -group hello</span><br><span class="line">./test</span><br><span class="line">[root@zutuanxue ~]# chown root.hello hello</span><br><span class="line">[root@zutuanxue ~]# find . -user root -group hello</span><br><span class="line">./hello</span><br><span class="line">[root@zutuanxue ~]# find . -uid 1000</span><br><span class="line">./test</span><br><span class="line">[root@zutuanxue ~]# find . -gid 1000</span><br><span class="line">./test</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-mtime -n +n	按照文件的更改时间来查找文件， -n表示n天以内，+n表示n天以前。还有-atime和-ctime 选项</span><br><span class="line">-amin/-cmin/-mmin n		 查找系统中最后N分钟</span><br><span class="line"></span><br><span class="line">　　</span><br><span class="line">#如果-mtime +2 表示当前时间-2day以前的mtime的文件。即文件的mtime小于 sysdate -2</span><br><span class="line">#如果-mtime -2 表示当前时间-2day以后的mtime的文件。即文件的mtime大于 sysdate -2</span><br><span class="line">#如果-mtime  2 表示文件mtime在sysdate -2 与 sysdate-1 之间的文件。</span><br><span class="line">#！！！！！实际上再记不住，记住一般删除旧数据，一定是选择+。</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# find /etc -mtime -2 </span><br><span class="line">/etc</span><br><span class="line">/etc/cups</span><br><span class="line">/etc/cups/subscriptions.conf</span><br><span class="line">/etc/resolv.conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-nogroup	查找无有效所属组的文件，即该文件所属的组在/etc/groups中不存在。</span><br><span class="line">-nouser	查找无有效属主的文件，即该文件的属主在/etc/passwd中不存在。</span><br><span class="line">[root@zutuanxue ~]# chown 1400.1400 hello</span><br><span class="line">[root@zutuanxue ~]# ll hello</span><br><span class="line">-rwxrwxrwx 1 1400 1400 8 3月  22 23:25 hello</span><br><span class="line">[root@zutuanxue ~]# find . -nogroup</span><br><span class="line">./hello</span><br><span class="line">[root@zutuanxue ~]# find . -nouser</span><br><span class="line">./hello</span><br><span class="line"></span><br><span class="line">-newer file1 查找更改时间比文件file1新的文件。</span><br><span class="line">[root@zutuanxue ~]# find /etc -newer initial-setup-ks.cfg </span><br><span class="line">/etc</span><br><span class="line">/etc/dnf/modules.d</span><br><span class="line">/etc/dnf/modules.d/httpd.module</span><br><span class="line">/etc/logrotate.d</span><br><span class="line">还有anewer和cnewer</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-type	查找某一类型的文件，诸如：</span><br><span class="line">b - 块设备文件。</span><br><span class="line">d - 目录。</span><br><span class="line">c - 字符设备文件。</span><br><span class="line">p - 管道文件。</span><br><span class="line">l - 符号链接文件。</span><br><span class="line">f - 普通文件。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# find /etc -newer initial-setup-ks.cfg -type f</span><br><span class="line">/etc/dnf/modules.d/httpd.module</span><br><span class="line">/etc/logrotate.d/glusterfs</span><br><span class="line">/etc/pki/nssdb/cert9.db</span><br><span class="line">/etc/pki/nssdb/key4.db</span><br><span class="line">/etc/yum.repos.d/server.repo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-size n[bcwkMG] 查找文件长度为n块的文件，带有c时表示文件长度以字节计。</span><br><span class="line">			b	512字节一块</span><br><span class="line">			c	字节</span><br><span class="line">			w	字（2字节）</span><br><span class="line">			k	k字节（1024）</span><br><span class="line">			M	M字节（1024x1024字节）</span><br><span class="line">			G	G字节（1024x1024x1024字节）</span><br><span class="line">[root@zutuanxue ~]# find . -size +1M</span><br><span class="line">./.cache/tracker/meta.db</span><br><span class="line">./.cache/tracker/meta.db-wal</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/startupCache/startupCache.8.little</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/startupCache/scriptCache-child-current.bin</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/startupCache/scriptCache-current.bin</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/places.sqlite</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/favicons.sqlite</span><br><span class="line"># 在使用的时候注意一下单位，如find . -size 4k使用4k时会显示所有大与3k小于等于4k的文件，如果使用的是4096c则是查找大小为4k的文件</span><br><span class="line">[root@zutuanxue ~]# find . -size 4k</span><br><span class="line">.</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/startupCache/urlCache-current.bin</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/startupCache/urlCache.bin</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/safebrowsing</span><br><span class="line">./.config/pulse</span><br><span class="line">./.mozilla/firefox/mduza4q4.default</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/datareporting/archived/2020-02</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/saved-telemetry-pings</span><br><span class="line">[root@zutuanxue ~]# find . -size 4096c</span><br><span class="line">.</span><br><span class="line">./.cache/mozilla/firefox/mduza4q4.default/safebrowsing</span><br><span class="line">./.config/pulse</span><br><span class="line">./.mozilla/firefox/mduza4q4.default</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/datareporting/archived/2020-02</span><br><span class="line">./.mozilla/firefox/mduza4q4.default/saved-telemetry-pings</span><br><span class="line">[root@zutuanxue ~]# find . -size 4k |wc -l</span><br><span class="line">8</span><br><span class="line">[root@zutuanxue ~]# find . -size 4096c |wc -l</span><br><span class="line">6</span><br><span class="line">[root@zutuanxue ~]# ll -h .cache/mozilla/firefox/mduza4q4.default/startupCache/urlCache-current.bin </span><br><span class="line">-rw-r--r-- 1 root root 3.1K 2月  24 02:34 .cache/mozilla/firefox/mduza4q4.default/startupCache/urlCache-current.bin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-follow：如果find命令遇到符号链接文件，就跟踪至链接所指向的文件。</span><br><span class="line">[root@zutuanxue ~]# ln -s /etc/ linketc</span><br><span class="line">[root@zutuanxue ~]# find . -name passwd</span><br><span class="line">[root@zutuanxue ~]# find . -name passwd -follow</span><br><span class="line">./linketc/pam.d/passwd</span><br><span class="line">./linketc/passwd</span><br><span class="line"></span><br><span class="line">-exec   command   &#123;&#125; \;      —–将查到的文件执行command操作,&#123;&#125; 和 \;之间有空格</span><br><span class="line">-ok 和-exec相同，只不过在操作前要询用户</span><br><span class="line">[root@zutuanxue ~]# find /etc -name passwd -exec grep &quot;hello&quot; &#123;&#125; \;</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">[root@zutuanxue ~]# find /etc -name passwd -ok grep &quot;hello&quot; &#123;&#125; \;</span><br><span class="line">&lt; grep ... /etc/pam.d/passwd &gt; ? y</span><br><span class="line">&lt; grep ... /etc/passwd &gt; ? y</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-empty	查找空文件或目录</span><br><span class="line">[root@zutuanxue ~]# find /etc -empty</span><br><span class="line">/etc/crypttab</span><br><span class="line">/etc/dnf/aliases.d</span><br><span class="line">/etc/dnf/modules.defaults.d</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-inum	查找i节点编号为指定数值的文件</span><br><span class="line">-samefile	查找相同的文件</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# ln hello hello1</span><br><span class="line">[root@zutuanxue ~]# ln hello hello2</span><br><span class="line">[root@zutuanxue ~]# ll -i hello</span><br><span class="line">34510098 -rwxrwxrwx 3 1400 1400 8 3月  22 23:25 hello</span><br><span class="line">[root@zutuanxue ~]# find . -inum 34510098</span><br><span class="line">./hello</span><br><span class="line">./hello1</span><br><span class="line">./hello2</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# find . -samefile hello</span><br><span class="line">./hello</span><br><span class="line">./hello1</span><br><span class="line">./hello2</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2、grep-egrep-数据检索命令"><a href="#5-2、grep-egrep-数据检索命令" class="headerlink" title="5.2、grep&amp;egrep 数据检索命令"></a>5.2、grep&amp;egrep 数据检索命令</h3><p>一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来，最常用。egrep是grep的扩展，支持更多的正则表达式元字符,等同于grep -E。</p>
+<p>useradd HELLO</p>
+<p>useradd helo</p>
+<p>useradd helllo</p>
+<p><strong>grep 与 正则表达式符号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">^ 行的开始 如：&#x27;^grep&#x27;匹配所有以grep开头的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;^he&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">$	行的结束 如：&#x27;grep$&#x27;匹配所有以grep结尾的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;sh$&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">.	匹配一个非换行符(&#x27;\n&#x27;)的字符如：&#x27;gr.p&#x27;匹配gr后接一个任意字符，然后是p。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;t.e&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">* 匹配零个或多个先前字符 如：&#x27; *grep&#x27; (注意*前有空格)匹配所有零个或多个空格后紧跟grep的行，需要用egrep 或者grep带上 -E 选项。 .*一起用代表任意字符。</span><br><span class="line">[root@zutuanxue ~]# grep -E &#x27;el*lo&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">[]	匹配一个指定范围内的字符，如&#x27;[Gg]rep&#x27;匹配Grep和grep。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;[Hh]el&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">[^] 匹配一个不在指定范围内的字符，如：&#x27;[^A-FH-Z]rep&#x27;匹配不包含A-F和H-Z的一个字母开头，紧跟rep的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;[^A-Z]ello&#x27; /etc/passwd</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;[^a-z]ello&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">\?	匹配零个或一个先前的字符。如：&#x27;gre\?p&#x27;匹配gr后跟一个或零个e字符，然后是p的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;hell\?o&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line"></span><br><span class="line">x\&#123;m\&#125; 重复字符x，m次，如：&#x27;o\&#123;5\&#125;&#x27;匹配包含5个o的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;l\&#123;2\&#125;&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">x\&#123;m,\&#125; 重复字符x,至少m次，如：&#x27;o\&#123;5,\&#125;&#x27;匹配至少有5个o的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;l\&#123;2,\&#125;&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">x\&#123;m,n\&#125; 重复字符x，至少m次，不多于n次，如：&#x27;o\&#123;5,10\&#125;&#x27;匹配5--10个o的行。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;l\&#123;1,3\&#125;&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">\b 单词锁定符，如: &#x27;\bgrep\b&#x27;只匹配grep。</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;hell&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helllo:x:1003:1003::/home/helllo:/bin/bash</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;\bhell\b&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">egrep和 grep -E的扩展集</span><br><span class="line">+	匹配一个或多个先前的字符。如：&#x27;[a-z]+able&#x27;，匹配一个或多个小写字母后跟able的串.</span><br><span class="line">[root@zutuanxue ~]# grep -E &#x27;[a-z]+llo&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helllo:x:1003:1003::/home/helllo:/bin/bash</span><br><span class="line">[root@zutuanxue ~]# grep -E &#x27;[a-z]+lo&#x27; /etc/passwd</span><br><span class="line"></span><br><span class="line">?	作用同\?,如：&#x27;gre?p&#x27;匹配gr后跟一个或零个e字符，然后是p的行。</span><br><span class="line">[root@zutuanxue ~]# grep -E &#x27;hel?lo&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;hel?lo&#x27; /etc/passwd</span><br><span class="line">[root@zutuanxue ~]# grep &#x27;hel\?lo&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line"></span><br><span class="line">a|b|c 匹配a或b或c。如：grep|sed匹配grep或sed</span><br><span class="line">[root@zutuanxue ~]# grep -E &#x27;llo|lllo&#x27; /etc/passwd</span><br><span class="line">hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">helllo:x:1003:1003::/home/helllo:/bin/bash</span><br><span class="line"></span><br><span class="line">*	0次或多次</span><br><span class="line">?	0次或1次</span><br><span class="line">+	1次或多次</span><br><span class="line"></span><br><span class="line">-E		支持扩展正则，相当于egrep</span><br><span class="line">-i		不区分大小写</span><br><span class="line">-v		取反，显示不匹配的</span><br><span class="line">--color=auto	高亮显示</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3、sort-对文件内容进行排序"><a href="#5-3、sort-对文件内容进行排序" class="headerlink" title="5.3、sort 对文件内容进行排序"></a>5.3、sort 对文件内容进行排序</h3><p><strong>常用命令选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">-b 忽略每行前面开始出的空格字符。</span><br><span class="line">[root@zutuanxue ~]# sort passwd</span><br><span class="line">apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line"> hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">    HELLO:x:1001:1001::/home/HELLO:/bin/bash</span><br><span class="line">      helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">[root@zutuanxue ~]# sort -b passwd</span><br><span class="line">apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line"> hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">    HELLO:x:1001:1001::/home/HELLO:/bin/bash</span><br><span class="line">      helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"></span><br><span class="line">-c 检查文件是否已经按照顺序排序。</span><br><span class="line">[root@zutuanxue ~]# sort -c passwd </span><br><span class="line">sort：passwd:2：无序： bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line"></span><br><span class="line">-t	用指定的符号做为分隔符</span><br><span class="line">-k	指定区间</span><br><span class="line">-n 	依照数值的大小排序。</span><br><span class="line">-r 以相反的顺序来排序。</span><br><span class="line">[root@zutuanxue ~]# sort -t &#x27;:&#x27; -k 3 -r -n  passwd </span><br><span class="line">nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin</span><br><span class="line">      helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">    HELLO:x:1001:1001::/home/HELLO:/bin/bash</span><br><span class="line"> hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line">   apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">或者</span><br><span class="line">[root@zutuanxue ~]# sort -t &#x27;:&#x27; -k 3rn passwd </span><br><span class="line">nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin</span><br><span class="line">      helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">    HELLO:x:1001:1001::/home/HELLO:/bin/bash</span><br><span class="line"> hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line">   apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-o&lt;输出文件&gt; 将排序后的结果存入指定的文件。</span><br><span class="line">[root@zutuanxue ~]# sort -t &#x27;:&#x27; -k 3 -r -n  passwd -o /root/passwd-sort</span><br><span class="line">[root@zutuanxue ~]# cat /root/passwd-sort </span><br><span class="line">nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin</span><br><span class="line">      helo:x:1002:1002::/home/helo:/bin/bash</span><br><span class="line">    HELLO:x:1001:1001::/home/HELLO:/bin/bash</span><br><span class="line"> hello:x:1000:1000:hello:/home/hello:/bin/bash</span><br><span class="line">dbus:x:81:81:System message bus:/:/sbin/nologin</span><br><span class="line">   apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4、uniq-数据去重"><a href="#5-4、uniq-数据去重" class="headerlink" title="5.4、uniq 数据去重"></a>5.4、uniq 数据去重</h3><p>一般配合sort使用</p>
+<p><strong>案例文档</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cat testuniq</span><br><span class="line">192.168.98.2</span><br><span class="line">192.168.98.8</span><br><span class="line">192.168.98.3</span><br><span class="line">192.168.98.3</span><br><span class="line">192.168.98.9</span><br><span class="line">192.168.98.8</span><br><span class="line">192.168.98.8</span><br><span class="line">192.168.98.0</span><br><span class="line">192.168.98.3</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用命令选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">-c	在每列旁边显示该行重复出现的次数。</span><br><span class="line">[root@zutuanxue ~]# uniq -c testuniq </span><br><span class="line">      1 192.168.98.2</span><br><span class="line">      1 192.168.98.8</span><br><span class="line">      2 192.168.98.3</span><br><span class="line">      1 192.168.98.9</span><br><span class="line">      2 192.168.98.8</span><br><span class="line">      1 192.168.98.0</span><br><span class="line">      1 192.168.98.3</span><br><span class="line"></span><br><span class="line">[root@zutuanxue ~]# uniq -c testuniq | sort</span><br><span class="line">      1 192.168.98.0</span><br><span class="line">      1 192.168.98.2</span><br><span class="line">      1 192.168.98.3</span><br><span class="line">      1 192.168.98.8</span><br><span class="line">      1 192.168.98.9</span><br><span class="line">      2 192.168.98.3</span><br><span class="line">      2 192.168.98.8</span><br><span class="line"></span><br><span class="line">-d	仅显示重复出现的行列。</span><br><span class="line">[root@zutuanxue ~]# uniq -d testuniq </span><br><span class="line">192.168.98.3</span><br><span class="line">192.168.98.8</span><br><span class="line"></span><br><span class="line">-u	仅显示出一次的行列。</span><br><span class="line">[root@zutuanxue ~]# uniq -u testuniq </span><br><span class="line">192.168.98.2</span><br><span class="line">192.168.98.8</span><br><span class="line">192.168.98.9</span><br><span class="line">192.168.98.0</span><br><span class="line">192.168.98.3</span><br><span class="line">[root@zutuanxue ~]# uniq -u testuniq | sort</span><br><span class="line">192.168.98.0</span><br><span class="line">192.168.98.2</span><br><span class="line">192.168.98.3</span><br><span class="line">192.168.98.8</span><br><span class="line">192.168.98.9</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5、tree-以树状结构列出目录内容"><a href="#5-5、tree-以树状结构列出目录内容" class="headerlink" title="5.5、tree 以树状结构列出目录内容"></a>5.5、tree 以树状结构列出目录内容</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">-a 显示所有文件和目录,默认不显示隐藏文件</span><br><span class="line">[root@zutuanxue ~]# tree -a</span><br><span class="line"></span><br><span class="line">-C 在文件和目录清单加上色彩，便于区分各种类型。</span><br><span class="line">[root@zutuanxue ~]# tree -C</span><br><span class="line"></span><br><span class="line">-d 只显示目录。</span><br><span class="line">[root@zutuanxue ~]# tree -d</span><br><span class="line"></span><br><span class="line">-D 列出文件或目录的更改时间。</span><br><span class="line">[root@zutuanxue ~]# tree -D</span><br><span class="line">.</span><br><span class="line">├── [Feb  4 15:07]  公共</span><br><span class="line">├── [Feb  4 15:07]  模板</span><br><span class="line"></span><br><span class="line">-f 在每个文件或目录之前，显示完整的路径名称。</span><br><span class="line">[root@zutuanxue ~]# tree -f</span><br><span class="line">.</span><br><span class="line">├── ./公共</span><br><span class="line">├── ./模板</span><br><span class="line"></span><br><span class="line">-F 加上文件类型标记，在执行文件，目录，Socket，管道名称名称，各自加上&quot;*&quot;,&quot;/&quot;,&quot;@&quot;,&quot;|&quot;号。</span><br><span class="line">[root@zutuanxue ~]# tree -F</span><br><span class="line">.</span><br><span class="line">├── 公共/</span><br><span class="line">├── 模板/</span><br><span class="line"></span><br><span class="line">-g -u 列出文件或目录的所属群组、主名称，没有对应的名称时，则显示群组、主的识别码。</span><br><span class="line">[root@zutuanxue ~]# tree -g</span><br><span class="line">.</span><br><span class="line">├── [root    ]  公共</span><br><span class="line">├── [root    ]  模板</span><br><span class="line"></span><br><span class="line">-i 不以阶梯状列出文件或目录名称。</span><br><span class="line">[root@zutuanxue ~]# tree -i</span><br><span class="line">.</span><br><span class="line">公共</span><br><span class="line">模板</span><br><span class="line">视频</span><br><span class="line"></span><br><span class="line">-n 不在文件和目录清单加上色彩。</span><br><span class="line">[root@zutuanxue ~]# tree -n</span><br><span class="line">.</span><br><span class="line">├── 公共</span><br><span class="line">├── 模板</span><br><span class="line"></span><br><span class="line">-p 列出权限标示。</span><br><span class="line">[root@zutuanxue ~]# tree -p</span><br><span class="line">.</span><br><span class="line">├── [drwxr-xr-x]  公共</span><br><span class="line">├── [drwxr-xr-x]  模板</span><br><span class="line"></span><br><span class="line">-s 列出文件或目录大小。</span><br><span class="line">[root@zutuanxue ~]# tree -s</span><br><span class="line">.</span><br><span class="line">├── [          6]  公共</span><br><span class="line">├── [          6]  模板</span><br><span class="line"></span><br><span class="line">-t 用文件和目录的更改时间排序。</span><br><span class="line">[root@zutuanxue ~]# tree -t</span><br><span class="line">.</span><br><span class="line">├── anaconda-ks.cfg</span><br><span class="line">├── initial-setup-ks.cfg</span><br><span class="line">├── 公共</span><br><span class="line"></span><br><span class="line">-u 列出文件或目录的拥有者名称，没有对应的名称时，则显示用户识别码。</span><br><span class="line">[root@zutuanxue ~]# tree -u</span><br><span class="line">.</span><br><span class="line">├── [root    ]  公共</span><br><span class="line">├── [root    ]  模板</span><br><span class="line"></span><br><span class="line">-L 显示目录层数，数值为正整数</span><br><span class="line">[root@zutuanxue ~]# tree -a -L 2</span><br><span class="line">.</span><br><span class="line">├── .cache</span><br><span class="line">│   ├── dconf</span><br><span class="line">│   ├── event-sound-cache.tdb.d5b6fe70a77f4945aa0999abdd33e686.x86_64-redhat-linux-gnu</span><br><span class="line">│   ├── evolution</span><br><span class="line">│   ├── gnome-shell</span><br><span class="line">│   ├── gnome-software</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-6、xargs命令"><a href="#5-6、xargs命令" class="headerlink" title="5.6、xargs命令"></a>5.6、xargs命令</h3><p>xargs 是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。用于一些不支持管道输入的命令如ls</p>
+<p><strong>案例文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@zutuanxue ~]# cat xargtest </span><br><span class="line">a a a</span><br><span class="line">b b b</span><br><span class="line">c c c</span><br><span class="line">d d d</span><br><span class="line">e</span><br><span class="line">f</span><br><span class="line">g</span><br><span class="line">h</span><br><span class="line">i</span><br><span class="line">j</span><br><span class="line">k</span><br><span class="line">l</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用命令选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">-n num 后面加列数</span><br><span class="line">[root@zutuanxue ~]# cat xargtest | xargs -n 2</span><br><span class="line">a a</span><br><span class="line">a b</span><br><span class="line">b b</span><br><span class="line">c c</span><br><span class="line">c d</span><br><span class="line">d d</span><br><span class="line">e f</span><br><span class="line">g h</span><br><span class="line">i j</span><br><span class="line">k l</span><br><span class="line">[root@zutuanxue ~]# cat xargtest | xargs</span><br><span class="line">a a a b b b c c c d d d e f g h i j k l</span><br><span class="line"></span><br><span class="line">-I	指定替换的字符串，并在后续的命令中用指定的字符串表示接收到的输入内容，并执行，可以用任意字符代替（不推荐有特殊含义的字符，如*等，如果使用请记得转意），一般为[]或&#123;&#125;</span><br><span class="line">[root@zutuanxue ~]# mkdir testx</span><br><span class="line">[root@zutuanxue ~]# find /var/ -name &quot;*.log&quot; | xargs  -I a cp a ./testx</span><br><span class="line">[root@zutuanxue ~]# ls testx | wc -l</span><br><span class="line">39</span><br><span class="line"></span><br><span class="line">-i	类似-I，相当于固定就是使用&#123;&#125;来表示接收到的输入内容</span><br><span class="line">[root@zutuanxue ~]# find /var/ -name &quot;*.log&quot; | xargs  -i cp &#123;&#125; ./testx</span><br><span class="line">[root@zutuanxue ~]# ls testx | wc -l</span><br><span class="line">39</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-d 指定分隔符</span><br><span class="line">[root@zutuanxue ~]# echo &quot;a9b9c9d9&quot; | xargs -d 9</span><br><span class="line">a b c d </span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-shadow%E6%96%87%E4%BB%B6/">linuxshadow文件</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/27/Linux%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%AE%9D%E5%85%B8/Linux-%E5%88%86%E5%8C%BA%E6%8C%82%E8%BD%BD/">linux分区挂载</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@anonymity</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
